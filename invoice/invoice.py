@@ -62,8 +62,6 @@ class InvoiceReport(HTMLReport):
         pool = Pool()
         Invoice = pool.get('account.invoice')
 
-        result = super(InvoiceReport, cls).execute(ids, data)
-
         if len(ids) == 1:
             # Re-instantiate because records are TranslateModel
             invoice, = Invoice.browse(ids)
@@ -71,12 +69,15 @@ class InvoiceReport(HTMLReport):
                 return (
                     invoice.invoice_report_format,
                     bytes(invoice.invoice_report_cache))
-            else:
 
-                if invoice.state in {'posted', 'paid'} and invoice.type == 'out':
-                    format_, data = result[0], result[1]
-                    invoice.invoice_report_format = format_
-                    invoice.invoice_report_cache = \
-                        Invoice.invoice_report_cache.cast(data)
-                    invoice.save()
+        result = super(InvoiceReport, cls).execute(ids, data)
+
+        if (len(ids) == 1 and invoice.state in {'posted', 'paid'}
+                and invoice.type == 'out'):
+            format_, data = result[0], result[1]
+            invoice.invoice_report_format = format_
+            invoice.invoice_report_cache = \
+                Invoice.invoice_report_cache.cast(data)
+            invoice.save()
+
         return result
