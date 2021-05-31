@@ -26,6 +26,7 @@ from trytond.i18n import gettext
 from trytond.model.modelstorage import _record_eval_pyson
 from trytond.config import config
 from trytond.exceptions import UserError
+from trytond.tools import slugify
 
 MEDIA_TYPE = config.get('html_report', 'type', default='screen')
 RAISE_USER_ERRORS = config.getboolean('html_report', 'raise_user_errors',
@@ -350,7 +351,7 @@ class HTMLReportMixin:
         # in case is not jinja, call super()
         if action.template_extension != 'jinja':
             return super().execute(ids, data)
-        action_name = cls.get_name(action)
+        action_name = slugify(cls.get_name(action))
 
         # use DualRecord when template extension is jinja
         data['html_dual_record'] = True
@@ -369,7 +370,7 @@ class HTMLReportMixin:
                             data, action)
                         rfilename = '%s-%s.%s' % (
                             action_name,
-                            (record.render.rec_name).replace('/', '-'),
+                            slugify(record.render.rec_name),
                             oext)
                         content_zip.writestr(rfilename, rcontent)
                 content = content.getvalue()
