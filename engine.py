@@ -369,17 +369,19 @@ class HTMLReportMixin:
                         oext, rcontent = cls._execute_html_report([record],
                             data, action)
                         rfilename = '%s-%s.%s' % (
-                            action_name,
+                            record.raw.id,
                             slugify(record.render.rec_name),
                             oext)
                         content_zip.writestr(rfilename, rcontent)
                 content = content.getvalue()
                 return ('zip', content, False, action_name)
 
+            filename = slugify(records[0].render.rec_name
+                if len(records) == 1 else action_name)
             oext, content = cls._execute_html_report(records, data, action)
             if not isinstance(content, str):
                 content = bytearray(content) if bytes == str else bytes(content)
-        return oext, content, cls.get_direct_print(action), action_name
+        return oext, content, cls.get_direct_print(action), filename
 
     @classmethod
     def _execute_html_report(cls, records, data, action):
