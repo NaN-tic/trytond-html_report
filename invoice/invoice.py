@@ -47,6 +47,11 @@ class InvoiceLine(metaclass=PoolMeta):
             if purchase not in key:
                 key.append(purchase)
 
+        if self.origin and 'account.invoice.line' in str(self.origin):
+            invoice = self.origin.invoice
+            if invoice not in key:
+                key.append(invoice)
+
         return key
 
 
