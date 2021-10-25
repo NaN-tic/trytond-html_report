@@ -30,6 +30,8 @@ class InvoiceLine(metaclass=PoolMeta):
         'get_sorted_key')
 
     def get_sorted_key(self, name):
+        InvoiceLine = Pool().get('account.invoice.line')
+
         key = []
         if hasattr(self, 'stock_moves'):
             for move in self.stock_moves:
@@ -46,6 +48,11 @@ class InvoiceLine(metaclass=PoolMeta):
             purchase = self.origin.purchase
             if purchase not in key:
                 key.append(purchase)
+
+        if self.origin and isinstance(self.origin, InvoiceLine):
+            invoice = self.origin.invoice
+            if invoice not in key:
+                key.append(invoice)
 
         return key
 
