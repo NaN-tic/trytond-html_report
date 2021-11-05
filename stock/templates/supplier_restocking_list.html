@@ -1,0 +1,18 @@
+{% extends 'html_report/templates/base.html' %}
+{% set shipment = record %}
+
+{% block title %}
+    {{ super() }}
+    {{ label('stock.shipment.in') }}
+{% endblock %}
+
+{% block main %}
+  {% language company.party.lang and company.party.raw.lang.code or 'en' %}
+
+    {% set shipment = record %}
+
+    {{ show_restocking_list_info(shipment) }}
+    {{ show_restocking_list_moves(shipment) }}
+
+  {% endlanguage %}
+{% endblock %}

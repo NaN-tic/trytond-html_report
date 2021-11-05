@@ -1,0 +1,27 @@
+<table style="width:100%;">
+  <thead>
+    <tr>
+    <th nowrap>{{ label('stock.move', 'from_location') }}</th>
+    <th nowrap>{{ label('stock.move', 'to_location') }}</th>
+    <th nowrap>{{ label('stock.move', 'product') }}</th>
+    {% if document.raw.show_lots %}<th nowrap>{{ label('stock.move', 'lot') }}</th>{% endif %}
+    <th nowrap>{{ label('stock.move', 'quantity') }}</th>
+    </tr>
+  </thead>
+  <tbody class="border">
+    {% if shipment.warehouse_input == shipment.warehouse_storage %}
+    {% set restocking_moves = document.incoming_moves %}
+    {% else %}
+    {% set restocking_moves = document.inventory_moves %}
+    {% endif %}
+    {% for move in restocking_moves %}
+      <tr>
+        <td>{{ move.from_location.render.rec_name }}</td>
+        <td>{{ move.to_location.render.rec_name }}</td>
+        <td>{{ move.product.render.rec_name }}</td>
+        {% if document.raw.show_lots %}<td>{{ move.lot and move.lot.render.number or '' }}{% if move.raw.lot and move.lot.raw.expiration_date %} ({{ move.lot.render.expiration_date }}){% endif %}</td>{% endif %}
+        <td>{{ move.product.render.quantity }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
