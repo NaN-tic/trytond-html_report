@@ -88,12 +88,21 @@ class PdfGenerator:
             element_page._page_box.all_children(), element.replace('_', '-'))
 
         if element == 'header':
-            element_height = element_html.height
+            if element_html:
+                element_height = element_html.height
+            else:
+                element_height = 0
         if element == 'footer':
-            element_height = element_page.height - element_html.position_y
+            if element_html:
+                element_height = element_page.height - element_html.position_y
+            else:
+                element_height = element_page.height
         if element == 'last_footer':
-            element_height = (element_page.height - element_html.position_y
-                - element_html.margin_bottom)
+            if element_html:
+                element_height = (element_page.height - element_html.position_y
+                    - element_html.margin_bottom)
+            else:
+                element_height = element_page.height
 
         return element_body, element_height
 
