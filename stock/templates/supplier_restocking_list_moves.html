@@ -20,7 +20,7 @@
         <td>{{ move.to_location.render.rec_name }}</td>
         <td>{{ move.product.render.rec_name }}</td>
         {% if document.raw.show_lots %}<td>{{ move.lot and move.lot.render.number or '' }}{% if move.raw.lot and move.lot.raw.expiration_date %} ({{ move.lot.render.expiration_date }}){% endif %}</td>{% endif %}
-        <td>{{ move.product.render.quantity }}</td>
+        <td>{{ move.render.quantity }}</td>
       </tr>
     {% endfor %}
   </tbody>
