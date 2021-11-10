@@ -124,6 +124,13 @@ table.condensed tr,td,th{
   padding: 0;
 }
 
+h1.title {
+  width: 85%;
+  text-align: center;
+  font-size: 14px;
+  margin-right: 1cm;
+  margin-left: 1cm;
+}
 h1.document{
   font-size: 14px;
   padding:0;

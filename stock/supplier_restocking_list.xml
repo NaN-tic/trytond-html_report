@@ -62,4 +62,20 @@
       <field name="signature" ref="supplier_restocking_list_moves_macro_signature"/>
     </record>
   </data>
+  <data noupdate="1">
+    <record model="html.template.translation" id="report_translation_restocking_list_ca">
+      <field name="report" ref="html_report_shipment_in_restocking_list"/>
+      <field name="src">Restocking List</field>
+      <field name="value">Llista de proveïment</field>
+      <!-- <field name="lang" ref="ir.lang_ca"/> -->
+      <field name="lang">ca</field>
+    </record>
+    <record model="html.template.translation" id="report_translation_restocking_list_es">
+      <field name="report" ref="html_report_shipment_in_restocking_list"/>
+      <field name="src">Restocking List</field>
+      <field name="value">Lista de reabastecimiento</field>
+      <!-- <field name="lang" ref="ir.lang_es"/> -->
+      <field name="lang">es</field>
+    </record>
+  </data>
 </tryton>
