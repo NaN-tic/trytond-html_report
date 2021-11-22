@@ -6,6 +6,7 @@ def register(module):
         stock.ShipmentOut,
         stock.ShipmentOutReturn,
         stock.ShipmentInternal,
+        stock.ShipmentIn,
         stock.ShipmentInReturn,
         stock.Move,
         module=module, type_='model', depends=['stock'])

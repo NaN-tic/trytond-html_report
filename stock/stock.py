@@ -28,6 +28,19 @@ class ShipmentOutReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta)
         return Report.label(self.__name__, "delivery_address")
 
 
+class ShipmentIn(HTMLReportMixin, metaclass=PoolMeta):
+    __name__ = 'stock.shipment.in'
+
+    show_lots = fields.Function(fields.Boolean('Show Lots'),
+        'get_show_lots')
+
+    def get_show_lots(self, name):
+        for move in self.moves:
+            if getattr(move, 'lot'):
+                return True
+        return False
+
+
 class ShipmentInReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.in.return'
 
