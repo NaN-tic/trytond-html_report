@@ -1,0 +1,9 @@
+{% set title = label(record.raw.__name__) %}
+
+<p>{{ record.company.render.rec_name }}</p>
+<h1 class="title">{{ _('Restocking List') }}</h1>
+<h1 class="document">{{ title }}: {{ record.raw.number and record.render.number }} <h1>
+<h2 class="document">{{ label('stock.shipment.in', 'reference') }}: {{ record.raw.origins and record.render.origins or record.render.reference or '' }} </h2>
+<h2 class="document">{{ label('stock.shipment.in', 'supplier') }}: {{ record.supplier.render.rec_name or '' }} </h2>
+<h2 class="document">{{ label('stock.shipment.in', 'planned_date') }}: {{ record.render.planned_date or '' }} </h2>
+<h2 class="document">{{ label('stock.shipment.in', 'warehouse') }}: {{ record.warehouse.render.rec_name }} </h2>

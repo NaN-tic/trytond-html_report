@@ -222,6 +222,10 @@ msgctxt "field:stock.move,sort_key:"
 msgid "key"
 msgstr "clau"
 
+msgctxt "field:stock.shipment.in,show_lots:"
+msgid "Show Lots"
+msgstr "Mostrar lots"
+
 msgctxt "field:stock.shipment.in.return,html_address:"
 msgid "HTML Party Address"
 msgstr ""
@@ -409,6 +413,10 @@ msgstr "Venta"
 msgctxt "model:ir.action,name:html_report_sale_proforma"
 msgid "Proforma"
 msgstr "Proforma"
+
+msgctxt "model:ir.action,name:html_report_shipment_in_restocking_list"
+msgid "Restocking List"
+msgstr "Llista de proveïment"
 
 msgctxt "model:ir.action,name:html_report_valued_delivery_note"
 msgid "Valued Delivery Note"

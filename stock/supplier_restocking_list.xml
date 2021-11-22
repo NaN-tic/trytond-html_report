@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<tryton>
+  <data depends="stock">
+    <!-- supplier restocking list -->
+    <record model='html.template.signature' id="supplier_restocking_list_info_macro_signature">
+        <field name="name">show_restocking_list_info(document)</field>
+    </record>
+    <record model='html.template' id="supplier_restocking_list_info_macro_id">
+        <field name="name">Supplier Restocking List Info</field>
+        <field name="type">macro</field>
+        <field name="sequence" eval="99"/>
+        <field name="filename">html_report/stock/templates/supplier_restocking_list_info.html</field>
+        <field name="implements" ref="html_report.supplier_restocking_list_info_macro_signature"/>
+    </record>
+
+    <record model='html.template.signature' id="supplier_restocking_list_moves_macro_signature">
+        <field name="name">show_restocking_list_moves(document)</field>
+    </record>
+    <record model='html.template' id="supplier_restocking_list_moves_macro_id">
+        <field name="name">Supplier Restocking List Moves</field>
+        <field name="type">macro</field>
+        <field name="sequence" eval="99"/>
+        <field name="filename">html_report/stock/templates/supplier_restocking_list_moves.html</field>
+        <field name="implements" ref="html_report.supplier_restocking_list_moves_macro_signature"/>
+    </record>
+
+    <record model='html.template' id="supplier_restocking_list_template_id">
+        <field name="name">Supplier Restocking List</field>
+        <field name="type">base</field>
+        <field name="sequence" eval="99"/>
+        <field name="filename">html_report/stock/templates/supplier_restocking_list.html</field>
+    </record>
+
+    <record model="ir.action.report" id="stock.report_shipment_in_restocking_list">
+        <field name="active" eval="False"/>
+    </record>
+
+    <record model="ir.action.report" id="html_report_shipment_in_restocking_list">
+        <field name="name">Restocking List</field>
+        <field name="model">stock.shipment.in</field>
+        <field name="report_name">stock.shipment.in.restocking_list</field>
+        <field name="extension">pdf</field>
+        <field name="template_extension">jinja</field>
+        <field name="single" eval="True"/>
+        <field name="html_template" ref="supplier_restocking_list_template_id"/>
+        <field name="extension">pdf</field>
+    </record>
+
+    <record model="ir.action.keyword" id="report_shipment_in_restocking_list_keyword">
+        <field name="keyword">form_print</field>
+        <field name="model">stock.shipment.in,-1</field>
+        <field name="action" ref="html_report_shipment_in_restocking_list"/>
+    </record>
+
+    <record model="html.report.template" id="report_shipment_in_restocking_list_info_id">
+      <field name="report" ref="html_report_shipment_in_restocking_list"/>
+      <field name="signature" ref="supplier_restocking_list_info_macro_signature"/>
+    </record>
+
+    <record model="html.report.template" id="report_shipment_in_restocking_moves_info_id">
+      <field name="report" ref="html_report_shipment_in_restocking_list"/>
+      <field name="signature" ref="supplier_restocking_list_moves_macro_signature"/>
+    </record>
+  </data>
+  <data noupdate="1">
+    <record model="html.template.translation" id="report_translation_restocking_list_ca">
+      <field name="report" ref="html_report_shipment_in_restocking_list"/>
+      <field name="src">Restocking List</field>
+      <field name="value">Llista de proveïment</field>
+      <!-- <field name="lang" ref="ir.lang_ca"/> -->
+      <field name="lang">ca</field>
+    </record>
+    <record model="html.template.translation" id="report_translation_restocking_list_es">
+      <field name="report" ref="html_report_shipment_in_restocking_list"/>
+      <field name="src">Restocking List</field>
+      <field name="value">Lista de reabastecimiento</field>
+      <!-- <field name="lang" ref="ir.lang_es"/> -->
+      <field name="lang">es</field>
+    </record>
+  </data>
+</tryton>
