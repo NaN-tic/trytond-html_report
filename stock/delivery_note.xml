@@ -170,4 +170,21 @@
     <field name="signature" ref="show_carrier_signature"/>
   </record>
 </data>
+
+<data depends="stock" noupdate="1">
+  <record model="html.template.translation" id="report_translation_delivery_note_ca">
+    <field name="report" ref="html_report_delivery_note"/>
+    <field name="src">Draft</field>
+    <field name="value">Esborrany</field>
+    <!-- <field name="lang" ref="ir.lang_ca"/> -->
+    <field name="lang">ca</field>
+  </record>
+  <record model="html.template.translation" id="report_translation_delivery_note_es">
+    <field name="report" ref="html_report_delivery_note"/>
+    <field name="src">Draft</field>
+    <field name="value">Borrador</field>
+    <!-- <field name="lang" ref="ir.lang_ca"/> -->
+    <field name="lang">es</field>
+  </record>
+</data>
 </tryton>
