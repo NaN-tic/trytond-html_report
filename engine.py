@@ -411,7 +411,7 @@ class HTMLReportMixin:
                             footer_html=footer, last_footer_html=last_footer).render_html())
                 else:
                     documents.append(content)
-            if extension == 'pdf':
+            if extension == 'pdf' and documents:
                 document = documents[0].copy([page for doc in documents
                     for page in doc.pages])
                 document = document.write_pdf()
