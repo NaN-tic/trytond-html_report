@@ -10,7 +10,7 @@ from barcode.writer import SVGWriter
 from io import BytesIO
 from functools import partial
 from decimal import Decimal
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 import jinja2
 import jinja2.ext
@@ -33,6 +33,14 @@ RAISE_USER_ERRORS = config.getboolean('html_report', 'raise_user_errors',
     default=False)
 DEFAULT_MIME_TYPE = config.get('html_report', 'mime_type', default='image/png')
 
+
+def strfdelta(tdelta, fmt):
+    d = {"days": tdelta.days}
+    d["hours"], rem = divmod(tdelta.seconds, 3600)
+    d["minutes"], d["seconds"] = divmod(rem, 60)
+    d['minutes'] = '%02d' % d['minutes']
+    d['seconds'] = '%02d' % d['seconds']
+    return fmt.format(**d)
 
 class DualRecordError(Exception):
     def __init__(self, message):
@@ -205,7 +213,7 @@ class Formatter:
     def _formatted_timedelta(self, record, field, value):
         if value is None:
             return ''
-        return '%.2f' % value.total_seconds()
+        return strfdelta(value, '{hours}:{minutes}')
 
     def _formatted_char(self, record, field, value):
         if value is None:
@@ -533,6 +541,8 @@ class HTMLReportMixin:
                 return lang.strftime(value) + ' ' + value.strftime('%H:%M:%S')
             if isinstance(value, date):
                 return lang.strftime(value)
+            if isinstance(value, timedelta):
+                return strfdelta(value, '{hours}:{minutes}')
             if isinstance(value, str):
                 return value.replace('\n', '<br/>')
             if isinstance(value, bytes):
