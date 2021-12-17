@@ -6,6 +6,8 @@ from trytond.pyson import Eval
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from trytond.cache import Cache
+from trytond.ir.lang import get_parent_language
+
 
 __all__ = ['ActionReport', 'HTMLTemplateTranslation']
 
@@ -189,7 +191,17 @@ class ActionReport(metaclass=PoolMeta):
             if translations:
                 text = translations[0].value
             else:
-                text = src
+                parent_lang = get_parent_language(lang)
+
+                translations = HTMLTemplateTranslation.search([
+                    ('report', '=', report),
+                    ('src', '=', src),
+                    ('lang', '=', parent_lang),
+                    ], limit=1)
+                if translations:
+                    text = translations[0].value
+                else:
+                    text = src
             cls._html_translation_cache.set(key, text)
         return text if not variables else text % variables
 

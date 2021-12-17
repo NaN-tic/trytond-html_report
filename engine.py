@@ -615,22 +615,17 @@ class HTMLReportMixin:
             model, = Model.search([('model', '=', model)])
             return model.name
         else:
-            translation = Translation.search([
-                    ('name', '=', "%s,%s" % (model, field)),
-                    ('lang', '=', lang),
-                    ], limit=1)
+            args = ("%s,%s" % (model, field), 'field', lang, None)
+            translation = Translation.get_sources([args])
 
-            if translation:
-                translation, = translation
-                return translation.value or translation.src
+            if translation[args]:
+                return translation[args]
             else:
-                translation = Translation.search([
-                        ('name', '=', "%s,%s" % (model, field)),
-                        ('lang', '=', 'en'),
-                        ], limit=1)
-                if translation:
-                    translation, = translation
-                    return translation.value or translation.src
+                args = ("%s,%s" % (model, field), 'field', 'en', None)
+                translation = Translation.get_sources([args])
+
+                if translation[args]:
+                    return translation[args]
 
             return field
 
