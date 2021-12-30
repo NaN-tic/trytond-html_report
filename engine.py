@@ -639,9 +639,11 @@ class HTMLReportMixin:
         return cls.to_base64(stream.getvalue())
 
     @classmethod
-    def barcode(cls, _type, value):
+    def barcode(cls, _type, value, text=None, **options):
+        # For the list of available options see:
+        # https://python-barcode.readthedocs.io/en/latest/writers.html
         ean_class = barcode.get_barcode_class(_type)
-        ean_code = ean_class(value, writer=SVGWriter()).render()
+        ean_code = ean_class(value, writer=SVGWriter()).render(options, text)
         return cls.to_base64(ean_code)
 
     def to_base64(image):
