@@ -1,32 +1,33 @@
-import os
-import io
 import binascii
+import io
 import mimetypes
+import os
 import zipfile
-import qrcode
-import qrcode.image.svg
-import barcode
-from barcode.writer import SVGWriter
-from io import BytesIO
-from functools import partial
-from decimal import Decimal
 from datetime import date, datetime, timedelta
+from decimal import Decimal
+from functools import partial
+from io import BytesIO
 
+import barcode
 import jinja2
 import jinja2.ext
-from babel import dates, numbers, support
-
+import qrcode
+import qrcode.image.svg
 import weasyprint
-from .generator import PdfGenerator
-from trytond.model.fields.selection import TranslatedSelection
-from trytond.tools import file_open
-from trytond.pool import Pool
-from trytond.transaction import Transaction
-from trytond.i18n import gettext
-from trytond.model.modelstorage import _record_eval_pyson
+from babel import dates, numbers, support
+from barcode.writer import SVGWriter
+
 from trytond.config import config
 from trytond.exceptions import UserError
-from trytond.tools import slugify
+from trytond.i18n import gettext
+from trytond.model.fields.selection import TranslatedSelection
+from trytond.model.modelstorage import _record_eval_pyson
+from trytond.pool import Pool
+from trytond.tools import file_open, slugify
+from trytond.transaction import Transaction
+
+from . import words
+from .generator import PdfGenerator
 
 MEDIA_TYPE = config.get('html_report', 'type', default='screen')
 RAISE_USER_ERRORS = config.getboolean('html_report', 'raise_user_errors',
@@ -571,6 +572,8 @@ class HTMLReportMixin:
             'modulepath': module_path,
             'base64': base64,
             'render': partial(render, lang=lang),
+            'integer_to_words': words.integer_to_words,
+            'number_to_words': words.number_to_words,
             'dateformat': partial(dates.format_date, locale=locale),
             'datetimeformat': partial(dates.format_datetime, locale=locale),
             'timeformat': partial(dates.format_time, locale=locale),
