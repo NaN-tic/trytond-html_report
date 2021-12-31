@@ -210,7 +210,8 @@ class HTMLTemplateTranslation(ModelSQL, ModelView):
     'HTML Template Translation'
     __name__ = 'html.template.translation'
     _order_name = 'src'
-    report = fields.Many2One('ir.action.report', 'Report', required=True)
+    report = fields.Many2One('ir.action.report', 'Report', required=True,
+        ondelete='CASCADE')
     src = fields.Text('Source', required=True)
     value = fields.Text('Translation Value')
     lang = fields.Selection('get_language', string='Language', required=True)
