@@ -64,7 +64,7 @@ class Template(sequence_ordered(), ModelSQL, ModelView):
                     encoding='utf-8') as fp:
                 return fp.read()
         except IOError:
-            return
+            return ''
 
     @classmethod
     def set_content(cls, views, name, value):
