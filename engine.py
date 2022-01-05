@@ -684,6 +684,7 @@ class HTMLReportMixin:
             'label': cls.label,
             'qrcode': cls.qrcode,
             'barcode': cls.barcode,
+            'timedelta': timedelta,
             }
         if Company:
             context['company'] = DualRecord(Company(
