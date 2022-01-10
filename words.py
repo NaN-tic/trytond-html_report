@@ -101,7 +101,7 @@ UNITS.update({
     # When the values is exactly '100', is so called
     100: {'en': "Hundred", 'es': "Cien", 'ca': "Cent"},
     1000: {'en': "Thousand", 'es': "Mil", 'ca': "Mil"},
-    1000000: {'en': "Million", 'es': "Un Millón", 'ca': "Un Milió"},
+    1000000: {'en': "Million", 'es': "Un millón", 'ca': "Un milió"},
 })
 
 
@@ -111,11 +111,8 @@ def integer_to_words(number, lang=None):
     assert type(number) == int, (
         "Invalid type of parameter. Expected 'int' "
         "but found %s" % str(type(number)))
-    assert lang and lang in SUPPORTED_LANGS, (
-        "The Language Code "
-        "is not supported. The suported languages are: %s"
-        % ", ".join(SUPPORTED_LANGS[:-1]) + " and " +
-        SUPPORTED_LANGS[-1])
+    if not lang or lang not in SUPPORTED_LANGS:
+        return number
 
     if number in UNITS and lang in UNITS[number]:
         return UNITS[number][lang]
@@ -185,9 +182,8 @@ def integer_to_words(number, lang=None):
 def number_to_words(number, lang=None, rounding=0.01, is_currency=True):
     if not lang:
         lang = Transaction().context.get('language')
-    assert lang and lang in SUPPORTED_LANGS, ("The Language Code is not "
-        "supported. The suported languages are: %s" % ", ".join(
-            SUPPORTED_LANGS[:-1]) + " and " + SUPPORTED_LANGS[-1])
+    if not lang or lang not in SUPPORTED_LANGS:
+        return number
 
     PREC = Decimal(str(rounding))
 
