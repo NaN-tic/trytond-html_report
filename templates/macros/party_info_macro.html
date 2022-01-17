@@ -1,5 +1,5 @@
 {% if party %}
-  {{ party.render.name }}
+  <b>{{ party.render.name }}</b>
   <br>
   {% if tax_identifier %}
     {{ tax_identifier.render.code }}
@@ -14,7 +14,7 @@
   <br>
   {% endif %}
   {% if party.raw.email %}
-  {{ label('party.party', 'email') }}: {{ party.render.email }}
+  {{ party.render.email }}
   <br>
   {% endif %}
   {% if second_address and second_address.raw.id != address.raw.id %}

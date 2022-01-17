@@ -10,6 +10,7 @@
 </div>{% endif %}
 {% if show_contact_mechanism %}<div class="company-info-contact-mechanims">
 {% if party.raw.phone %}{{ label('party.party', 'phone') }}: {{ party.render.phone }}<br/>{% endif %}
-{% if party.raw.email %}{{ label('party.party', 'email') }}: {{ party.render.email }}{% endif %}
+{% if party.raw.email %}{{ party.render.email }}<br/>{% endif %}
+{% if party.raw.website %}{{ party.render.website }}{% endif %}
 </div>{% endif %}
 </div>
