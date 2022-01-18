@@ -28,6 +28,31 @@ class InvoiceLine(metaclass=PoolMeta):
     __name__ = 'account.invoice.line'
     sort_key = fields.Function(fields.Char('Sorted Key'),
         'get_sorted_key')
+    shipment = fields.Function(fields.Reference('Shipment',
+        selection='get_shipment_origin'), 'get_shipment')
+
+    @classmethod
+    def _get_shipment_origin(cls):
+        return ['stock.shipment.out', 'stock.shipment.out.return',
+            'stock.shipment.in', 'stock.shipment.in.return',
+            'stock.shipment.drop']
+
+    @classmethod
+    def get_shipment_origin(cls):
+        Model = Pool().get('ir.model')
+        models = cls._get_shipment_origin()
+        models = Model.search([
+                ('model', 'in', models),
+                ])
+        return [(None, '')] + [(m.model, m.name) for m in models]
+
+    def get_shipment(self, name):
+        if not self.stock_moves:
+            return
+        shipment = self.stock_moves[0].shipment
+        if not shipment:
+            return
+        return str(shipment)
 
     def get_sorted_key(self, name):
         InvoiceLine = Pool().get('account.invoice.line')
