@@ -185,12 +185,20 @@ class HTMLReport(Report):
 
             {% extends 'html_report/report/base.html' %}
         """
-        module, path = name.split('/', 1)
         try:
-            with file_open(os.path.join(module, path)) as f:
-                return f.read()
-        except IOError:
-            return None
+            id = int(name)
+        except ValueError:
+            module, path = name.split('/', 1)
+            try:
+                with file_open(os.path.join(module, path)) as f:
+                    return f.read()
+            except IOError:
+                return None
+
+        pool = Pool()
+        Template = pool.get('html.template')
+        template = Template(id)
+        return template.all_content
 
     @classmethod
     def get_environment(cls):
