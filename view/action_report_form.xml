@@ -17,5 +17,8 @@
             <separator name="html_content" colspan="4"/>
             <field name="html_content" colspan="4"/>
         </page>
+        <page string="Jinja Template" id="jinja_template">
+            <field name="jinja_template" colspan="4"/>
+        </page>
     </xpath>
 </data>
