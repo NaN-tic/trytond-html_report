@@ -20,6 +20,7 @@ class ActionReport(metaclass=PoolMeta):
             'invisible': Eval('template_extension') != 'jinja',
             },
         depends=['template_extension'])
+    jinja_template = fields.Text('Jinja Template')
     html_header_template = fields.Many2One('html.template', 'Header',
         domain=[
             ('type', '=', 'header'),
@@ -87,12 +88,20 @@ class ActionReport(metaclass=PoolMeta):
         obj = getattr(self, obj_name)
         if not obj:
             return
-
         content = []
         for template in self.html_templates:
             if template.template_used and template.template_used.all_content:
                 content.append(template.template_used.all_content or '')
-        content.append(obj.all_content or '')
+
+        content_obj = obj.all_content.strip()
+        first = content_obj.split('\n')[0]
+        if first.startswith('{%') and 'extends' in first:
+            last = '\n'.join(content_obj.split('\n')[1:])
+        else:
+            first = ''
+            last = content_obj
+        new_content = '\n'.join([first, self.jinja_template or '', last])
+        content.append(new_content or '')
         return '\n\n'.join(content)
 
     @classmethod
