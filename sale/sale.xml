@@ -4,9 +4,10 @@
     <!-- html.template base, header and last-footer -->
     <record model='html.template' id="sale_template_id">
         <field name="name">Sale</field>
-        <field name="type">base</field>
+        <field name="type">extension</field>
         <field name="sequence" eval="99"/>
         <field name="filename">html_report/sale/templates/sale.html</field>
+        <field name="parent" ref="base_template"/>
     </record>
 
    <record model='html.template' id="sale_last_footer_template">
@@ -81,6 +82,11 @@
         <field name="action" ref="html_report_sale"/>
     </record>
 
+    <record model="html.report.template" id="report_sale_css__id">
+      <field name="report" ref="html_report_sale"/>
+      <field name="signature" ref="css_macro_signature"/>
+    </record>
+
     <record model="html.report.template" id="report_footer_id">
       <field name="report" ref="html_report_sale"/>
       <field name="signature" ref="show_footer_signature"/>
@@ -148,6 +154,11 @@
         <field name="keyword">form_print</field>
         <field name="model">sale.sale,-1</field>
         <field name="action" ref="html_report_sale_proforma"/>
+    </record>
+
+    <record model="html.report.template" id="report_proforma_css__id">
+      <field name="report" ref="html_report_sale_proforma"/>
+      <field name="signature" ref="css_macro_signature"/>
     </record>
 
     <record model="html.report.template" id="report_sale_proforma_show_image_id">

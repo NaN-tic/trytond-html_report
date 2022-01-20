@@ -4,9 +4,10 @@
       <!-- html.template base, header and last-footer -->
       <record model='html.template' id="invoice_template_id">
           <field name="name">Invoice</field>
-          <field name="type">base</field>
+          <field name="type">extension</field>
           <field name="sequence" eval="99"/>
           <field name="filename">html_report/invoice/templates/invoice.html</field>
+          <field name="parent" ref="base_template"/>
       </record>
 
      <record model='html.template' id="invoice_last_footer_template">
@@ -92,6 +93,11 @@
         <field name="keyword">form_print</field>
         <field name="model">account.invoice,-1</field>
         <field name="action" ref="html_report_invoice"/>
+    </record>
+
+    <record model="html.report.template" id="report_css_id">
+      <field name="report" ref="html_report_invoice"/>
+      <field name="signature" ref="css_macro_signature"/>
     </record>
 
     <record model="html.report.template" id="report_invoice_invoice_company_id">
