@@ -89,7 +89,7 @@ class ShipmentOut(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
         return Report.label(self.__name__, "delivery_address")
 
     def get_sorted_lines(self, name):
-        lines = [x for x in self.inventory_moves or self.outgoing_moves]
+        lines = [x for x in self.outgoing_moves]
         lines.sort(key=lambda k: k.sort_key, reverse=True)
         return [x.id for x in lines]
 
