@@ -5,7 +5,7 @@
     <title>{% block title %}{% endblock %}</title>
     <meta name="description" content="">
     <meta name="author" content="Nantic">
-    <style>{{ show_css() }}</style>
+    <style>{% if show_css is defined %}{{ show_css() }}{% endif %}</style>
     <style>{% block styles %}{% endblock %}</style>
   </head>
 
