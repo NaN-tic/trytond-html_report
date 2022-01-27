@@ -126,9 +126,8 @@ class Move(metaclass=PoolMeta):
                         and self.origin.sale or None)
             else:
                 sale = (self.origin
-                        and self.origin.origin
-                        and ('sale.line' in str(self.origin.origin))
-                        and self.origin.origin.sale or None)
+                        and ('sale.line' in str(self.origin))
+                        and self.origin.sale or None)
             if sale and sale not in key:
                 key.append(sale)
 
