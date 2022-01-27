@@ -5,7 +5,15 @@
     <title>{% block title %}{% endblock %}</title>
     <meta name="description" content="">
     <meta name="author" content="Nantic">
-    <style>{% if show_css is defined %}{{ show_css() }}{% endif %}</style>
+    {% if show_css is defined %}
+      <style>{{ show_css() }}</style>
+    {% else %}
+      {% if report.raw.extension == 'html' %}
+      <link href="{{ 'html_report/templates/base.css'|base64 }}" rel="stylesheet" type="text/css">
+      {% else %}
+      <link href="{{ 'html_report/templates/base.css'|modulepath }}" rel="stylesheet" type="text/css">
+      {% endif %}
+    {% endif %}
     <style>{% block styles %}{% endblock %}</style>
   </head>
 
