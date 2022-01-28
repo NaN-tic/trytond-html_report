@@ -76,7 +76,7 @@ msgstr "Padre"
 
 msgctxt "field:html.template,type:"
 msgid "Type"
-msgstr "Tipos"
+msgstr "Tipo"
 
 msgctxt "field:html.template,uses:"
 msgid "Uses"
