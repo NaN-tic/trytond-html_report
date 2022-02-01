@@ -94,9 +94,10 @@
     <!-- Valued delivery_note -->
     <record model='html.template' id="valued_delivery_note_template_id">
         <field name="name">Valued Delivery Note</field>
-        <field name="type">base</field>
+        <field name="type">extension</field>
         <field name="sequence" eval="99"/>
         <field name="filename">html_report/stock/templates/valued_delivery_note.html</field>
+        <field name="parent" ref="base_template"/>
     </record>
 
    <record model='html.template' id="valued_delivery_note_last_footer_template">
