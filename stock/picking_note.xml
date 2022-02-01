@@ -90,9 +90,10 @@
   <!-- Internal Picking_note -->
   <record model='html.template' id="internal_picking_note_template_id">
       <field name="name">Internal Picking Note</field>
-      <field name="type">base</field>
+      <field name="type">extension</field>
       <field name="sequence" eval="99"/>
       <field name="filename">html_report/stock/templates/internal_picking_note.html</field>
+      <field name="parent" ref="base_template"/>
   </record>
 
     <record model="ir.action.report" id="stock.report_shipment_internal">
