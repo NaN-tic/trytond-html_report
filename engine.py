@@ -622,6 +622,7 @@ class HTMLReportMixin:
         else:
             translation = Translation.search([
                     ('name', '=', "%s,%s" % (model, field)),
+                    ('type', '=', 'field'),
                     ('lang', '=', lang),
                     ], limit=1)
 
@@ -631,6 +632,7 @@ class HTMLReportMixin:
             else:
                 translation = Translation.search([
                         ('name', '=', "%s,%s" % (model, field)),
+                        ('type', '=', 'field'),
                         ('lang', '=', 'en'),
                         ], limit=1)
                 if translation:
@@ -659,6 +661,10 @@ class HTMLReportMixin:
         value = value.decode('ascii')
         mimetype = "image/svg+xml"
         return ('data:%s;base64,%s' % (mimetype, value)).strip()
+
+    @classmethod
+    def dualrecord(cls, record):
+        return DualRecord(record)
 
     @classmethod
     def render_template_jinja(cls, action, template_string, record=None,
@@ -690,6 +696,7 @@ class HTMLReportMixin:
             'qrcode': cls.qrcode,
             'barcode': cls.barcode,
             'timedelta': timedelta,
+            'dualrecord': cls.dualrecord,
             }
         if Company:
             context['company'] = DualRecord(Company(

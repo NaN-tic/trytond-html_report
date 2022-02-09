@@ -10,86 +10,88 @@
     </tr>
   </thead>
   <tbody class="border">
-
-    {% for key in document.raw.sorted_keys %}
-        {% if key %}
-          <th class="sub_header" colspan="6">
-            {% for item in key %}
-              {{ label(item.__name__) }}: {{ item.number }} {% if item.reference %}/ {{ item.reference }}{% endif %}
-              {% if item.sale_date %}
-                {{ label(item.__name__, 'sale_date') }}: {{ item.sale_date|dateformat('short')  }}
-              {% elif item.effective_date %}
-                {{ label(item.__name__, 'effective_date') }}: {{ item.effective_date|dateformat('short')  }}
-              {% endif %}
-              <br/>
-            {% endfor %}
-           </th>
-        {% endif %}
-
-        {% for line in document.lines  if line.raw.sort_key == key %}
-          {% if line.raw.type == 'line' %}
-          <tr>
-            {% if line.raw.description %}
-              <td></td>
-              <td>{{ line.render.description }}</td>
-            {% else %}
-              <td>{{ line.product and line.product.render.code or '-' }}</td>
-              <td>{{ line.product and line.product.render.name or '-' }}</td>
-            {% endif %}
-
-            <td class="text-right">{{ line.render.quantity }} {% if line.unit %} {{ line.unit.render.symbol }} {% endif %}</td>
-
-            {% if line.raw.gross_unit_price %}
-              <td class="text-right">{{ line.render.gross_unit_price }} {{ line.invoice.currency.render.symbol }}</td>
-              {% if line.raw.discount1 or line.raw.discount2 or line.raw.discount3 %}
-                <td class="text-right">
-                    {% if line.raw.discount1 %}
-                      {{ '-{0:.2F}'.format(line.raw.discount1*100).replace('.',',') }}% <br>
-                    {%endif%}
-                    {% if line.raw.discount2 %}
-                      {{ '-{0:.2F}'.format(line.raw.discount2*100).replace('.',',') }}%<br>
-                    {%endif%}
-                    {% if line.raw.discount3 %}
-                      {{ '-{0:.2F}'.format(line.raw.discount3*100).replace('.',',') }}%<br>
-                    {%endif%}
-                </td>
-              {% elif line.raw.discount and line.raw.discount > 0 %}
-                <td class="text-right">{{ '-{0:.2F}'.format(line.raw.discount*100) }} %</td>
-              {% else %}
-                <td> </td>
-              {% endif %}
-            {% else %}
-              <td class="text-right">{{ line.render.unit_price }} {{ line.invoice.currency.render.symbol }}</td>
-              <td></td>
-            {% endif %}
-            <td class="text-right">{{ line.render.amount }} {{ line.invoice.currency.render.symbol }}</td>
-          </tr>
-          {%endif%}
-
-          {% if line.raw.type == 'comment' %}
-          <tr>
-            <td>{{ line.render.type }}</td>
-            <td colspan="5">{{ line.render.description }}</td>
-          </tr>
-          {%endif%}
-
-          {% if line.raw.type == 'title' %}
-          <tr>
-            <td colspan="6"><strong>{{ line.render.description }}<strong></td>
-          </tr>
-          {%endif%}
-
-          {% if line.raw.type == 'subtotal' %}
-          <tr>
-            <td colspan="5"><strong>{{ line.render.description }}<strong></td>
-            <td class="text-right"><strong>{{ line.render.amount }} {{ line.invoice.currency.render.symbol }}<strong> </td>
-          </tr>
-          {%endif%}
-        {% endfor %}
-
-    {% endfor %}
-    <tr class="b-hide">
-      <td colspan="6"></td>
+    {% for key, lines in document.raw.lines | groupby('shipment') %}
+    <tr>
+      <th class="sub_header_level1" colspan="6">
+        {{ label(key.__name__) }}: {{ key.number }} {% if key.reference %}/ {{ key.reference }}{% endif %}
+        {% if key.effective_date %}{{ label(key.__name__, 'effective_date') }}: {{ key.effective_date|dateformat('short') }}{% endif %}
+      </th>
     </tr>
+      {% for key2, origin_lines in lines | groupby('origin_lines') %}
+      <tr>
+        <th class="sub_header_level2" colspan="6">
+            {{ label(key2.__name__) }}: {{ key2.number }} {% if key2.reference %}/ {{ key2.reference }}{% endif %}
+            {% if key2.sale_date %}{{ label(key2.__name__, 'sale_date') }}: {{ key2.sale_date|dateformat('short') }}{% endif %}
+        </th>
+      </tr>
+      <!-- lines -->
+      {% for line in origin_lines %} {% set line = dualrecord(line) %}
+        {% if line.raw.type == 'line' %}
+        <tr>
+          {% if line.raw.description %}
+            <td></td>
+            <td>{{ line.render.description }}</td>
+          {% else %}
+            <td>{{ line.product and line.product.render.code or '-' }}</td>
+            <td>{{ line.product and line.product.render.name or '-' }}</td>
+          {% endif %}
+
+          <td class="text-right">{{ line.render.quantity }} {% if line.unit %} {{ line.unit.render.symbol }}{% endif %}</td>
+
+          {% if line.raw.gross_unit_price %}
+            <td class="text-right">{{ line.render.gross_unit_price }} {{ line.invoice.currency.render.symbol }}</td>
+            {% if line.raw.discount1 or line.raw.discount2 or line.raw.discount3 %}
+              <td class="text-right">
+                  {% if line.raw.discount1 %}
+                    {{ '-{0:.2F}'.format(line.raw.discount1*100).replace('.',',') }}%<br>
+                  {%endif%}
+                  {% if line.raw.discount2 %}
+                    {{ '-{0:.2F}'.format(line.raw.discount2*100).replace('.',',') }}%<br>
+                  {%endif%}
+                  {% if line.raw.discount3 %}
+                    {{ '-{0:.2F}'.format(line.raw.discount3*100).replace('.',',') }}%<br>
+                  {%endif%}
+              </td>
+            {% elif line.raw.discount and line.raw.discount > 0 %}
+              <td class="text-right">{{ '-{0:.2F}'.format(line.raw.discount*100) }} %</td>
+            {% else %}
+              <td> </td>
+            {% endif %}
+          {% else %}
+            <td class="text-right">{{ line.render.unit_price }} {{ line.invoice.currency.render.symbol }}</td>
+            <td></td>
+          {% endif %}
+          <td class="text-right">{{ line.render.amount }} {{ line.invoice.currency.render.symbol }}</td>
+        </tr>
+        {%endif%}
+
+        {% if line.raw.type == 'comment' %}
+        <tr>
+          <td>{{ line.render.type }}</td>
+          <td colspan="5">{{ line.render.description }}</td>
+        </tr>
+        {%endif%}
+
+        {% if line.raw.type == 'title' %}
+        <tr>
+          <td colspan="6"><strong>{{ line.render.description }}<strong></td>
+        </tr>
+        {%endif%}
+
+        {% if line.raw.type == 'subtotal' %}
+        <tr>
+          <td colspan="5"><strong>{{ line.render.description }}<strong></td>
+          <td class="text-right"><strong>{{ line.render.amount }} {{ line.invoice.currency.render.symbol }}<strong> </td>
+        </tr>
+        {%endif%}
+      {% endfor %}
+      <!-- end origin_lines -->
+  {% endfor %}
+  <!-- end lines -->
+  {% endfor %}
+
+  <tr class="b-hide">
+    <td colspan="6"></td>
+  </tr>
   </tbody>
 </table>

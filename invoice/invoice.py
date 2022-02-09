@@ -8,16 +8,6 @@ from trytond.modules.html_report.html_report import HTMLReport
 
 class Invoice(HTMLPartyInfoMixin, metaclass=PoolMeta):
     __name__ = 'account.invoice'
-    sorted_keys = fields.Function(fields.Char('Sorted Key'),
-        'get_sorted_keys')
-
-    def get_sorted_keys(self, name):
-        lines = []
-        for x in self.lines:
-            if x.sort_key in lines:
-                continue
-            lines.append(x.sort_key)
-        return lines
 
     def get_html_address(self, name):
         return (self.invoice_address and self.invoice_address.id
@@ -26,10 +16,10 @@ class Invoice(HTMLPartyInfoMixin, metaclass=PoolMeta):
 
 class InvoiceLine(metaclass=PoolMeta):
     __name__ = 'account.invoice.line'
-    sort_key = fields.Function(fields.Char('Sorted Key'),
-        'get_sorted_key')
-    shipment = fields.Function(fields.Reference('Shipment',
+    shipment = fields.Function(fields.Reference("Shipment",
         selection='get_shipment_origin'), 'get_shipment')
+    origin_lines = fields.Function(fields.Reference("Origin Lines",
+        selection='get_origin_line_models'), 'get_origin_lines')
 
     @classmethod
     def _get_shipment_origin(cls):
@@ -54,32 +44,29 @@ class InvoiceLine(metaclass=PoolMeta):
             return
         return str(shipment)
 
-    def get_sorted_key(self, name):
-        InvoiceLine = Pool().get('account.invoice.line')
+    @classmethod
+    def _get_origin_lines(cls):
+        return {
+            'sale.line': 'sale',
+            'purchase.line': 'purchase',
+            }
 
-        key = []
-        if hasattr(self, 'stock_moves'):
-            for move in self.stock_moves:
-                shipment = move.shipment
-                if shipment in key:
-                    continue
-                key.append(shipment)
-        if self.origin and 'sale.line' in str(self.origin):
-            sale = self.origin.sale
-            if sale not in key:
-                key.append(sale)
+    @classmethod
+    def get_origin_line_models(cls):
+        Model = Pool().get('ir.model')
+        models = cls._get_origin_lines().keys()
+        models = Model.search([
+                ('model', 'in', models),
+                ])
+        return [(None, '')] + [(m.model, m.name) for m in models]
 
-        if self.origin and 'purchase.line' in str(self.origin):
-            purchase = self.origin.purchase
-            if purchase not in key:
-                key.append(purchase)
-
-        if self.origin and isinstance(self.origin, InvoiceLine):
-            invoice = self.origin.invoice
-            if invoice not in key:
-                key.append(invoice)
-
-        return key
+    def get_origin_lines(self, name):
+        models = self._get_origin_lines()
+        if self.origin:
+            model = self.origin.__name__
+            if models.get(model):
+                field = models.get(model)
+                return str(getattr(self.origin, field))
 
 
 class InvoiceReport(HTMLReport):
