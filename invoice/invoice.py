@@ -16,10 +16,10 @@ class Invoice(HTMLPartyInfoMixin, metaclass=PoolMeta):
 
 class InvoiceLine(metaclass=PoolMeta):
     __name__ = 'account.invoice.line'
-    shipment = fields.Function(fields.Reference("Shipment",
-        selection='get_shipment_origin'), 'get_shipment')
-    origin_lines = fields.Function(fields.Reference("Origin Lines",
-        selection='get_origin_line_models'), 'get_origin_lines')
+    shipment_key = fields.Function(fields.Char("Shipment Key",
+        ), 'get_shipment_key')
+    origin_line_key = fields.Function(fields.Char("Origin Line Key",
+        ), 'get_origin_line_key')
 
     @classmethod
     def _get_shipment_origin(cls):
@@ -27,46 +27,29 @@ class InvoiceLine(metaclass=PoolMeta):
             'stock.shipment.in', 'stock.shipment.in.return',
             'stock.shipment.drop']
 
-    @classmethod
-    def get_shipment_origin(cls):
-        Model = Pool().get('ir.model')
-        models = cls._get_shipment_origin()
-        models = Model.search([
-                ('model', 'in', models),
-                ])
-        return [(None, '')] + [(m.model, m.name) for m in models]
-
-    def get_shipment(self, name):
+    def get_shipment_key(self, name):
         if not self.stock_moves:
-            return
+            return ''
         shipment = self.stock_moves[0].shipment
         if not shipment:
-            return
+            return ''
         return str(shipment)
 
     @classmethod
-    def _get_origin_lines(cls):
+    def _get_origin_line_keys(cls):
         return {
             'sale.line': 'sale',
             'purchase.line': 'purchase',
             }
 
-    @classmethod
-    def get_origin_line_models(cls):
-        Model = Pool().get('ir.model')
-        models = cls._get_origin_lines().keys()
-        models = Model.search([
-                ('model', 'in', models),
-                ])
-        return [(None, '')] + [(m.model, m.name) for m in models]
-
-    def get_origin_lines(self, name):
-        models = self._get_origin_lines()
+    def get_origin_line_key(self, name):
+        models = self._get_origin_line_keys()
         if self.origin:
             model = self.origin.__name__
             if models.get(model):
                 field = models.get(model)
                 return str(getattr(self.origin, field))
+        return ''
 
 
 class InvoiceReport(HTMLReport):

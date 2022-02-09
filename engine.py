@@ -664,6 +664,11 @@ class HTMLReportMixin:
 
     @classmethod
     def dualrecord(cls, record):
+        if not record:
+            return
+        if isinstance(record, str):
+            model, id = record.split(',')
+            record = Pool().get(model)(id)
         return DualRecord(record)
 
     @classmethod

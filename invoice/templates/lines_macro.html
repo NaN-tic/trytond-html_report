@@ -10,30 +10,34 @@
     </tr>
   </thead>
   <tbody class="border">
-    {% for key, lines in document.raw.lines | groupby('shipment') %}
-    <tr>
+    {% for key, lines in document.raw.lines|groupby('shipment_key') %}
+    <tr>{% set key = dualrecord(key) %}
       <th class="sub_header_level1" colspan="6">
-        {{ label(key.__name__) }}: {{ key.number }} {% if key.reference %}/ {{ key.reference }}{% endif %}
-        {% if key.effective_date %}{{ label(key.__name__, 'effective_date') }}: {{ key.effective_date|dateformat('short') }}{% endif %}
+        {% if key %}
+        {{ label(key.raw.__name__) }}: {{ key.render.number }} {% if key.raw.reference %}/ {{ key.render.reference }}{% endif %}
+        {% if key.raw.effective_date %}{{ label(key.raw.__name__, 'effective_date') }}: {{ key.render.effective_date }}{% endif %}
+        {% endif %}
       </th>
     </tr>
-      {% for key2, origin_lines in lines | groupby('origin_lines') %}
-      <tr>
-        <th class="sub_header_level2" colspan="6">
-            {{ label(key2.__name__) }}: {{ key2.number }} {% if key2.reference %}/ {{ key2.reference }}{% endif %}
-            {% if key2.sale_date %}{{ label(key2.__name__, 'sale_date') }}: {{ key2.sale_date|dateformat('short') }}{% endif %}
+      {% for key2, origin_lines in lines|groupby('origin_line_key') %}
+      <tr>{% set key2 = dualrecord(key2) %}
+        <th class="{% if key2 %}sub_header_level2{% else %}sub_header_level1{% endif %}" colspan="6">
+          {% if key2 %}
+          {{ label(key2.raw.__name__) }}: {{ key2.render.number }} {% if key2.render.reference %}/ {{ key2.render.reference }}{% endif %}
+          {% if key2.render.sale_date %}{{ label(key2.raw.__name__, 'sale_date') }}: {{ key2.render.sale_date }}{% endif %}
+          {% endif %}
         </th>
       </tr>
       <!-- lines -->
-      {% for line in origin_lines %} {% set line = dualrecord(line) %}
+      {% for line in origin_lines %}{% set line = dualrecord(line) %}
         {% if line.raw.type == 'line' %}
         <tr>
           {% if line.raw.description %}
             <td></td>
             <td>{{ line.render.description }}</td>
           {% else %}
-            <td>{{ line.product and line.product.render.code or '-' }}</td>
-            <td>{{ line.product and line.product.render.name or '-' }}</td>
+            <td>{{ line.product and line.product.render.code or '' }}</td>
+            <td>{{ line.product and line.product.render.name or '' }}</td>
           {% endif %}
 
           <td class="text-right">{{ line.render.quantity }} {% if line.unit %} {{ line.unit.render.symbol }}{% endif %}</td>
