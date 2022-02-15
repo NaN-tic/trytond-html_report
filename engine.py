@@ -2,6 +2,7 @@ import binascii
 import io
 import mimetypes
 import os
+import logging
 import zipfile
 from datetime import date, datetime, timedelta
 from decimal import Decimal
@@ -33,6 +34,8 @@ MEDIA_TYPE = config.get('html_report', 'type', default='screen')
 RAISE_USER_ERRORS = config.getboolean('html_report', 'raise_user_errors',
     default=False)
 DEFAULT_MIME_TYPE = config.get('html_report', 'mime_type', default='image/png')
+
+logger = logging.getLogger(__name__)
 
 
 def strfdelta(tdelta, fmt):
@@ -392,6 +395,15 @@ class HTMLReportMixin:
             oext, content = cls._execute_html_report(records, data, action)
             if not isinstance(content, str):
                 content = bytearray(content) if bytes == str else bytes(content)
+
+            Printer = None
+            try:
+                Printer = Pool().get('printer')
+            except KeyError:
+                logger.warning('Model "Printer" not found.')
+            if Printer:
+                return Printer.send_report(oext, content,
+                    action_name, action)
         return oext, content, cls.get_direct_print(action), filename
 
     @classmethod
