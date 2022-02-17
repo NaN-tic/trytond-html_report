@@ -36,8 +36,7 @@
         <field name="name">Invoice Lines</field>
         <field name="type">macro</field>
         <field name="sequence" eval="99"/>
-        <!-- see depends="account_invoice,stock" that use lines_macro.html -->
-        <field name="filename">html_report/invoice/templates/simplified_lines_macro.html</field>
+        <field name="filename">html_report/invoice/templates/lines_macro.html</field>
         <field name="implements" ref="html_report.invoice_lines_macro_signature"/>
     </record>
 
@@ -161,11 +160,6 @@
   <data depends="account_invoice_discount">
     <record model="ir.action.report" id="account_invoice_discount.report_invoice">
         <field name="active" eval="False"/>
-    </record>
-  </data>
-  <data depends="account_invoice,stock">
-    <record model='html.template' id="html_report.invoice_lines_macro_id">
-        <field name="filename">html_report/invoice/templates/lines_macro.html</field>
     </record>
   </data>
 </tryton>
