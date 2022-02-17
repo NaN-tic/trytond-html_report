@@ -11,7 +11,7 @@
     <tr>
       <td>{{ line.product and line.product.render.code or '' }}</td>
       <td>{{ line.product and line.product.render.name or '' }}{% if line.raw.description %}<p>{{ line.render.description }}</p>{% endif %}</td>
-      <td class="text-right">{{ line.render.quantity }}</td>
+      <td class="text-right">{{ line.render.quantity }} {% if line.unit %} {{ line.unit.render.symbol }}{% endif %}</td>
       <td class="text-right">{{ line.render.unit_price }}</td>
       <td class="text-right">{{ line.render.amount }}</td>
     </tr>
