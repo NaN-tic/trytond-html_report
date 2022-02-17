@@ -108,6 +108,18 @@ th.sub_header{
   border-collapse:separate;
   column-span:all;
 }
+th.sub_header_level1{
+  padding-top: 0.25rem;
+  vertical-align: top;
+  border-collapse:separate;
+  column-span:all;
+}
+th.sub_header_level2{
+  vertical-align: top;
+  border-bottom: 1px solid #dee2e6;
+  border-collapse:separate;
+  column-span:all;
+}
 
 td.hide {
   display:none;
