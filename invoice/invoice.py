@@ -28,6 +28,8 @@ class InvoiceLine(metaclass=PoolMeta):
             'stock.shipment.drop']
 
     def get_shipment_key(self, name):
+        if not hasattr(self, 'stock_moves'):
+            return ''
         if not self.stock_moves:
             return ''
         shipment = self.stock_moves[0].shipment

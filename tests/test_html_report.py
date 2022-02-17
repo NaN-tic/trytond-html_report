@@ -13,7 +13,7 @@ from trytond.tests.test_tryton import doctest_setup, doctest_teardown
 
 SCENARIOS = [
     'stock_dependency_scenario.rst',
-    'account_invoice_dependency_scenario.rst',
+    'scenario_account_invoice.rst',
     'sale_dependency_scenario.rst',
     'stock_valued_dependency_scenario.rst',
     'production_dependency_scenario.rst',

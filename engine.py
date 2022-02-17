@@ -668,6 +668,15 @@ class HTMLReportMixin:
         return ('data:%s;base64,%s' % (mimetype, value)).strip()
 
     @classmethod
+    def dualrecord(cls, record):
+        if not record:
+            return
+        if isinstance(record, str):
+            model, id = record.split(',')
+            record = Pool().get(model)(id)
+        return DualRecord(record)
+
+    @classmethod
     def render_template_jinja(cls, action, template_string, record=None,
             records=None, data=None):
         """
@@ -697,6 +706,7 @@ class HTMLReportMixin:
             'qrcode': cls.qrcode,
             'barcode': cls.barcode,
             'timedelta': timedelta,
+            'dualrecord': cls.dualrecord,
             }
         if Company:
             context['company'] = DualRecord(Company(
