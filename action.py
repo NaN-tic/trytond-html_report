@@ -69,6 +69,10 @@ class ActionReport(metaclass=PoolMeta):
         'get_content')
     html_last_footer_content = fields.Function(fields.Binary(
             'Last Page Footer Content'), 'get_content')
+    html_zipped = fields.Boolean('Zipped', states={
+        'invisible': ~Eval('single'),
+        }, depends=['single'],
+        help='If set, a zip file with a document per record will be created.')
 
     @classmethod
     def __setup__(cls):
