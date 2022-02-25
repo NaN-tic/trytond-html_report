@@ -114,6 +114,10 @@ msgctxt "field:ir.action.report,html_content:"
 msgid "Content"
 msgstr "Contenido"
 
+msgctxt "field:ir.action.report,html_copies:"
+msgid "Number of copies"
+msgstr "Número de copias"
+
 msgctxt "field:ir.action.report,html_footer_content:"
 msgid "Footer Content"
 msgstr "Contenido pie"

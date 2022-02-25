@@ -73,6 +73,7 @@ class ActionReport(metaclass=PoolMeta):
         'invisible': ~Eval('single'),
         }, depends=['single'],
         help='If set, a zip file with a document per record will be created.')
+    html_copies = fields.Integer('Number of copies')
 
     @classmethod
     def __setup__(cls):

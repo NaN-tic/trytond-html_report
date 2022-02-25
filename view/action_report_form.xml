@@ -16,6 +16,8 @@
             <field name="html_last_footer_template"/>
             <label name="html_raise_user_error"/>
             <field name="html_raise_user_error"/>
+            <label name="html_copies"/>
+            <field name="html_copies"/>
             <separator name="html_templates" colspan="4"/>
             <field name="html_templates" colspan="4"/>
             <separator name="html_content" colspan="4"/>

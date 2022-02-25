@@ -3,11 +3,14 @@ import io
 import mimetypes
 import os
 import logging
+import subprocess
 import zipfile
+import tempfile
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 from functools import partial
 from io import BytesIO
+from PyPDF2 import PdfFileMerger, PdfFileReader
 
 import barcode
 import jinja2
@@ -34,6 +37,10 @@ MEDIA_TYPE = config.get('html_report', 'type', default='screen')
 RAISE_USER_ERRORS = config.getboolean('html_report', 'raise_user_errors',
     default=False)
 DEFAULT_MIME_TYPE = config.get('html_report', 'mime_type', default='image/png')
+
+# Determines if on merge, resulting PDF should be compacted using ghostscript
+COMPACT_ON_MERGE = config.get('html_report', 'compact_on_merge',
+    default=False)
 
 logger = logging.getLogger(__name__)
 
@@ -362,6 +369,45 @@ class HTMLReportMixin:
         return header, content, footer, last_footer
 
     @classmethod
+    def merge_pdfs(cls, pdfs_data):
+        merger = PdfFileMerger()
+        for pdf_data in pdfs_data:
+            tmppdf = BytesIO(pdf_data)
+            merger.append(PdfFileReader(tmppdf))
+            tmppdf.close()
+
+        if COMPACT_ON_MERGE:
+            # Use ghostscript to compact PDF which will usually remove
+            # duplicated images. It can make a PDF go from 17MB to 1.8MB,
+            # for example.
+            path = tempfile.mkdtemp()
+            merged_path = os.path.join(path, 'merged.pdf')
+            merged = open(merged_path, 'wb')
+            merger.write(merged)
+            merged.close()
+
+            compacted_path = os.path.join(path, 'compacted.pdf')
+            # changed PDFSETTINGS from /printer to /prepress
+            command = ['gs', '-q', '-dBATCH', '-dNOPAUSE', '-dSAFER',
+                '-sDEVICE=pdfwrite', '-dPDFSETTINGS=/prepress',
+                '-sOutputFile=%s' % compacted_path, merged_path]
+            subprocess.call(command)
+
+            f = open(compacted_path, 'r')
+            try:
+                pdf_data = f.read()
+            finally:
+                f.close()
+        else:
+            tmppdf = BytesIO()
+            merger.write(tmppdf)
+            pdf_data = tmppdf.getvalue()
+            merger.close()
+            tmppdf.close()
+
+        return pdf_data
+
+    @classmethod
     def execute(cls, ids, data):
         cls.check_access()
         action, model = cls.get_action(data)
@@ -396,6 +442,8 @@ class HTMLReportMixin:
                         rfilename = '%s.%s' % (
                             slugify(record.render.rec_name),
                             oext)
+                        if action.html_copies and action.html_copies > 1:
+                            rcontent = cls.merge_pdfs([rcontent] * action.html_copies)
                         content_zip.writestr(rfilename, rcontent)
                 content = content.getvalue()
                 return ('zip', content, False, filename)
@@ -403,6 +451,9 @@ class HTMLReportMixin:
             oext, content = cls._execute_html_report(records, data, action)
             if not isinstance(content, str):
                 content = bytearray(content) if bytes == str else bytes(content)
+
+            if action.html_copies and action.html_copies > 1:
+                content = cls.merge_pdfs([content] * action.html_copies)
 
             Printer = None
             try:
