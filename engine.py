@@ -29,6 +29,7 @@ from trytond.model.modelstorage import _record_eval_pyson
 from trytond.pool import Pool
 from trytond.tools import file_open, slugify
 from trytond.transaction import Transaction
+from trytond.tools import grouped_slice
 
 from . import words
 from .generator import PdfGenerator
@@ -647,6 +648,7 @@ class HTMLReportMixin:
             'percentformat': partial(numbers.format_percent, locale=locale),
             'scientificformat': partial(
                 numbers.format_scientific, locale=locale),
+            'grouped_slice': grouped_slice,
             }
 
     @classmethod
