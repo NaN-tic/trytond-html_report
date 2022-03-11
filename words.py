@@ -5,21 +5,29 @@ from trytond.transaction import Transaction
 
 SUPPORTED_LANGS = ('en', 'es', 'ca')
 
+NEGATIVE = {
+    'en': 'Minus',
+    'es': 'Menos',
+    'ca': 'Menys',
+    }
+
 TENS_UNITS_SEP = {
     'en': "-",
     'es': " y ",
     'ca': "-",
-}
+    }
+
 CURRENCY_DECIMALS_SEP = {
     'en': "with",
     'es': "con",
     'ca': "amb",
-}
+    }
+
 NOT_CURRENCY_DECIMALS_SEP = {
     'en': "dot",
     'es': "coma",
     'ca': "coma",
-}
+    }
 
 CURRENCY_INTEGER_NAME = {
     0: {'en': "Euros", 'es': "Euros", 'ca': "Euros"},
@@ -104,6 +112,40 @@ UNITS.update({
     1000000: {'en': "Million", 'es': "Un millón", 'ca': "Un milió"},
 })
 
+def __convert_hundreds(input_hundred, lang):
+    assert (input_hundred and
+            type(input_hundred) == int and
+            input_hundred < 1000), "Invalid Hundred input"
+
+    if input_hundred in UNITS and lang in UNITS[input_hundred]:
+        return [UNITS[input_hundred][lang]]
+
+    res = []
+
+    hundreds_value = (input_hundred // 100) * 100
+    if hundreds_value:
+        res.append(HUNDREDS[hundreds_value][lang])
+        input_hundred -= hundreds_value
+        if not input_hundred:
+            return res
+
+    if input_hundred in UNITS and lang in UNITS[input_hundred]:
+        # values <= 30 or X0
+        res.append(UNITS[input_hundred][lang])
+        return res
+
+    # XY; X >= 3 and y != 0
+    tens_value = (input_hundred // 10) * 10
+    units_value = input_hundred - tens_value
+    if TENS_UNITS_SEP and lang in TENS_UNITS_SEP:
+        res.append(TENS[tens_value][lang] + TENS_UNITS_SEP[lang]
+            + UNITS[units_value][lang])
+    else:
+        res.append(TENS[tens_value][lang])
+        res.append(UNITS[units_value][lang])
+
+    return res
+
 
 def integer_to_words(number, lang=None):
     if not lang:
@@ -114,54 +156,26 @@ def integer_to_words(number, lang=None):
     if not lang or lang not in SUPPORTED_LANGS:
         return number
 
+    converted = []
+
+    if number < 0:
+        converted.append(NEGATIVE[lang])
+        number = abs(number)
+
     if number in UNITS and lang in UNITS[number]:
-        return UNITS[number][lang]
+        converted.append(UNITS[number][lang])
+        return ' '.join(converted)
 
     million = int(math.floor(Decimal(str(number)) / 1000000))
     thousands = number - million * 1000000
     thousands = int(math.floor(Decimal(str(thousands)) / 1000))
     hundreds = number - million * 1000000 - thousands * 1000
 
-    def __convert_hundreds(input_hundred):
-        assert (input_hundred and
-                type(input_hundred) == int and
-                input_hundred < 1000), "Invalid Hundred input"
-
-        if input_hundred in UNITS and lang in UNITS[input_hundred]:
-            return [UNITS[input_hundred][lang]]
-
-        res = []
-
-        hundreds_value = (input_hundred // 100) * 100
-        if hundreds_value:
-            res.append(HUNDREDS[hundreds_value][lang])
-            input_hundred -= hundreds_value
-            if not input_hundred:
-                return res
-
-        if input_hundred in UNITS and lang in UNITS[input_hundred]:
-            # values <= 30 or X0
-            res.append(UNITS[input_hundred][lang])
-            return res
-
-        # XY; X >= 3 and y != 0
-        tens_value = (input_hundred // 10) * 10
-        units_value = input_hundred - tens_value
-        if TENS_UNITS_SEP and lang in TENS_UNITS_SEP:
-            res.append(TENS[tens_value][lang] + TENS_UNITS_SEP[lang]
-                + UNITS[units_value][lang])
-        else:
-            res.append(TENS[tens_value][lang])
-            res.append(UNITS[units_value][lang])
-
-        return res
-
-    converted = []
     if million:
         if million == 1:
             converted.append(UNITS[1000000][lang])
         else:
-            converted += __convert_hundreds(million)
+            converted += __convert_hundreds(million, lang)
             converted.append(GREATER[1000000][lang])
 
         number -= million * 1000000
@@ -170,12 +184,12 @@ def integer_to_words(number, lang=None):
         if thousands == 1:
             converted.append(UNITS[1000][lang])
         else:
-            converted += __convert_hundreds(thousands)
+            converted += __convert_hundreds(thousands, lang)
             converted.append(GREATER[1000][lang])
 
     if hundreds:
         # exactly 100 is already handled
-        converted += __convert_hundreds(hundreds)
+        converted += __convert_hundreds(hundreds, lang)
     return " ".join(converted)
 
 
@@ -189,10 +203,14 @@ def number_to_words(number, lang=None, rounding=0.01, is_currency=True):
 
     number = Decimal(str(number)).quantize(PREC)
 
+    res = []
+    if number < 0:
+        res.append(NEGATIVE[lang])
+        number = abs(number)
+
     number_int = int(math.floor(number))
     decimals = int((number - number_int) * (1 / PREC))
 
-    res = []
     res.append(integer_to_words(number_int, lang))
 
     if is_currency:
