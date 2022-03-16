@@ -203,7 +203,8 @@ class ActionReport(metaclass=PoolMeta):
                 ('lang', '=', lang),
                 ], limit=1)
             if translations:
-                text = translations[0].value
+                translation, = translations
+                text = translation.value or translation.src
             else:
                 parent_lang = get_parent_language(lang)
 
@@ -213,7 +214,8 @@ class ActionReport(metaclass=PoolMeta):
                     ('lang', '=', parent_lang),
                     ], limit=1)
                 if translations:
-                    text = translations[0].value
+                    translation, = translations
+                    text = translation.value or translation.src
                 else:
                     text = src
             cls._html_translation_cache.set(key, text)
@@ -260,3 +262,7 @@ class HTMLTemplateTranslation(ModelSQL, ModelView):
         Report = Pool().get('ir.action.report')
         Report._html_translation_cache.clear()
         return super(HTMLTemplateTranslation, cls).delete(translations)
+
+    @property
+    def unique_key(self):
+        return (self.src, self.lang)
