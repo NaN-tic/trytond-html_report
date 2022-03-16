@@ -58,7 +58,10 @@ class ReportTranslationSet(metaclass=PoolMeta):
             messages += get_messages(report.html_header_content)
             messages += get_messages(report.html_footer_content)
 
-        langs = Lang.search([('translatable', '=', True)])
+        langs = Lang.search([
+            ('translatable', '=', True),
+            ('code', '!=', 'en'),
+            ])
         to_save = []
         for message in messages:
             for lang in langs:
