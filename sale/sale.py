@@ -1,10 +1,17 @@
 from trytond.pool import PoolMeta, Pool
+from trytond.pyson import Eval
 from trytond.modules.html_report.html import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import HTMLReportMixin
 
 
 class Sale(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
     __name__ = 'sale.sale'
+
+    @classmethod
+    def __setup__(cls):
+        super(Sale, cls).__setup__()
+        cls.html_party.context = {'company': Eval('company')}
+        cls.html_party.depends = ['company']
 
     def get_html_address(self, name):
         return (self.invoice_address and self.invoice_address.id

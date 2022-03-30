@@ -1,6 +1,7 @@
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.rpc import RPC
+from trytond.pyson import Eval
 from trytond.transaction import Transaction
 from trytond.modules.html_report.html import HTMLPartyInfoMixin
 from trytond.modules.html_report.html_report import HTMLReport
@@ -8,6 +9,12 @@ from trytond.modules.html_report.html_report import HTMLReport
 
 class Invoice(HTMLPartyInfoMixin, metaclass=PoolMeta):
     __name__ = 'account.invoice'
+
+    @classmethod
+    def __setup__(cls):
+        super(Invoice, cls).__setup__()
+        cls.html_party.context = {'company': Eval('company')}
+        cls.html_party.depends = ['company']
 
     def get_html_address(self, name):
         return (self.invoice_address and self.invoice_address.id

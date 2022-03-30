@@ -10,6 +10,7 @@ from trytond.pool import Pool
 from trytond.tools import file_open
 from trytond.transaction import Transaction
 from trytond.tests.test_tryton import doctest_setup, doctest_teardown
+from trytond.modules.company.tests import CompanyTestMixin
 
 SCENARIOS = [
     'stock_dependency_scenario.rst',
@@ -24,7 +25,7 @@ SCENARIOS = [
     'purchase_dependency_scenario.rst',
 ]
 
-class HtmlReportTestCase(ModuleTestCase):
+class HtmlReportTestCase(CompanyTestMixin, ModuleTestCase):
     'Test Html Report module'
     module = 'html_report'
 

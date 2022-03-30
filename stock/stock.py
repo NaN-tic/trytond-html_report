@@ -1,14 +1,20 @@
 from trytond.model import fields
 from trytond.pool import PoolMeta, Pool
+from trytond.pyson import Eval
 from trytond.modules.html_report.html import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import HTMLReportMixin
 
 
 class ShipmentOutReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.out.return'
-
     show_lots = fields.Function(fields.Boolean('Show Lots'),
         'get_show_lots')
+
+    @classmethod
+    def __setup__(cls):
+        super(ShipmentOutReturn, cls).__setup__()
+        cls.html_party.context = {'company': Eval('company')}
+        cls.html_party.depends = ['company']
 
     def get_show_lots(self, name):
         for move in self.incoming_moves:
@@ -30,7 +36,6 @@ class ShipmentOutReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta)
 
 class ShipmentIn(HTMLReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.in'
-
     show_lots = fields.Function(fields.Boolean('Show Lots'),
         'get_show_lots')
 
@@ -43,9 +48,14 @@ class ShipmentIn(HTMLReportMixin, metaclass=PoolMeta):
 
 class ShipmentInReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.in.return'
-
     show_lots = fields.Function(fields.Boolean('Show Lots'),
         'get_show_lots')
+
+    @classmethod
+    def __setup__(cls):
+        super(ShipmentInReturn, cls).__setup__()
+        cls.html_party.context = {'company': Eval('company')}
+        cls.html_party.depends = ['company']
 
     def get_show_lots(self, name):
         for move in self.moves:
@@ -67,12 +77,17 @@ class ShipmentInReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
 
 class ShipmentOut(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.out'
-
     sorted_lines = fields.Function(fields.One2Many('stock.move',
         'line', 'Sorted Lines'), 'get_sorted_lines')
     sorted_keys = fields.Function(fields.Char('key'), 'get_sorted_keys')
     show_lots = fields.Function(fields.Boolean('Show Lots'),
         'get_show_lots')
+
+    @classmethod
+    def __setup__(cls):
+        super(ShipmentOut, cls).__setup__()
+        cls.html_party.context = {'company': Eval('company')}
+        cls.html_party.depends = ['company']
 
     def get_html_party(self, name):
         return self.customer and self.customer.id
@@ -141,6 +156,12 @@ class Move(metaclass=PoolMeta):
 
 class ShipmentInternal(HTMLPartyInfoMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.internal'
+
+    @classmethod
+    def __setup__(cls):
+        super(ShipmentInternal, cls).__setup__()
+        cls.html_party.context = {'company': Eval('company')}
+        cls.html_party.depends = ['company']
 
     def get_html_party(self, name):
         return
