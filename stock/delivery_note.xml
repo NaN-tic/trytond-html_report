@@ -192,5 +192,11 @@
     <!-- <field name="lang" ref="ir.lang_ca"/> -->
     <field name="lang">es</field>
   </record>
+  <record model="html.template.translation" id="report_translation_delivery_note_de">
+    <field name="report" ref="html_report_delivery_note"/>
+    <field name="src">Draft</field>
+    <field name="value">Entwurf</field>
+    <field name="lang">de</field>
+  </record>
 </data>
 </tryton>

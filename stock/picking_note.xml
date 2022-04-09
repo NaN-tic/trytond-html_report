@@ -170,6 +170,12 @@
     <!-- <field name="lang" ref="ir.lang_ca"/> -->
     <field name="lang">es</field>
   </record>
+  <record model="html.template.translation" id="report_translation_picking_note_de">
+    <field name="report" ref="html_report_picking_note"/>
+    <field name="src">Draft</field>
+    <field name="value">Entwurf</field>
+    <field name="lang">de</field>
+  </record>
   <record model="html.template.translation" id="report_translation_internal_picking_note_ca">
     <field name="report" ref="html_report_internal_picking_note"/>
     <field name="src">Draft</field>
@@ -183,6 +189,12 @@
     <field name="value">Borrador</field>
     <!-- <field name="lang" ref="ir.lang_ca"/> -->
     <field name="lang">es</field>
+  </record>
+  <record model="html.template.translation" id="report_translation_internal_picking_note_de">
+    <field name="report" ref="html_report_internal_picking_note"/>
+    <field name="src">Draft</field>
+    <field name="value">Entwurf</field>
+    <field name="lang">de</field>
   </record>
 </data>
 </tryton>

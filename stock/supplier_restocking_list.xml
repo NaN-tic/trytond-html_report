@@ -83,5 +83,11 @@
       <!-- <field name="lang" ref="ir.lang_es"/> -->
       <field name="lang">es</field>
     </record>
+    <record model="html.template.translation" id="report_translation_restocking_list_de">
+      <field name="report" ref="html_report_shipment_in_restocking_list"/>
+      <field name="src">Restocking List</field>
+      <field name="value">Einlagerungsliste</field>
+      <field name="lang">de</field>
+    </record>
   </data>
 </tryton>
