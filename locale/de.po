@@ -2,21 +2,33 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "field:html.report.template,create_date:"
-msgid "Create Date"
-msgstr "Erstellungsdatum"
+msgctxt "field:account.invoice,html_address:"
+msgid "HTML Party Address"
+msgstr ""
 
-msgctxt "field:html.report.template,create_uid:"
-msgid "Create User"
-msgstr "Erstellt durch"
+msgctxt "field:account.invoice,html_party:"
+msgid "HTML Party"
+msgstr ""
 
-msgctxt "field:html.report.template,id:"
-msgid "ID"
-msgstr "ID"
+msgctxt "field:account.invoice,html_second_address:"
+msgid "HTML Second Address"
+msgstr ""
 
-msgctxt "field:html.report.template,rec_name:"
-msgid "Record Name"
-msgstr "Name"
+msgctxt "field:account.invoice,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr ""
+
+msgctxt "field:account.invoice,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr ""
+
+msgctxt "field:account.invoice.line,origin_line_key:"
+msgid "Origin Line Key"
+msgstr ""
+
+msgctxt "field:account.invoice.line,shipment_key:"
+msgid "Shipment Key"
+msgstr ""
 
 msgctxt "field:html.report.template,report:"
 msgid "Report"
@@ -30,13 +42,9 @@ msgctxt "field:html.report.template,template:"
 msgid "Template"
 msgstr "Vorlage"
 
-msgctxt "field:html.report.template,write_date:"
-msgid "Write Date"
-msgstr "Zuletzt geändert"
-
-msgctxt "field:html.report.template,write_uid:"
-msgid "Write User"
-msgstr "Letzte Änderung durch"
+msgctxt "field:html.report.template,template_used:"
+msgid "Template Used"
+msgstr "Verwendete Vorlage"
 
 msgctxt "field:html.template,all_content:"
 msgid "All Content"
@@ -46,17 +54,13 @@ msgctxt "field:html.template,content:"
 msgid "Content"
 msgstr "Inhalt"
 
-msgctxt "field:html.template,create_date:"
-msgid "Create Date"
-msgstr "Erstellungsdatum"
+msgctxt "field:html.template,data:"
+msgid "Content"
+msgstr "Inhalt"
 
-msgctxt "field:html.template,create_uid:"
-msgid "Create User"
-msgstr "Erstellt durch"
-
-msgctxt "field:html.template,id:"
-msgid "ID"
-msgstr "ID"
+msgctxt "field:html.template,filename:"
+msgid "Template path"
+msgstr "Vorlagenpfad"
 
 msgctxt "field:html.template,implements:"
 msgid "Signature"
@@ -70,10 +74,6 @@ msgctxt "field:html.template,parent:"
 msgid "Parent"
 msgstr "Übergeordnet (Vorlage)"
 
-msgctxt "field:html.template,rec_name:"
-msgid "Record Name"
-msgstr "Name"
-
 msgctxt "field:html.template,type:"
 msgid "Type"
 msgstr "Typ"
@@ -82,61 +82,13 @@ msgctxt "field:html.template,uses:"
 msgid "Uses"
 msgstr "Verwendung"
 
-msgctxt "field:html.template,write_date:"
-msgid "Write Date"
-msgstr "Zuletzt geändert"
-
-msgctxt "field:html.template,write_uid:"
-msgid "Write User"
-msgstr "Letzte Änderung durch"
-
-msgctxt "field:html.template.signature,create_date:"
-msgid "Create Date"
-msgstr "Erstellungsdatum"
-
-msgctxt "field:html.template.signature,create_uid:"
-msgid "Create User"
-msgstr "Erstellt durch"
-
-msgctxt "field:html.template.signature,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:html.template.signature,name:"
 msgid "Name"
 msgstr "Name"
 
-msgctxt "field:html.template.signature,rec_name:"
-msgid "Record Name"
-msgstr "Name"
-
-msgctxt "field:html.template.signature,write_date:"
-msgid "Write Date"
-msgstr "Zuletzt geändert"
-
-msgctxt "field:html.template.signature,write_uid:"
-msgid "Write User"
-msgstr "Letzte Änderung durch"
-
-msgctxt "field:html.template.translation,create_date:"
-msgid "Create Date"
-msgstr "Erstellungsdatum"
-
-msgctxt "field:html.template.translation,create_uid:"
-msgid "Create User"
-msgstr "Erstellt durch"
-
-msgctxt "field:html.template.translation,id:"
-msgid "ID"
-msgstr "ID"
-
 msgctxt "field:html.template.translation,lang:"
 msgid "Language"
 msgstr "Sprache"
-
-msgctxt "field:html.template.translation,rec_name:"
-msgid "Record Name"
-msgstr "Name"
 
 msgctxt "field:html.template.translation,report:"
 msgid "Report"
@@ -150,30 +102,6 @@ msgctxt "field:html.template.translation,value:"
 msgid "Translation Value"
 msgstr "Übersetzung"
 
-msgctxt "field:html.template.translation,write_date:"
-msgid "Write Date"
-msgstr "Zuletzt geändert"
-
-msgctxt "field:html.template.translation,write_uid:"
-msgid "Write User"
-msgstr "Letzte Änderung durch"
-
-msgctxt "field:html.template.usage,create_date:"
-msgid "Create Date"
-msgstr "Erstellungsdatum"
-
-msgctxt "field:html.template.usage,create_uid:"
-msgid "Create User"
-msgstr "Erstellt durch"
-
-msgctxt "field:html.template.usage,id:"
-msgid "ID"
-msgstr "ID"
-
-msgctxt "field:html.template.usage,rec_name:"
-msgid "Record Name"
-msgstr "Name"
-
 msgctxt "field:html.template.usage,signature:"
 msgid "Signature"
 msgstr "Signatur"
@@ -182,36 +110,44 @@ msgctxt "field:html.template.usage,template:"
 msgid "Template"
 msgstr "Vorlage"
 
-msgctxt "field:html.template.usage,write_date:"
-msgid "Write Date"
-msgstr "Zuletzt geändert"
-
-msgctxt "field:html.template.usage,write_uid:"
-msgid "Write User"
-msgstr "Letzte Änderung durch"
-
 msgctxt "field:ir.action.report,html_content:"
 msgid "Content"
 msgstr "Inhalt"
+
+msgctxt "field:ir.action.report,html_copies:"
+msgid "Number of copies"
+msgstr "Anzahl Kopien"
 
 msgctxt "field:ir.action.report,html_footer_content:"
 msgid "Footer Content"
 msgstr "Berichtsfuß Inhalt"
 
-msgctxt "field:ir.action.report,html_footer_report:"
+msgctxt "field:ir.action.report,html_footer_template:"
 msgid "Footer"
-msgstr "Berichtsfuß"
+msgstr "Fußzeile"
 
 msgctxt "field:ir.action.report,html_header_content:"
 msgid "Header Content"
 msgstr "Berichtskopf Inhalt"
 
-msgctxt "field:ir.action.report,html_header_report:"
+msgctxt "field:ir.action.report,html_header_template:"
 msgid "Header"
-msgstr "Berichtskopf"
+msgstr "Dokumentenkopf"
+
+msgctxt "field:ir.action.report,html_last_footer_content:"
+msgid "Last Page Footer Content"
+msgstr "Fußzeileninhalt letzte Seite"
+
+msgctxt "field:ir.action.report,html_last_footer_template:"
+msgid "Last Page Footer"
+msgstr "Fußzeile letzte Seite"
+
+msgctxt "field:ir.action.report,html_raise_user_error:"
+msgid "Raise User Error"
+msgstr "Bei Fehlern unterbrechen"
 
 msgctxt "field:ir.action.report,html_template:"
-msgid "Template"
+msgid "Body"
 msgstr "Vorlage"
 
 msgctxt "field:ir.action.report,html_templates:"
@@ -221,6 +157,172 @@ msgstr "Vorlagen"
 msgctxt "field:ir.action.report,html_translations:"
 msgid "Translations"
 msgstr "Übersetzungen"
+
+msgctxt "field:ir.action.report,html_zipped:"
+msgid "Zipped"
+msgstr "Als Zip-Datei packen"
+
+msgctxt "field:ir.action.report,jinja_template:"
+msgid "Jinja Template"
+msgstr "Jinjavorlage"
+
+msgctxt "field:purchase.purchase,html_address:"
+msgid "HTML Party Address"
+msgstr ""
+
+msgctxt "field:purchase.purchase,html_party:"
+msgid "HTML Party"
+msgstr ""
+
+msgctxt "field:purchase.purchase,html_second_address:"
+msgid "HTML Second Address"
+msgstr ""
+
+msgctxt "field:purchase.purchase,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr ""
+
+msgctxt "field:purchase.purchase,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr ""
+
+msgctxt "field:sale.sale,html_address:"
+msgid "HTML Party Address"
+msgstr ""
+
+msgctxt "field:sale.sale,html_party:"
+msgid "HTML Party"
+msgstr ""
+
+msgctxt "field:sale.sale,html_second_address:"
+msgid "HTML Second Address"
+msgstr ""
+
+msgctxt "field:sale.sale,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr ""
+
+msgctxt "field:sale.sale,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr ""
+
+msgctxt "field:stock.move,sort_key:"
+msgid "key"
+msgstr ""
+
+msgctxt "field:stock.shipment.in,show_lots:"
+msgid "Show Lots"
+msgstr "Chargen anzeigen"
+
+msgctxt "field:stock.shipment.in.return,html_address:"
+msgid "HTML Party Address"
+msgstr ""
+
+msgctxt "field:stock.shipment.in.return,html_party:"
+msgid "HTML Party"
+msgstr ""
+
+msgctxt "field:stock.shipment.in.return,html_second_address:"
+msgid "HTML Second Address"
+msgstr ""
+
+msgctxt "field:stock.shipment.in.return,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr ""
+
+msgctxt "field:stock.shipment.in.return,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr ""
+
+msgctxt "field:stock.shipment.in.return,show_lots:"
+msgid "Show Lots"
+msgstr "Chargen anzeigen"
+
+msgctxt "field:stock.shipment.internal,html_address:"
+msgid "HTML Party Address"
+msgstr ""
+
+msgctxt "field:stock.shipment.internal,html_party:"
+msgid "HTML Party"
+msgstr ""
+
+msgctxt "field:stock.shipment.internal,html_second_address:"
+msgid "HTML Second Address"
+msgstr ""
+
+msgctxt "field:stock.shipment.internal,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr ""
+
+msgctxt "field:stock.shipment.internal,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr ""
+
+msgctxt "field:stock.shipment.out,html_address:"
+msgid "HTML Party Address"
+msgstr ""
+
+msgctxt "field:stock.shipment.out,html_party:"
+msgid "HTML Party"
+msgstr ""
+
+msgctxt "field:stock.shipment.out,html_second_address:"
+msgid "HTML Second Address"
+msgstr ""
+
+msgctxt "field:stock.shipment.out,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr ""
+
+msgctxt "field:stock.shipment.out,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr ""
+
+msgctxt "field:stock.shipment.out,show_lots:"
+msgid "Show Lots"
+msgstr "Chargen anzeigen"
+
+msgctxt "field:stock.shipment.out,sorted_keys:"
+msgid "key"
+msgstr ""
+
+msgctxt "field:stock.shipment.out,sorted_lines:"
+msgid "Sorted Lines"
+msgstr ""
+
+msgctxt "field:stock.shipment.out.return,html_address:"
+msgid "HTML Party Address"
+msgstr ""
+
+msgctxt "field:stock.shipment.out.return,html_party:"
+msgid "HTML Party"
+msgstr ""
+
+msgctxt "field:stock.shipment.out.return,html_second_address:"
+msgid "HTML Second Address"
+msgstr ""
+
+msgctxt "field:stock.shipment.out.return,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr ""
+
+msgctxt "field:stock.shipment.out.return,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr ""
+
+msgctxt "field:stock.shipment.out.return,show_lots:"
+msgid "Show Lots"
+msgstr "Chargen anzeigen"
+
+msgctxt "help:ir.action.report,html_raise_user_error:"
+msgid "Will raise a UserError in case of error in template parsing."
+msgstr "Gibt Fehler bei der Vorlagenverarbeitung aus."
+
+msgctxt "help:ir.action.report,html_zipped:"
+msgid "If set, a zip file with a document per record will be created."
+msgstr ""
+"Bei Aktivierung wird eine zip-Datei mit einem Dokument pro Datensatz "
+"erstellt."
 
 msgctxt "model:html.report.template,name:"
 msgid "HTML Report - Template"
@@ -266,6 +368,46 @@ msgctxt "model:ir.action,name:act_template_translation_form"
 msgid "Template Translation"
 msgstr "Vorlagenübersetzung"
 
+msgctxt "model:ir.action,name:html_report_customer_refund_note"
+msgid "Customer Refund Note"
+msgstr "Warenrücknahme"
+
+msgctxt "model:ir.action,name:html_report_delivery_note"
+msgid "Delivery Note"
+msgstr "Lieferschein"
+
+msgctxt "model:ir.action,name:html_report_internal_picking_note"
+msgid "Internal Picking Note"
+msgstr "Pickliste"
+
+msgctxt "model:ir.action,name:html_report_picking_note"
+msgid "Picking Note"
+msgstr "Pickliste"
+
+msgctxt "model:ir.action,name:html_report_purchase"
+msgid "Purchase"
+msgstr "Einkauf"
+
+msgctxt "model:ir.action,name:html_report_purchase_simplified"
+msgid "Purchase Simplified"
+msgstr "Einkauf einfach"
+
+msgctxt "model:ir.action,name:html_report_refund_note"
+msgid "Refund Note"
+msgstr "Warenrückgabe"
+
+msgctxt "model:ir.action,name:html_report_sale"
+msgid "Sale"
+msgstr "Verkauf"
+
+msgctxt "model:ir.action,name:html_report_sale_proforma"
+msgid "Proforma"
+msgstr "Proforma"
+
+msgctxt "model:ir.action,name:html_report_shipment_in_restocking_list"
+msgid "Restocking List"
+msgstr "Einlagerungsliste"
+
 msgctxt "model:ir.message,text:missing_signatures"
 msgid "\"%(template)s\" missing signatures: %(missing)s"
 msgstr "\"%(template)s\" fehlende Signaturen: %(missing)s"
@@ -277,6 +419,20 @@ msgstr "Nr."
 msgctxt "model:ir.message,text:msg_yes"
 msgid "Yes"
 msgstr "Ja"
+
+msgctxt "model:ir.message,text:render_error"
+msgid "The following error was found rendering report \"%(report)s\": %(error)s"
+msgstr ""
+"Bei der Verarbeitung des Berichts \"%(report)s\" ist folgender Fehler "
+"aufgetreten: %(error)s"
+
+msgctxt "model:ir.message,text:template_error"
+msgid ""
+"The following template error was found parsing report \"%(report)s\": "
+"%(error)s"
+msgstr ""
+"Der folgende Fehler wurde in der Vorlage für Bericht \"%(report)s\" "
+"gefunden: %(error)s"
 
 msgctxt "model:ir.message,text:unused_signatures"
 msgid "\"%(template)s\" unused signatures: %(unused)s"
@@ -319,9 +475,21 @@ msgid "Extension"
 msgstr "Dokumententyp"
 
 msgctxt "selection:html.template,type:"
+msgid "Footer"
+msgstr "Fußzeile"
+
+msgctxt "selection:html.template,type:"
+msgid "Header"
+msgstr "Dokumentenkopf"
+
+msgctxt "selection:html.template,type:"
 msgid "Macro"
 msgstr "Makro"
 
 msgctxt "view:ir.action.report:"
 msgid "HTML Report"
 msgstr "HTML Bericht"
+
+msgctxt "view:ir.action.report:"
+msgid "Jinja Template"
+msgstr "Jinja Vorlage"
