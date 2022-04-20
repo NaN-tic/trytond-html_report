@@ -1,8 +1,8 @@
 # The COPYRIGHT file at the top level of this repository contains the full
 # copyright notices and license terms.
+from io import StringIO, BytesIO
 from trytond.pool import PoolMeta, Pool
 from trytond.transaction import Transaction
-from babel._compat import StringIO, BytesIO
 from babel.messages.extract import extract as babel_extract
 import jinja2
 
@@ -51,7 +51,7 @@ class ReportTranslationSet(metaclass=PoolMeta):
         for x in translations:
             if x.id not in translations_dict:
                 translations_dict[x.id] = []
-            translations_dict[x.id].append(x.source)
+            translations_dict[x.id].append(x.src)
 
         messages = []
         for report in reports:
@@ -61,6 +61,7 @@ class ReportTranslationSet(metaclass=PoolMeta):
 
         langs = Lang.search([('translatable', '=', True)])
         to_save = []
+
         for message in messages:
             if message in translations:
                 continue
