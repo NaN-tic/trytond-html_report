@@ -2,7 +2,7 @@
 # copyright notices and license terms.
 from trytond.pool import PoolMeta, Pool
 from trytond.transaction import Transaction
-from babel._compat import StringIO, BytesIO
+from io import StringIO, BytesIO
 from babel.messages.extract import extract as babel_extract
 import jinja2
 
