@@ -10,7 +10,7 @@
     </tr>
   </thead>
   <tbody class="border">
-    {% for key, lines in document.raw.lines|groupby('shipment_key') %}
+    {% for key, lines in document.raw.lines|groupby('shipment_key')|nullslast %}
     <tr>{% set key = dualrecord(key) %}
       <th class="sub_header_level1" colspan="6">
         {% if key %}
@@ -19,7 +19,7 @@
         {% endif %}
       </th>
     </tr>
-      {% for key2, origin_lines in lines|groupby('origin_line_key') %}
+      {% for key2, origin_lines in lines|groupby('origin_line_key')|nullslast %}
       <tr>{% set key2 = dualrecord(key2) %}
         <th class="{% if key2 %}sub_header_level2{% else %}sub_header_level1{% endif %}" colspan="6">
           {% if key2 %}
