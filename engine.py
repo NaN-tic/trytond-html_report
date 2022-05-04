@@ -627,6 +627,22 @@ class HTMLReportMixin:
                 return ('data:%s;base64,%s' % (mimetype, value)).strip()
             return value
 
+        def nullslast(tuple_list):
+            if not isinstance(tuple_list, list):
+                raise UserError(gettext(
+                    'html_report.nullslat_incorrect_format'))
+            if not all(isinstance(t, tuple) for t in tuple_list):
+                raise UserError(gettext(
+                    'html_report.nullslat_incorrect_format'))
+            none_elements = []
+            non_none_elements = []
+            for t in tuple_list:
+                if t[0]:
+                    non_none_elements.append(t)
+                else:
+                    none_elements.append(t)
+            return non_none_elements + none_elements
+
         locale = Transaction().context.get('report_lang',
             Transaction().language).split('_')[0]
         lang, = Lang.search([
@@ -649,6 +665,7 @@ class HTMLReportMixin:
             'scientificformat': partial(
                 numbers.format_scientific, locale=locale),
             'grouped_slice': grouped_slice,
+            'nullslast': nullslast,
             }
 
     @classmethod
