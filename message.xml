@@ -19,5 +19,8 @@
         <record model="ir.message" id="render_error">
             <field name="text">The following error was found rendering report "%(report)s": %(error)s</field>
         </record>
+        <record model="ir.message" id="nullslat_incorrect_format">
+            <field name="text">The nullslast filter only accept a list of tuples.</field>
+        </record>
     </data>
 </tryton>

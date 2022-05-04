@@ -26,6 +26,14 @@ msgctxt "field:account.invoice,sorted_keys:"
 msgid "Sorted Key"
 msgstr "Clau ordenació"
 
+msgctxt "field:account.invoice.line,origin_line_key:"
+msgid "Origin Line Key"
+msgstr ""
+
+msgctxt "field:account.invoice.line,shipment_key:"
+msgid "Shipment Key"
+msgstr ""
+
 msgctxt "field:account.invoice.line,sort_key:"
 msgid "Sorted Key"
 msgstr "Clau ordenació"
@@ -138,6 +146,11 @@ msgctxt "field:ir.action.report,html_last_footer_template:"
 msgid "Last Footer"
 msgstr "Peu última pàgina"
 
+#, fuzzy
+msgctxt "field:ir.action.report,html_raise_user_error:"
+msgid "Raise User Error"
+msgstr "Mostrar l'error al usuari"
+
 msgctxt "field:ir.action.report,html_template:"
 msgid "Body"
 msgstr "Cos"
@@ -149,6 +162,10 @@ msgstr "Plantilles"
 msgctxt "field:ir.action.report,html_translations:"
 msgid "Translations"
 msgstr "Traduccions"
+
+msgctxt "field:ir.action.report,jinja_template:"
+msgid "Jinja Template"
+msgstr ""
 
 msgctxt "field:production,html_address:"
 msgid "HTML Party Address"
@@ -326,6 +343,10 @@ msgctxt "field:stock.shipment.out.return,show_lots:"
 msgid "Show Lots"
 msgstr "Mostrar lots"
 
+msgctxt "help:ir.action.report,html_raise_user_error:"
+msgid "Will raise a UserError in case of error in template parsing."
+msgstr ""
+
 msgctxt "model:html.report.template,name:"
 msgid "HTML Report - Template"
 msgstr "Informe HTML - Plantilla"
@@ -434,6 +455,20 @@ msgctxt "model:ir.message,text:msg_yes"
 msgid "Yes"
 msgstr "Si"
 
+msgctxt "model:ir.message,text:nullslat_incorrect_format"
+msgid "The nullslast filter only accept a list of tuples."
+msgstr "El filtre nullslast només accepta una llista de tuples."
+
+msgctxt "model:ir.message,text:render_error"
+msgid "The following error was found rendering report \"%(report)s\": %(error)s"
+msgstr ""
+
+msgctxt "model:ir.message,text:template_error"
+msgid ""
+"The following template error was found parsing report \"%(report)s\": "
+"%(error)s"
+msgstr ""
+
 msgctxt "model:ir.message,text:unused_signatures"
 msgid "\"%(template)s\" unused signatures: %(unused)s"
 msgstr "\"%(template)s\" no es fan us de les firmes: %(missing)s"
@@ -489,3 +524,7 @@ msgstr "Macro"
 msgctxt "view:ir.action.report:"
 msgid "HTML Report"
 msgstr "Informe HTML"
+
+msgctxt "view:ir.action.report:"
+msgid "Jinja Template"
+msgstr ""
