@@ -52,6 +52,8 @@ def strfdelta(tdelta, fmt):
     d["minutes"], d["seconds"] = divmod(rem, 60)
     d['minutes'] = '%02d' % d['minutes']
     d['seconds'] = '%02d' % d['seconds']
+    if not 'days' in fmt and d.get('days') > 0:
+        d1["hours"] += d.get('days') * 24 # 24h/day
     return fmt.format(**d)
 
 class DualRecordError(Exception):
