@@ -6,13 +6,14 @@
   @top-right {
     content: "";
   }
-  @bottom-right {
+  @bottom-right-corner {
     content: counter(page) " / " counter(pages);
     text-align: right;
     font-family: 'Arial';
     bottom:0;
     font-size: 9px;
-    padding-bottom: 4cm;
+    padding-right: 0.5cm;
+    padding-bottom: 1cm;
   }
 }
 
