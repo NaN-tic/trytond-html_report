@@ -13,7 +13,9 @@
     bottom:0;
     font-size: 9px;
     padding-right: 0.5cm;
-    padding-bottom: 1cm;
+    padding-bottom: 0.5cm;
+    text-align: right;
+    vertical-align: bottom;
   }
 }
 
