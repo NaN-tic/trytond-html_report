@@ -6,7 +6,7 @@
     {% set label_package = label(record.raw.__name__, 'number_packages') %}
 {% endif %}
 
-{% if record.raw.state not in ['assigned', 'picked', 'pack'] %}
+{% if record.raw.state not in ['assigned', 'picked', 'packed', 'done'] %}
     <h1 class="document">{{ _('Draft') }}</h1>
 {% endif%}
 <h1 class="document">{{title}}: {{ record.raw.number and record.render.number }} <h1>
