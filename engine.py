@@ -1,5 +1,4 @@
 import binascii
-import io
 import mimetypes
 import os
 import logging
@@ -11,7 +10,8 @@ from decimal import Decimal
 from functools import partial
 from io import BytesIO
 from PyPDF2 import PdfFileMerger, PdfFileReader
-
+from PIL import Image
+import magic
 import barcode
 import jinja2
 import jinja2.ext
@@ -38,6 +38,7 @@ MEDIA_TYPE = config.get('html_report', 'type', default='screen')
 RAISE_USER_ERRORS = config.getboolean('html_report', 'raise_user_errors',
     default=False)
 DEFAULT_MIME_TYPE = config.get('html_report', 'mime_type', default='image/png')
+IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/tiff']
 
 # Determines if on merge, resulting PDF should be compacted using ghostscript
 COMPACT_ON_MERGE = config.get('html_report', 'compact_on_merge',
@@ -637,6 +638,85 @@ class HTMLReportMixin:
                     none_elements.append(t)
             return non_none_elements + none_elements
 
+        def is_image(file_id):
+            # attachment.file_id
+            path = config.get('database', 'path')
+            db_name = Transaction().database.name
+
+            image = '%s/%s/%s/%s/%s' % (
+                path,
+                db_name,
+                file_id[:2],
+                file_id[2:4:],
+                file_id,
+                )
+            if not os.path.isfile(image):
+                return False
+            mimetype = magic.from_file(image, mime=True)
+            if mimetype in IMAGE_TYPES:
+                return True
+            return False
+
+        def thumbnail(filename, size, crop=None, quality=85):
+            '''Create thumbnail image
+
+            :param filename: image digest - '2566a0e6538be8e094431ff46ae58950'
+            :param size: size thumb - '100x100'
+            :param crop: crop thumb - top, middle, bottom or None
+            :param quality: JPEG quality 1-100
+            :return file name
+
+            Example jinja2 tag:
+            <img src="file://{{ attachment.raw.file_id|thumbnail("200x200") }}"/>
+            '''
+            width, height = [int(x) for x in size.split('x')]
+
+            path = config.get('database', 'path')
+            db_name = Transaction().database.name
+
+            original_filename = os.path.join(path, db_name, filename[0:2], filename[2:4], filename)
+
+            size = (width, height)
+
+            try:
+                img = Image.open(original_filename)
+            except IOError:
+                return
+
+            if crop:
+                img_ratio = img.size[0] / float(img.size[1])
+                ratio = size[0] / float(size[1])
+
+                #The image is scaled/cropped vertically or horizontally depending on the ratio
+                if ratio > img_ratio:
+                    img = img.resize((size[0], size[0] * img.size[1] / img.size[0]), Image.ANTIALIAS)
+                    # Crop in the top, middle or bottom
+                    if crop == 'top':
+                        box = (0, 0, img.size[0], size[1])
+                    elif crop == 'bottom':
+                        box = (0, img.size[1] - size[1], img.size[0], img.size[1])
+                    else :
+                        box = (0, (img.size[1] - size[1]) / 2, img.size[0], (img.size[1] + size[1]) / 2)
+                    img = img.crop(box)
+                elif ratio < img_ratio:
+                    img = img.resize((size[1] * img.size[0] / img.size[1], size[1]), Image.ANTIALIAS)
+                    # Crop in the top, middle or bottom
+                    if crop == 'top':
+                        box = (0, 0, size[0], img.size[1])
+                    elif crop == 'bottom':
+                        box = (img.size[0] - size[0], 0, img.size[0], img.size[1])
+                    else :
+                        box = ((img.size[0] - size[0]) / 2, 0, (img.size[0] + size[0]) / 2, img.size[1])
+                    img = img.crop(box)
+            else:
+                img.thumbnail(size)
+
+            # save tmp file and return file name
+            tf = tempfile.NamedTemporaryFile(delete=False)
+            thumb_filename = tf.name
+            img.save(thumb_filename, img.format, quality=quality)
+            return thumb_filename
+
         locale = Transaction().context.get('report_lang',
             Transaction().language).split('_')[0]
         lang, = Lang.search([
@@ -660,6 +740,8 @@ class HTMLReportMixin:
                 numbers.format_scientific, locale=locale),
             'grouped_slice': grouped_slice,
             'nullslast': nullslast,
+            'is_image': is_image,
+            'thumbnail': thumbnail,
             }
 
     @classmethod
@@ -721,7 +803,7 @@ class HTMLReportMixin:
     @classmethod
     def qrcode(cls, value):
         qr_code = qrcode.make(value, image_factory=qrcode.image.svg.SvgImage)
-        stream = io.BytesIO()
+        stream = BytesIO()
         qr_code.save(stream=stream)
         return cls.to_base64(stream.getvalue())
 
