@@ -11,7 +11,9 @@ from decimal import Decimal
 from functools import partial
 from io import BytesIO
 from PyPDF2 import PdfFileMerger, PdfFileReader
+from urllib.parse import urlparse
 
+import re
 import barcode
 import jinja2
 import jinja2.ext
@@ -645,6 +647,16 @@ class HTMLReportMixin:
                     none_elements.append(t)
             return non_none_elements + none_elements
 
+        def short_url(value):
+            pattern = r"""(?i)\b((?:https?:(?:/{1,3}|[a-z0-9%])|[a-z0-9.\-]+[.]/)(?:[^\s()<>{}\[\]]+|\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\))+(?:\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’])|(?:(?<!@)[a-z0-9]+(?:[.\-][a-z0-9]+)*[.]\b/?(?!@)))"""
+            find_urls = re.findall(pattern, value)
+
+            for furl in find_urls:
+                netloc = urlparse(furl).netloc
+                r = (furl, '<a href="%s">%s</a>' % (furl, netloc))
+                value = value.replace(*r)
+            return value
+
         locale = Transaction().context.get('report_lang',
             Transaction().language).split('_')[0]
         lang, = Lang.search([
@@ -668,6 +680,7 @@ class HTMLReportMixin:
                 numbers.format_scientific, locale=locale),
             'grouped_slice': grouped_slice,
             'nullslast': nullslast,
+            'short_url': short_url,
             }
 
     @classmethod
