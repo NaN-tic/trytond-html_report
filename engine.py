@@ -678,8 +678,7 @@ class HTMLReportMixin:
         Downstream modules can override this method to easily make changes
         to environment
         """
-        extensions = ['jinja2.ext.i18n', 'jinja2.ext.autoescape',
-            'jinja2.ext.with_', 'jinja2.ext.loopcontrols', 'jinja2.ext.do',
+        extensions = ['jinja2.ext.i18n', 'jinja2.ext.loopcontrols', 'jinja2.ext.do',
             SwitchableLanguageExtension]
         env = jinja2.Environment(extensions=extensions,
             loader=jinja2.FunctionLoader(cls.jinja_loader_func))
