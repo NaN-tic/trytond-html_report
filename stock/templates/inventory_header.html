@@ -1,0 +1,19 @@
+<link rel="stylesheet" href="{{ 'html_report/templates/base.css'|modulepath }}">
+
+
+{% language company.party.lang and company.party.raw.lang.code or 'en' %}
+
+<header id="header">
+  <table>
+    <tr>
+      <td><strong>{{ label('stock.inventory', 'number') }}:</strong> {{ record.render.number }}</td>
+      <td><strong>{{ label('stock.inventory', 'date') }}:</strong> {{ record.render.date }}</td>
+    </tr>
+    <tr>
+      <td><strong>{{ label('stock.inventory', 'location') }}:</strong> {{ record.location.render.name }}</td>
+      <td></td>
+    </tr>
+  </table>
+</header>
+
+{% endlanguage %}

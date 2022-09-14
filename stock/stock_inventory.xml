@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+    <tryton>
+        <data depends="stock">
+            <!-- Invnetory -->
+            <record model='html.template' id="inventory_header_template">
+                <field name="name">Inventory Header</field>
+                <field name="type">header</field>
+                <field name="sequence" eval="99"/>
+                <field name="filename">html_report/stock/templates/inventory_header.html</field>
+            </record>
+
+            <record model="html.template" id="invnetory_template_id">
+                <field name="name">Inventory</field>
+                <field name="type">extension</field>
+                <field name="sequence" eval="99"/>
+                <field name="filename">html_report/stock/templates/inventory.html</field>
+                <field name="parent" ref="base_template"/>
+            </record>
+
+            <record model="ir.action.report" id="html_report_inventory">
+                <field name="name">Inventory</field>
+                <field name="model">stock.inventory</field>
+                <field name="report_name">stock.inventory</field>
+                <field name="extension">pdf</field>
+                <field name="template_extension">jinja</field>
+                <field name="single" eval="True"/>
+                <field name="html_template" ref="invnetory_template_id"/>
+                <field name="html_header_template" ref="inventory_header_template"/>
+            </record>
+
+            <record model="ir.action.keyword" id="report_inventory_keyword">
+                <field name="keyword">form_print</field>
+                <field name="model">stock.inventory,-1</field>
+                <field name="action" ref="html_report_inventory"/>
+            </record>
+
+            <record model='html.template.signature' id="show_inventory_lines_signature">
+                <field name="name">show_inventory_lines(carrier)</field>
+            </record>
+            <record model='html.template' id="inventory_show_inventory_lines_macro_id">
+                <field name="name">Delivery Note Document info</field>
+                <field name="type">macro</field>
+                <field name="sequence" eval="99"/>
+                <field name="filename">html_report/stock/templates/inventory_show_inventory_lines_macro.html</field>
+                <field name="implements" ref="show_inventory_lines_signature"/>
+            </record>
+
+            <record model="html.report.template" id="report_inventory_inventory_lines_id">
+                <field name="report" ref="html_report_inventory"/>
+                <field name="signature" ref="show_inventory_lines_signature"/>
+            </record>
+        </data>
+    </tryton>

@@ -165,3 +165,7 @@ class ShipmentInternal(HTMLPartyInfoMixin, metaclass=PoolMeta):
 
     def get_html_party(self, name):
         return
+
+
+class StockInventory(HTMLReportMixin, metaclass=PoolMeta):
+    __name__ = 'stock.inventory'
