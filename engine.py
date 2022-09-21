@@ -653,8 +653,9 @@ class HTMLReportMixin:
 
             for furl in find_urls:
                 netloc = urlparse(furl).netloc
-                r = (furl, '<a href="%s">%s</a>' % (furl, netloc))
-                value = value.replace(*r)
+                if netloc:
+                    r = (furl, '<a href="%s">%s</a>' % (furl, netloc))
+                    value = value.replace(*r)
             return value
 
         locale = Transaction().context.get('report_lang',
