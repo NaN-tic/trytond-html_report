@@ -712,8 +712,10 @@ class HTMLReportMixin:
 
     @classmethod
     def label(cls, model, field=None, lang=None):
+        pool = Pool()
+        Translation = pool.get('ir.translation')
+        Model = pool.get('ir.model')
 
-        Translation = Pool().get('ir.translation')
         if not lang:
             lang = Transaction().language
 
@@ -721,7 +723,6 @@ class HTMLReportMixin:
             return ''
 
         if field == None:
-            Model = Pool().get('ir.model')
             model, = Model.search([('model', '=', model)])
             return model.name
         else:
@@ -737,7 +738,8 @@ class HTMLReportMixin:
                 if translation[args]:
                     return translation[args]
 
-            return field
+            ModelObject = pool.get(model)
+            return getattr(ModelObject, field).string
 
     @classmethod
     def qrcode(cls, value):
