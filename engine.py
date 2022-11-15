@@ -32,6 +32,7 @@ from trytond.pool import Pool
 from trytond.tools import file_open, slugify
 from trytond.transaction import Transaction
 from trytond.tools import grouped_slice
+from trytond.report import Report
 
 from . import words
 from .generator import PdfGenerator
@@ -674,6 +675,11 @@ class HTMLReportMixin:
             'grouped_slice': grouped_slice,
             'nullslast': nullslast,
             'short_url': short_url,
+            'format_date': Report.format_date,
+            'format_datetime': Report.format_datetime,
+            'format_timedelta': Report.format_timedelta,
+            'format_currency': Report.format_currency,
+            'format_number': Report.format_number,
             }
 
     @classmethod
