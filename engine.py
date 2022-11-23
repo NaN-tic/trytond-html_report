@@ -12,6 +12,9 @@ from functools import partial
 from io import BytesIO
 from PyPDF2 import PdfFileMerger, PdfFileReader
 from PIL import Image
+from urllib.parse import urlparse
+
+import re
 import magic
 import barcode
 import jinja2
@@ -31,6 +34,7 @@ from trytond.pool import Pool
 from trytond.tools import file_open, slugify
 from trytond.transaction import Transaction
 from trytond.tools import grouped_slice
+from trytond.report import Report
 
 from . import words
 from .generator import PdfGenerator
@@ -706,6 +710,17 @@ class HTMLReportMixin:
             img.save(thumb_filename, img.format, quality=quality)
             return thumb_filename
 
+        def short_url(value):
+            pattern = r"""(?i)\b((?:https?:(?:/{1,3}|[a-z0-9%])|[a-z0-9.\-]+[.]/)(?:[^\s()<>{}\[\]]+|\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\))+(?:\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’])|(?:(?<!@)[a-z0-9]+(?:[.\-][a-z0-9]+)*[.]\b/?(?!@)))"""
+            find_urls = re.findall(pattern, value)
+
+            for furl in find_urls:
+                netloc = urlparse(furl).netloc
+                if netloc:
+                    r = (furl, '<a href="%s">%s</a>' % (furl, netloc))
+                    value = value.replace(*r)
+            return value
+
         locale = Transaction().context.get('report_lang',
             Transaction().language).split('_')[0]
         lang, = Lang.search([
@@ -731,6 +746,12 @@ class HTMLReportMixin:
             'nullslast': nullslast,
             'is_image': is_image,
             'thumbnail': thumbnail,
+            'short_url': short_url,
+            'format_date': Report.format_date,
+            'format_datetime': Report.format_datetime,
+            'format_timedelta': Report.format_timedelta,
+            'format_currency': Report.format_currency,
+            'format_number': Report.format_number,
             }
 
     @classmethod
@@ -762,8 +783,10 @@ class HTMLReportMixin:
 
     @classmethod
     def label(cls, model, field=None, lang=None):
+        pool = Pool()
+        Translation = pool.get('ir.translation')
+        Model = pool.get('ir.model')
 
-        Translation = Pool().get('ir.translation')
         if not lang:
             lang = Transaction().language
 
@@ -771,7 +794,6 @@ class HTMLReportMixin:
             return ''
 
         if field == None:
-            Model = Pool().get('ir.model')
             model, = Model.search([('model', '=', model)])
             return model.name
         else:
@@ -787,7 +809,8 @@ class HTMLReportMixin:
                 if translation[args]:
                     return translation[args]
 
-            return field
+            ModelObject = pool.get(model)
+            return getattr(ModelObject, field).string
 
     @classmethod
     def qrcode(cls, value):
