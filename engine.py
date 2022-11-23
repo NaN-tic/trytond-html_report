@@ -1,6 +1,7 @@
 import binascii
 import mimetypes
 import os
+import io
 import logging
 import subprocess
 import zipfile
@@ -638,48 +639,36 @@ class HTMLReportMixin:
                     none_elements.append(t)
             return non_none_elements + none_elements
 
-        def is_image(file_id):
-            # attachment.file_id
-            path = config.get('database', 'path')
-            db_name = Transaction().database.name
+        def is_image(data):
+            # fields.Binary.data
 
-            image = '%s/%s/%s/%s/%s' % (
-                path,
-                db_name,
-                file_id[:2],
-                file_id[2:4:],
-                file_id,
-                )
-            if not os.path.isfile(image):
+            if not data:
                 return False
-            mimetype = magic.from_file(image, mime=True)
+
+            mimetype = magic.from_buffer(data, mime=True)
             if mimetype in IMAGE_TYPES:
                 return True
             return False
 
-        def thumbnail(filename, size, crop=None, quality=85):
+        def thumbnail(data, size, crop=None, quality=85):
             '''Create thumbnail image
 
-            :param filename: image digest - '2566a0e6538be8e094431ff46ae58950'
+            :param data: bytes
             :param size: size thumb - '100x100'
             :param crop: crop thumb - top, middle, bottom or None
             :param quality: JPEG quality 1-100
             :return file name
 
             Example jinja2 tag:
-            <img src="file://{{ attachment.raw.file_id|thumbnail("200x200") }}"/>
+            <img src="file://{{ attachment.raw.data|thumbnail("200x200") }}"/>
             '''
             width, height = [int(x) for x in size.split('x')]
-
-            path = config.get('database', 'path')
-            db_name = Transaction().database.name
-
-            original_filename = os.path.join(path, db_name, filename[0:2], filename[2:4], filename)
 
             size = (width, height)
 
             try:
-                img = Image.open(original_filename)
+                stream = io.BytesIO(data)
+                img = Image.open(stream)
             except IOError:
                 return
 
