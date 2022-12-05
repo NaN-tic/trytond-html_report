@@ -255,7 +255,8 @@ class Formatter:
             digits = getattr(record, digits).digits
         else:
             # TODO remove from issue10677
-            digits = digits[1]
+            if digits:
+                digits = digits[1]
         if not isinstance(digits, int):
             digits = _record_eval_pyson(record, digits,
                 encoded=False)
