@@ -1,7 +1,7 @@
 import binascii
-import io
 import mimetypes
 import os
+import io
 import logging
 import subprocess
 import zipfile
@@ -11,9 +11,11 @@ from decimal import Decimal
 from functools import partial
 from io import BytesIO
 from PyPDF2 import PdfFileMerger, PdfFileReader
+from PIL import Image
 from urllib.parse import urlparse
 
 import re
+import magic
 import barcode
 import jinja2
 import jinja2.ext
@@ -41,6 +43,7 @@ MEDIA_TYPE = config.get('html_report', 'type', default='screen')
 RAISE_USER_ERRORS = config.getboolean('html_report', 'raise_user_errors',
     default=False)
 DEFAULT_MIME_TYPE = config.get('html_report', 'mime_type', default='image/png')
+IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/tiff']
 
 # Determines if on merge, resulting PDF should be compacted using ghostscript
 COMPACT_ON_MERGE = config.get('html_report', 'compact_on_merge',
@@ -640,6 +643,73 @@ class HTMLReportMixin:
                     none_elements.append(t)
             return non_none_elements + none_elements
 
+        def is_image(data):
+            # fields.Binary.data
+
+            if not data:
+                return False
+
+            mimetype = magic.from_buffer(data, mime=True)
+            if mimetype in IMAGE_TYPES:
+                return True
+            return False
+
+        def thumbnail(data, size, crop=None, quality=85):
+            '''Create thumbnail image
+
+            :param data: bytes
+            :param size: size thumb - '100x100'
+            :param crop: crop thumb - top, middle, bottom or None
+            :param quality: JPEG quality 1-100
+            :return file name
+
+            Example jinja2 tag:
+            <img src="file://{{ attachment.raw.data|thumbnail("200x200") }}"/>
+            '''
+            width, height = [int(x) for x in size.split('x')]
+
+            size = (width, height)
+
+            try:
+                stream = io.BytesIO(data)
+                img = Image.open(stream)
+            except IOError:
+                return
+
+            if crop:
+                img_ratio = img.size[0] / float(img.size[1])
+                ratio = size[0] / float(size[1])
+
+                #The image is scaled/cropped vertically or horizontally depending on the ratio
+                if ratio > img_ratio:
+                    img = img.resize((size[0], size[0] * img.size[1] / img.size[0]), Image.ANTIALIAS)
+                    # Crop in the top, middle or bottom
+                    if crop == 'top':
+                        box = (0, 0, img.size[0], size[1])
+                    elif crop == 'bottom':
+                        box = (0, img.size[1] - size[1], img.size[0], img.size[1])
+                    else :
+                        box = (0, (img.size[1] - size[1]) / 2, img.size[0], (img.size[1] + size[1]) / 2)
+                    img = img.crop(box)
+                elif ratio < img_ratio:
+                    img = img.resize((size[1] * img.size[0] / img.size[1], size[1]), Image.ANTIALIAS)
+                    # Crop in the top, middle or bottom
+                    if crop == 'top':
+                        box = (0, 0, size[0], img.size[1])
+                    elif crop == 'bottom':
+                        box = (img.size[0] - size[0], 0, img.size[0], img.size[1])
+                    else :
+                        box = ((img.size[0] - size[0]) / 2, 0, (img.size[0] + size[0]) / 2, img.size[1])
+                    img = img.crop(box)
+            else:
+                img.thumbnail(size)
+
+            # save tmp file and return file name
+            tf = tempfile.NamedTemporaryFile(delete=False)
+            thumb_filename = tf.name
+            img.save(thumb_filename, img.format, quality=quality)
+            return thumb_filename
+
         def short_url(value):
             pattern = r"""(?i)\b((?:https?:(?:/{1,3}|[a-z0-9%])|[a-z0-9.\-]+[.]/)(?:[^\s()<>{}\[\]]+|\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\))+(?:\([^\s()]*?\([^\s()]+\)[^\s()]*?\)|\([^\s]+?\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’])|(?:(?<!@)[a-z0-9]+(?:[.\-][a-z0-9]+)*[.]\b/?(?!@)))"""
             find_urls = re.findall(pattern, value)
@@ -674,6 +744,8 @@ class HTMLReportMixin:
                 numbers.format_scientific, locale=locale),
             'grouped_slice': grouped_slice,
             'nullslast': nullslast,
+            'is_image': is_image,
+            'thumbnail': thumbnail,
             'short_url': short_url,
             'format_date': Report.format_date,
             'format_datetime': Report.format_datetime,
@@ -743,7 +815,7 @@ class HTMLReportMixin:
     @classmethod
     def qrcode(cls, value):
         qr_code = qrcode.make(value, image_factory=qrcode.image.svg.SvgImage)
-        stream = io.BytesIO()
+        stream = BytesIO()
         qr_code.save(stream=stream)
         return cls.to_base64(stream.getvalue())
 
