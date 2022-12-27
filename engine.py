@@ -10,7 +10,7 @@ from datetime import date, datetime, timedelta
 from decimal import Decimal
 from functools import partial
 from io import BytesIO
-from PyPDF2 import PdfFileMerger, PdfFileReader
+from PyPDF2 import PdfMerger, PdfReader
 from PIL import Image
 from urllib.parse import urlparse
 
@@ -58,9 +58,10 @@ def strfdelta(tdelta, fmt):
     d["minutes"], d["seconds"] = divmod(rem, 60)
     d['minutes'] = '%02d' % d['minutes']
     d['seconds'] = '%02d' % d['seconds']
-    if not 'days' in fmt and d.get('days') > 0:
-        d["hours"] += d.get('days') * 24 # 24h/day
+    if 'days' not in fmt and d.get('days') > 0:
+        d["hours"] += d.get('days') * 24  # 24h/day
     return fmt.format(**d)
+
 
 class DualRecordError(Exception):
     def __init__(self, message):
@@ -127,9 +128,9 @@ class SwitchableTranslations:
             return Report.gettext(self.report, singular, self.language)
         return singular
 
+
 # Based on
 # https://stackoverflow.com/questions/44882075/switch-language-in-jinja-template/45014393#45014393
-
 class SwitchableLanguageExtension(jinja2.ext.Extension):
     '''
     This Jinja2 Extension allows the user to use the folowing tag:
@@ -159,7 +160,8 @@ class SwitchableLanguageExtension(jinja2.ext.Extension):
         args = [parser.parse_expression()]
         # Parse everything between the start and end tag:
         body = parser.parse_statements(['name:endlanguage'], drop_needle=True)
-        # Call the _switch_language method with the given language code and body
+        # Call the _switch_language method with the given language code
+        # and body
         return jinja2.ext.nodes.CallBlock(self.call_method('_switch_language',
                 args), [], [], body).set_lineno(lineno)
 
@@ -182,7 +184,8 @@ class Formatter:
 
     def _get_lang(self):
         Lang = Pool().get('ir.lang')
-        locale = Transaction().context.get('report_lang', Transaction().language)
+        locale = Transaction().context.get('report_lang',
+            Transaction().language)
         lang = self.__langs.get(locale)
         if lang:
             return lang
@@ -283,7 +286,7 @@ class Formatter:
 
         Model = Pool().get(record.__name__)
         record = Model(record.id)
-        t  = TranslatedSelection(field.name)
+        t = TranslatedSelection(field.name)
         return t.__get__(record, record).replace('\n', '<br/>')
 
     # TODO: Implement: dict, multiselection
@@ -319,8 +322,8 @@ class DualRecord:
                 '"%s".' % (name, self.raw.__name__))
         if field._type not in {'many2one', 'one2one', 'reference', 'one2many',
                 'many2many'}:
-            raise DualRecordError('You are trying to access field "%s" of type '
-                '"%s" in a DualRecord of model "%s". You must use "raw." or '
+            raise DualRecordError('You are trying to access field "%s" of type'
+                ' "%s" in a DualRecord of model "%s". You must use "raw." or '
                 '"render." before the field name.' % (name, field._type,
                     self.raw.__name__))
         value = getattr(self.raw, name)
@@ -355,14 +358,15 @@ class HTMLReportMixin:
 
     @classmethod
     def get_templates_jinja(cls, action):
+        # .decode('utf-8'))
         header = (action.html_header_content and
-            action.html_header_content) # decode('utf-8'))
+            action.html_header_content)
         content = (action.report_content
-            and action.report_content.decode("utf-8") or action.html_content) #.decode('utf-8'))
+            and action.report_content.decode("utf-8") or action.html_content)
         footer = (action.html_footer_content and
-            action.html_footer_content) #.decode('utf-8'))
+            action.html_footer_content)
         last_footer = (action.html_last_footer_content and
-            action.html_last_footer_content) #.decode('utf-8'))
+            action.html_last_footer_content)
         if not content:
             if not action.html_content:
                 raise Exception('Error', 'Missing jinja report file!')
@@ -371,10 +375,10 @@ class HTMLReportMixin:
 
     @classmethod
     def merge_pdfs(cls, pdfs_data):
-        merger = PdfFileMerger()
+        merger = PdfMerger()
         for pdf_data in pdfs_data:
             tmppdf = BytesIO(pdf_data)
-            merger.append(PdfFileReader(tmppdf))
+            merger.append(PdfReader(tmppdf))
             tmppdf.close()
 
         if COMPACT_ON_MERGE:
@@ -421,7 +425,7 @@ class HTMLReportMixin:
         data['html_dual_record'] = True
         records = []
         with Transaction().set_context(html_report=action.id,
-            address_with_party=False):
+                address_with_party=False):
             if model and ids:
                 records = cls._get_dual_records(ids, model, data)
 
@@ -444,14 +448,16 @@ class HTMLReportMixin:
                             slugify(record.render.rec_name),
                             oext)
                         if action.html_copies and action.html_copies > 1:
-                            rcontent = cls.merge_pdfs([rcontent] * action.html_copies)
+                            rcontent = cls.merge_pdfs(
+                                [rcontent] * action.html_copies)
                         content_zip.writestr(rfilename, rcontent)
                 content = content.getvalue()
                 return ('zip', content, False, filename)
 
             oext, content = cls._execute_html_report(records, data, action)
             if not isinstance(content, str):
-                content = bytearray(content) if bytes == str else bytes(content)
+                content = bytearray(content) if bytes == str else bytes(
+                    content)
 
             if action.html_copies and action.html_copies > 1:
                 content = cls.merge_pdfs([content] * action.html_copies)
@@ -468,8 +474,8 @@ class HTMLReportMixin:
 
     @classmethod
     def _execute_html_report(cls, records, data, action):
-        header_template, main_template, footer_template, last_footer_template = \
-                cls.get_templates_jinja(action)
+        (header_template, main_template, footer_template,
+            last_footer_template) = cls.get_templates_jinja(action)
         extension = data.get('output_format', action.extension or 'pdf')
         if action.single:
             # If document requires a page counter for each record we need to
@@ -484,12 +490,13 @@ class HTMLReportMixin:
                 footer = footer_template and cls.render_template_jinja(action,
                     footer_template, record=record, records=[record],
                     data=data)
-                last_footer = last_footer_template and cls.render_template_jinja(action,
-                    last_footer_template, record=record, records=[record],
-                    data=data)
+                last_footer = (last_footer_template and
+                    cls.render_template_jinja(action, last_footer_template,
+                        record=record, records=[record], data=data))
                 if extension == 'pdf':
                     documents.append(PdfGenerator(content, header_html=header,
-                            footer_html=footer, last_footer_html=last_footer).render_html())
+                        footer_html=footer,
+                        last_footer_html=last_footer).render_html())
                 else:
                     documents.append(content)
             if extension == 'pdf' and documents:
@@ -505,11 +512,12 @@ class HTMLReportMixin:
                 header_template, records=records, data=data)
             footer = footer_template and cls.render_template_jinja(action,
                 footer_template, records=records, data=data)
-            last_footer = last_footer_template and cls.render_template_jinja(action,
-                last_footer_template, records=records, data=data)
+            last_footer = last_footer_template and cls.render_template_jinja(
+                action, last_footer_template, records=records, data=data)
             if extension == 'pdf':
                 document = PdfGenerator(content, header_html=header,
-                    footer_html=footer, last_footer_html=last_footer).render_html().write_pdf()
+                    footer_html=footer,
+                    last_footer_html=last_footer).render_html().write_pdf()
             else:
                 document = content
         return extension, document
@@ -542,7 +550,8 @@ class HTMLReportMixin:
     @classmethod
     def jinja_loader_func(cls, name):
         """
-        Return the template from the module directories or ID from other template.
+        Return the template from the module directories or ID from other
+        template.
 
         The name is expected to be in the format:
 
@@ -680,26 +689,34 @@ class HTMLReportMixin:
                 img_ratio = img.size[0] / float(img.size[1])
                 ratio = size[0] / float(size[1])
 
-                #The image is scaled/cropped vertically or horizontally depending on the ratio
+                # The image is scaled/cropped vertically or horizontally
+                # depending on the ratio
                 if ratio > img_ratio:
-                    img = img.resize((size[0], size[0] * img.size[1] / img.size[0]), Image.ANTIALIAS)
+                    img = img.resize(
+                        (size[0], size[0] * img.size[1] / img.size[0]),
+                        Image.ANTIALIAS)
                     # Crop in the top, middle or bottom
                     if crop == 'top':
                         box = (0, 0, img.size[0], size[1])
                     elif crop == 'bottom':
-                        box = (0, img.size[1] - size[1], img.size[0], img.size[1])
-                    else :
-                        box = (0, (img.size[1] - size[1]) / 2, img.size[0], (img.size[1] + size[1]) / 2)
+                        box = (0, img.size[1] - size[1], img.size[0],
+                            img.size[1])
+                    else:
+                        box = (0, (img.size[1] - size[1]) / 2, img.size[0],
+                            (img.size[1] + size[1]) / 2)
                     img = img.crop(box)
                 elif ratio < img_ratio:
-                    img = img.resize((size[1] * img.size[0] / img.size[1], size[1]), Image.ANTIALIAS)
+                    img = img.resize((size[1] * img.size[0] / img.size[1],
+                        size[1]), Image.ANTIALIAS)
                     # Crop in the top, middle or bottom
                     if crop == 'top':
                         box = (0, 0, size[0], img.size[1])
                     elif crop == 'bottom':
-                        box = (img.size[0] - size[0], 0, img.size[0], img.size[1])
-                    else :
-                        box = ((img.size[0] - size[0]) / 2, 0, (img.size[0] + size[0]) / 2, img.size[1])
+                        box = (img.size[0] - size[0], 0, img.size[0],
+                            img.size[1])
+                    else:
+                        box = ((img.size[0] - size[0]) / 2, 0,
+                            (img.size[0] + size[0]) / 2, img.size[1])
                     img = img.crop(box)
             else:
                 img.thumbnail(size)
@@ -793,7 +810,7 @@ class HTMLReportMixin:
         if not model:
             return ''
 
-        if field == None:
+        if field is None:
             model, = Model.search([('model', '=', model)])
             return model.name
         else:
