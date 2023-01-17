@@ -193,4 +193,6 @@ class PdfGenerator:
         for box in boxes:
             if box.element_tag == element:
                 return box
-            return PdfGenerator.get_element(box.all_children(), element)
+            box_children = PdfGenerator.get_element(box.all_children(), element)
+            if box_children:
+                return box_children
