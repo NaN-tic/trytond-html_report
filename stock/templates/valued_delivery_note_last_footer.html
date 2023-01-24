@@ -1,3 +1,4 @@
+{% set shipment = record %}
  <link rel="stylesheet" href="{{ 'html_report/templates/base.css'|modulepath }}">
 
  <style>
@@ -11,12 +12,13 @@
    margin-bottom: 2cm;
  }
  </style>
-
+{% language shipment.customer.lang and shipment.customer.raw.lang.code or company.party.lang and company.party.raw.lang.code or 'en' %}
  <last-footer id="last-footer" align="center">
     <table id="totals" class="condensed">
       <tr>
         <td></td>
-        <td>{{ show_totals(record) }}</td>
+        <td>{{ show_totals(shipment) }}</td>
       </tr>
     </table>
  </last-footer>
+ {% endlanguage %}
