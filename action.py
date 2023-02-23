@@ -61,8 +61,7 @@ class ActionReport(metaclass=PoolMeta):
         help='Will raise a UserError in case of error in template parsing.')
     html_translations = fields.One2Many('html.template.translation', 'report',
         'Translations')
-    _html_translation_cache = Cache('html.template.translation',
-        size_limit=10240, context=False)
+    _html_translation_cache = Cache('html.template.translation', context=False)
     html_header_content = fields.Function(fields.Binary('Header Content'),
         'get_content')
     html_footer_content = fields.Function(fields.Binary('Footer Content'),
