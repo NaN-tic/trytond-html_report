@@ -35,7 +35,7 @@
             </record>
 
             <record model='html.template.signature' id="show_inventory_lines_signature">
-                <field name="name">show_inventory_lines(carrier)</field>
+                <field name="name">show_inventory_lines(inventory)</field>
             </record>
             <record model='html.template' id="inventory_show_inventory_lines_macro_id">
                 <field name="name">Delivery Note Document info</field>
