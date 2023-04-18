@@ -208,3 +208,7 @@ footer {
 #totals {
   min-width: 5cm;
 }
+
+.no-wrap {
+  white-space: nowrap;
+}
