@@ -9,4 +9,5 @@ def register(module):
         stock.ShipmentIn,
         stock.ShipmentInReturn,
         stock.Move,
+        stock.StockInventory,
         module=module, type_='model', depends=['stock'])
