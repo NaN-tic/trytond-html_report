@@ -357,6 +357,8 @@ class DualRecord:
 class HTMLReportMixin:
     __slots__ = ()
     babel_domain = 'messages'
+    side_margin = 2
+    extra_vertical_margin = 30
 
     @classmethod
     def _get_dual_records(cls, ids, model, data):
@@ -448,8 +450,12 @@ class HTMLReportMixin:
                 content = BytesIO()
                 with zipfile.ZipFile(content, 'w') as content_zip:
                     for record in records:
-                        oext, rcontent = cls._execute_html_report([record],
-                            data, action)
+                        oext, rcontent = cls._execute_html_report(
+                            [record],
+                            data,
+                            action,
+                            side_margin=cls.side_margin,
+                            extra_vertical_margin=cls.extra_vertical_margin)
                         rfilename = '%s.%s' % (
                             slugify(record.render.rec_name),
                             oext)
@@ -459,7 +465,12 @@ class HTMLReportMixin:
                 content = content.getvalue()
                 return ('zip', content, False, filename)
 
-            oext, content = cls._execute_html_report(records, data, action)
+            oext, content = cls._execute_html_report(
+                    records,
+                    data,
+                    action,
+                    side_margin=cls.side_margin,
+                    extra_vertical_margin=cls.extra_vertical_margin)
             if not isinstance(content, str):
                 content = bytearray(content) if bytes == str else bytes(content)
 
@@ -477,7 +488,8 @@ class HTMLReportMixin:
         return oext, content, cls.get_direct_print(action), filename
 
     @classmethod
-    def _execute_html_report(cls, records, data, action):
+    def _execute_html_report(cls, records, data, action, side_margin=2,
+            extra_vertical_margin=30):
         header_template, main_template, footer_template, last_footer_template = \
                 cls.get_templates_jinja(action)
         extension = data.get('output_format', action.extension or 'pdf')
@@ -498,8 +510,13 @@ class HTMLReportMixin:
                     last_footer_template, record=record, records=[record],
                     data=data)
                 if extension == 'pdf':
-                    documents.append(PdfGenerator(content, header_html=header,
-                            footer_html=footer, last_footer_html=last_footer).render_html())
+                    documents.append(PdfGenerator(
+                            content,
+                            header_html=header,
+                            footer_html=footer,
+                            last_footer_html=last_footer,
+                            side_margin=side_margin,
+                            extra_vertical_margin=extra_vertical_margin).render_html())
                 else:
                     documents.append(content)
             if extension == 'pdf' and documents:
@@ -518,8 +535,14 @@ class HTMLReportMixin:
             last_footer = last_footer_template and cls.render_template_jinja(action,
                 last_footer_template, records=records, data=data)
             if extension == 'pdf':
-                document = PdfGenerator(content, header_html=header,
-                    footer_html=footer, last_footer_html=last_footer).render_html().write_pdf()
+                document = PdfGenerator(
+                    content,
+                    header_html=header,
+                    footer_html=footer,
+                    last_footer_html=last_footer,
+                    side_margin=side_margin,
+                    extra_vertical_margin=extra_vertical_margin
+                    ).render_html().write_pdf()
             else:
                 document = content
         return extension, document

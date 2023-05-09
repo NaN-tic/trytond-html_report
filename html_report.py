@@ -120,6 +120,8 @@ class HTMLReport(Report):
     render_method = "weasyprint"
     babel_domain = 'messages'
     report_translations = None
+    side_margin = 2
+    extra_vertical_margin = 30
 
     @classmethod
     def execute(cls, ids, data):
