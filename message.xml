@@ -22,5 +22,12 @@
         <record model="ir.message" id="nullslat_incorrect_format">
             <field name="text">The nullslast filter only accept a list of tuples.</field>
         </record>
+        <record model="ir.message" id="msg_error_timeout">
+            <field name="text">The process was interrupted by timeout.</field>
+        </record>
+        <record model="ir.message" id="msg_exception_timeout">
+            <field name="text">The process was an exception:
+%(result)s</field>
+        </record>
     </data>
 </tryton>

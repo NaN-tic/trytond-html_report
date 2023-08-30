@@ -6,6 +6,7 @@ import logging
 import subprocess
 import zipfile
 import tempfile
+import multiprocessing
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 from functools import partial
@@ -421,9 +422,10 @@ class HTMLReportMixin:
         return pdf_data
 
     @classmethod
-    def execute(cls, ids, data):
+    def __execute(cls, ids, data, queue=None):
         cls.check_access()
         action, model = cls.get_action(data)
+
         # in case is not jinja, call super()
         if action.template_extension != 'jinja':
             return super().execute(ids, data)
@@ -476,16 +478,66 @@ class HTMLReportMixin:
 
             if action.html_copies and action.html_copies > 1:
                 content = cls.merge_pdfs([content] * action.html_copies)
-
             Printer = None
             try:
                 Printer = Pool().get('printer')
             except KeyError:
                 logger.warning('Model "Printer" not found.')
             if Printer:
-                return Printer.send_report(oext, content,
+                result = Printer.send_report(oext, content,
                     action_name, action)
-        return oext, content, cls.get_direct_print(action), filename
+                if result:
+                    oext, content, direct_print, filename = result
+
+        if queue and content:
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                temp_file.write(content)
+            try:
+                queue.put((oext, temp_file.name, cls.get_direct_print(action), filename))
+            except Exception as e:
+                queue.put(e)
+        elif content:
+            return (oext, content, cls.get_direct_print(action), filename)
+
+    @classmethod
+    def execute(cls, ids, data):
+        cls.check_access()
+        action, model = cls.get_action(data)
+        # in case is not jinja, call super()
+        if action.template_extension != 'jinja':
+            return super().execute(ids, data)
+
+        context = Transaction().context
+        if context.get('timeout'):
+            timeout = context['timeout']
+
+            queue = multiprocessing.SimpleQueue()
+            process = multiprocessing.Process(target=cls.__execute, args=(ids, data, queue,))
+            process.start()
+
+            try:
+                process.join(timeout=timeout)
+
+                if process.is_alive():
+                    process.terminate()
+                    raise UserError(gettext('html_report.msg_error_timeout'))
+                else:
+                    if not queue.empty():
+                        result = queue.get()
+
+                        if isinstance(result, Exception):
+                            raise UserError(gettext('html_report.msg_exception_timeout',
+                                result=result))
+                        else:
+                            with open(result[1], "rb") as temp_file:
+                                content = temp_file.read()
+                                # TODO remove tmp file
+                                return (result[0], content, result[2], result[3])
+
+            except KeyboardInterrupt:
+                process.terminate()
+                process.join()
+        return cls.__execute(ids, data, queue=None)
 
     @classmethod
     def _execute_html_report(cls, records, data, action, side_margin=2,
