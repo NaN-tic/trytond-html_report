@@ -522,7 +522,9 @@ class HTMLReportMixin:
                     process.terminate()
                     raise UserError(gettext('html_report.msg_error_timeout'))
                 else:
-                    if not queue.empty():
+                    if queue.empty():
+                        raise UserError(gettext('html_report.msg_queue_empty'))
+                    else:
                         result = queue.get()
 
                         if isinstance(result, Exception):
