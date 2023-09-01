@@ -6,17 +6,13 @@ import logging
 import subprocess
 import zipfile
 import tempfile
+import traceback
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 from functools import partial
 from io import BytesIO
 from urllib.parse import urlparse
-
-try:
-    from PyPDF2 import PdfMerger, PdfReader
-except ImportError:
-    from PyPDF2 import PdfFileMerger as PdfMerger, PdfFileReader as PdfReader
-
+from pypdf import PdfMerger, PdfReader
 import re
 import barcode
 import jinja2
@@ -851,6 +847,24 @@ class HTMLReportMixin:
         try:
             res = report_template.render(**context)
         except Exception as e:
+            o = traceback.TracebackException.from_exception(e)
+            lineno = None
+            for line in reversed(o.stack):
+                if line.filename == '<template>':
+                    lineno = line.lineno
+                    break
+            if lineno:
+                location = []
+                location.append('Line %s' % lineno)
+                lines = template_string.splitlines()
+                for line in reversed(lines[:lineno]):
+                    if re.match(r'^\s*{%\s*macro\s+', line):
+                        location.append('Macro %s' % line.split()[2])
+                        break
+                location.append('Expr: %s' %
+                    template_string.splitlines()[lineno-1])
+                e.args = e.args + tuple(location)
+
             if RAISE_USER_ERRORS or action.html_raise_user_error:
                 raise UserError(gettext('html_report.render_error',
                         report=action.rec_name, error=repr(e)))
