@@ -183,7 +183,8 @@ class Formatter:
         lang = self.__langs.get(locale)
         if lang:
             return lang
-        lang, = Lang.search([('code', '=', locale or 'en')], limit=1)
+        langs = Lang.search([('code', '=', locale or 'en')], limit=1)
+        lang = langs[0] if langs else 'en'
         self.__langs[locale] = lang
         return lang
 
@@ -626,7 +627,8 @@ class HTMLReportMixin:
 
         def render(value, digits=2, lang=None, filename=None):
             if not lang:
-                lang, = Lang.search([('code', '=', 'en')], limit=1)
+                langs = Lang.search([('code', '=', 'en')], limit=1)
+                lang = langs[0] if langs else 'en'
             if isinstance(value, (float, Decimal)):
                 return lang.format('%.*f', (digits, value),
                     grouping=True)
@@ -685,9 +687,10 @@ class HTMLReportMixin:
 
         locale = Transaction().context.get('report_lang',
             Transaction().language).split('_')[0]
-        lang, = Lang.search([
+        langs = Lang.search([
                 ('code', '=', locale or 'en'),
-                ])
+                ], limit=1)
+        lang = langs[0] if langs else 'en'
         return {
             'modulepath': module_path,
             'base64': base64,
