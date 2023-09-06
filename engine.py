@@ -808,6 +808,11 @@ class HTMLReportMixin:
         return DualRecord(record)
 
     @classmethod
+    def raise_user_error(cls, value):
+        raise UserError(value)
+
+
+    @classmethod
     def render_template_jinja(cls, action, template_string, record=None,
             records=None, data=None):
         """
@@ -838,6 +843,7 @@ class HTMLReportMixin:
             'barcode': cls.barcode,
             'timedelta': timedelta,
             'dualrecord': cls.dualrecord,
+            'raise_user_error': cls.raise_user_error,
             }
         if Company:
             context['company'] = DualRecord(Company(
