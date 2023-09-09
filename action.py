@@ -22,7 +22,10 @@ class ActionReport(metaclass=PoolMeta):
             'invisible': Eval('template_extension') != 'jinja',
             },
         depends=['template_extension'])
-    jinja_template = fields.Text('Jinja Template')
+    jinja_template = fields.Text('Jinja Template',
+        states={
+            'invisible': Eval('template_extension') != 'jinja',
+            })
     html_header_template = fields.Many2One('html.template', 'Header',
         domain=[
             ('type', '=', 'header'),
