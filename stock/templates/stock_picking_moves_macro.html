@@ -1,34 +1,33 @@
 <table style="width:100%;">
   <thead>
     <tr>
-    {% if locations in ('from', 'both') %}
-      <th nowrap>{{ label('stock.move', 'from_location') }}</th>
-    {%endif%}
-    {%if locations in ('to', 'both') %}
-      <th nowrap>{{ label('stock.move', 'to_location') }}</th>
-    {%endif%}
-    <th nowrap>{{ label('product.product', 'code') }}</th>
-    <th nowrap>{{ label('product.template', 'name') }}</th>
-    {% if show_lots %}<th>{{ label('stock.move', 'lot') }}</th>{% endif %}
-    <th class="text-right" nowrap>{{label('stock.move', 'quantity') }}</th>
-    <th nowrap>{{ label('stock.move', 'uom') }}</th>
+      <th nowrap>{{ label('product.product', 'code') }}</th>
+      <th nowrap>{{ label('product.template', 'name') }}</th>
+      {% if show_lots %}<th>{{ label('stock.move', 'lot') }}</th>{% endif %}
+      <th class="text-right" nowrap>{{label('stock.move', 'quantity') }}</th>
+      <th nowrap>{{ label('stock.move', 'uom') }}</th>
     </tr>
   </thead>
   <tbody class="border">
-    {% for move in moves %}
-        <tr>
-          {%if locations in ('from', 'both') %}
-            <td>{{move.from_location.render.code}} {{move.from_location.render.name}}</td>
-          {%endif%}
-          {%if locations in ('to', 'both') %}
-            <td>{{move.to_location.render.code}} {{move.to_location.render.name}}</td>
-          {%endif%}
-          <td>{{ move.product and move.product.render.code or '-' }}</td>
-          <td>{{ move.product and move.product.render.name or '-' }}</td>
-          {% if show_lots %}<td>{{ move.lot and move.lot.render.number or '' }}{% if move.raw.lot and move.lot.raw.expiration_date %} ({{ move.lot.render.expiration_date }}){% endif %}</td>{% endif %}
-          <td class="text-right">{{ move.render.quantity }}</td>
-          <td>{{ move.uom.render.name }}</td>
-        </tr>
-    {% endfor %}
+  {% if record.incoming_moves %}{% for move in record.incoming_moves %}
+     <tr>
+       <td>{{ move.product and move.product.render.code or '' }}</td>
+       <td>{{ move.product and move.product.render.name or '-' }}</td>
+       {% if show_lots %}<td>{{ move.lot and move.lot.render.number or '' }}{% if move.raw.lot and move.lot.raw.expiration_date %} ({{ move.lot.render.expiration_date }}){% endif %}</td>{% endif %}
+       <td class="text-right">{{ move.render.quantity }}</td>
+       <td>{{ move.uom.render.name }}</td>
+     </tr>
+     <tr style="border-bottom: 1px solid black;"> </tr>
+     {% endfor %}
+  {% else %}{% for move in record.moves %}
+     <tr>
+       <td>{{ move.product and move.product.render.code or '' }}</td>
+       <td>{{ move.product and move.product.render.name or '-' }}</td>
+       {% if show_lots %}<td>{{ move.lot and move.lot.render.number or '' }}{% if move.raw.lot and move.lot.raw.expiration_date %} ({{ move.lot.render.expiration_date }}){% endif %}</td>{% endif %}
+       <td class="text-right">{{ move.render.quantity }}</td>
+       <td>{{ move.uom.render.name }}</td>
+     </tr>
+     {% endfor %}
+  {% endif %}
   </tbody>
 </table>
