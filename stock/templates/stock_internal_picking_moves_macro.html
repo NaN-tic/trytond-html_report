@@ -9,7 +9,7 @@
     </tr>
   </thead>
   <tbody class="border">
-  {% for move in record.inventory_moves %}
+  {% if record.incoming_moves %}{% for move in record.incoming_moves %}
      <tr>
        <td>{{ move.product and move.product.render.code or '' }}</td>
        <td>{{ move.product and move.product.render.name or '-' }}</td>
@@ -19,5 +19,15 @@
      </tr>
      <tr style="border-bottom: 1px solid black;"> </tr>
      {% endfor %}
+  {% else %}{% for move in record.moves %}
+     <tr>
+       <td>{{ move.product and move.product.render.code or '' }}</td>
+       <td>{{ move.product and move.product.render.name or '-' }}</td>
+       {% if show_lots %}<td>{{ move.lot and move.lot.render.number or '' }}{% if move.raw.lot and move.lot.raw.expiration_date %} ({{ move.lot.render.expiration_date }}){% endif %}</td>{% endif %}
+       <td class="text-right">{{ move.render.quantity }}</td>
+       <td>{{ move.uom.render.name }}</td>
+     </tr>
+     {% endfor %}
+  {% endif %}
   </tbody>
 </table>
