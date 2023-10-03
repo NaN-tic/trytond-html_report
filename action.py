@@ -110,7 +110,7 @@ class ActionReport(metaclass=PoolMeta):
         else:
             first = ''
             last = content_obj
-        new_content = '\n'.join([first, self.jinja_template or '', last])
+        new_content = '\n'.join([self.jinja_template or '', first, last])
         content.append(new_content or '')
         return '\n\n'.join(content)
 
