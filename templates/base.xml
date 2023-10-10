@@ -79,6 +79,16 @@
         <field name="implements" ref="css_macro_signature"/>
     </record>
 
+    <record model='html.template.signature' id="css_extension_macro_signature">
+        <field name="name">show_css_extension()</field>
+    </record>
+    <record model='html.template' id="css_extension_macro_id">
+        <field name="name">CSS Extension</field>
+        <field name="type">macro</field>
+        <field name="sequence" eval="99"/>
+        <field name="implements" ref="css_extension_macro_signature"/>
+    </record>
+
     <record model='html.template.signature' id="party_macro_signature">
         <field name="name">show_party_info(party, tax_identifier, address, second_address_label, second_address)</field>
     </record>

@@ -100,6 +100,11 @@
       <field name="signature" ref="css_macro_signature"/>
     </record>
 
+    <record model="html.report.template" id="report_css_extension_id">
+      <field name="report" ref="html_report_invoice"/>
+      <field name="signature" ref="css_extension_macro_signature"/>
+    </record>
+
     <record model="html.report.template" id="report_invoice_invoice_company_id">
       <field name="report" ref="html_report_invoice"/>
       <field name="signature" ref="company_info_macro_signature"/>
