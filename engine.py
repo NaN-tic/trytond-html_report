@@ -3,6 +3,7 @@ import io
 import mimetypes
 import os
 import logging
+import pytz
 import subprocess
 import zipfile
 import tempfile
@@ -642,7 +643,7 @@ class HTMLReportMixin:
             if hasattr(value, 'rec_name'):
                 return value.rec_name
             if isinstance(value, datetime):
-                return lang.strftime(value) + ' ' + value.strftime('%H:%M:%S')
+                return lang.strftime(value)
             if isinstance(value, date):
                 return lang.strftime(value)
             if isinstance(value, timedelta):
@@ -827,13 +828,15 @@ class HTMLReportMixin:
         if records is None:
             records = []
 
+        now = datetime.now()
         context = {
             'report': DualRecord(action),
             'record': record,
             'records': records,
             'data': data,
-            'time': datetime.now(),
             'user': DualRecord(User(Transaction().user)),
+            'time': now,
+            'utc_time': now,
             'Decimal': Decimal,
             'label': cls.label,
             'qrcode': cls.qrcode,
@@ -843,8 +846,14 @@ class HTMLReportMixin:
             'raise_user_error': cls.raise_user_error,
             }
         if Company:
-            context['company'] = DualRecord(Company(
-                    Transaction().context.get('company')))
+            company = Company(Transaction().context.get('company'))
+            context['company'] = DualRecord(company)
+            if company.timezone:
+                timezone = pytz.timezone(company.timezone)
+                tznow = timezone.localize(now)
+                tznow = now + tznow.utcoffset()
+                context['time'] = tznow
+
         context.update(cls.local_context())
         try:
             report_template = env.from_string(template_string)
