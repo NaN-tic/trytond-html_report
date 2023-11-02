@@ -894,8 +894,9 @@ class HTMLReportMixin:
             'timedelta': timedelta,
             'dualrecord': cls.dualrecord,
             }
-        if Company:
-            company = Company(Transaction().context.get('company'))
+        company_id = Transaction().context.get('company')
+        if Company and company_id:
+            company = Company(company_id)
             context['company'] = DualRecord(company)
             if company.timezone:
                 timezone = pytz.timezone(company.timezone)
