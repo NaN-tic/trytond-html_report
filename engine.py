@@ -880,7 +880,7 @@ class HTMLReportMixin:
                 location.append('Line %s' % lineno)
                 lines = template_string.splitlines()
                 for line in reversed(lines[:lineno]):
-                    if re.match('r^\s*{%\s*endmacro\s+', line):
+                    if re.match(r'^\s*{%\s*endmacro\s+', line):
                         location.append('(not in a macro)')
                         break
                     if re.match(r'^\s*{%\s*macro\s+', line):
