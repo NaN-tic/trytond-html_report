@@ -254,7 +254,7 @@ class HtmlReportTestCase(CompanyTestMixin, ModuleTestCase):
                             ('create', [{
                                         'product': product1,
                                         'quantity': 2,
-                                        'uom': unit,
+                                        'unit': unit,
                                         'from_location': storage_loc.id,
                                         'to_location': lost_found_loc.id,
                                         }]),

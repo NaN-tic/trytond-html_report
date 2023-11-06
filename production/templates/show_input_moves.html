@@ -16,7 +16,7 @@
           <th class="hide"/>
         {% endif %}
         <th class="text-right" nowrap>{{label('stock.move', 'quantity') }}</th>
-        <th nowrap>{{ label('stock.move', 'uom') }}</th>
+        <th nowrap>{{ label('stock.move', 'unit') }}</th>
       </tr>
   </thead>
   <tbody class="border">
@@ -37,7 +37,7 @@
             <td/>
           {%endif%}
           <td class="text-right">{{ move.render.quantity }}</td>
-          <td>{{ move.uom.render.name }}</td>
+          <td>{{ move.unit.render.name }}</td>
         </tr>
     {% endfor %}
   </tbody>

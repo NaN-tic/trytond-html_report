@@ -5,7 +5,7 @@
     <th nowrap>{{ label('product.template', 'name') }}</th>
     {% if document.raw.show_lots %}<th>{{ label('stock.move', 'lot') }}</th>{% endif %}
     <th class="text-right" nowrap>{{label('stock.move', 'quantity') }}</th>
-    <th nowrap>{{ label('stock.move', 'uom') }}</th>
+    <th nowrap>{{ label('stock.move', 'unit') }}</th>
     {%if valued == True %}
       <th class="text-right">{{label('stock.move', 'gross_unit_price') }}</th>
       <th class="text-right"></th>
@@ -34,7 +34,7 @@
               <td>{{ move.product and move.product.render.name or '-' }}</td>
               {% if document.raw.show_lots %}<td>{{ move.lot and move.lot.render.number or '' }}{% if move.raw.lot and move.lot.raw.expiration_date %} ({{ move.lot.render.expiration_date }}){% endif %}</td>{% endif %}
               <td class="text-right">{{ move.render.quantity }}</td>
-              <td>{{ move.uom.render.name }}</td>
+              <td>{{ move.unit.render.name }}</td>
               {%if valued == True %}
                 <td class="text-right" nowrap>{{ move.render.gross_unit_price }} {{ document.currency.render.symbol }}</td>
                 {% if move.raw.discount and move.raw.discount > 0 %}

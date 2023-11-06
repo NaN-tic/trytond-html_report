@@ -14,7 +14,7 @@
       <th class="hide"/>
     {% endif %}
     <th class="text-right" nowrap>{{label('stock.move', 'quantity') }}</th>
-    <th nowrap>{{ label('stock.move', 'uom') }}</th>
+    <th nowrap>{{ label('stock.move', 'unit') }}</th>
     {%if valued == True %}
       <th class="text-right">{{label('stock.move', 'gross_unit_price') }}</th>
       <th class="text-right"></th>
@@ -42,7 +42,7 @@
                 <td/>
               {%endif%}
               <td class="text-right">{{ move.render.quantity }}</td>
-              <td>{{ move.uom.render.name }}</td>
+              <td>{{ move.unit.render.name }}</td>
               {%if valued == True %}
                 <td class="text-right" nowrap>{{ move.render.gross_unit_price }}</td>
                 <td class="text-right" nowrap>{% if move.raw.discount and move.raw.discount > 0 %}{{ '-{0:.2F}'.format(move.raw.discount*100) }}{% endif %}</td>
