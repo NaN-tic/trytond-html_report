@@ -226,8 +226,7 @@ class Formatter:
     def _formatted_datetime(self, record, field, value):
         if value is None:
             return ''
-        return (self._get_lang().strftime(value) + ' '
-            + value.strftime('%H:%M:%S'))
+        return self._get_lang().strftime(value)
 
     def _formatted_timestamp(self, record, field, value):
         return self._formatted_datetime(record, field, value)
