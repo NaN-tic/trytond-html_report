@@ -13,7 +13,7 @@ class ShipmentOutReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta)
     @classmethod
     def __setup__(cls):
         super(ShipmentOutReturn, cls).__setup__()
-        cls.html_party.context = {'company': Eval('company')}
+        cls.html_party.context = {'company': Eval('company', -1)}
         cls.html_party.depends = ['company']
 
     def get_show_lots(self, name):
@@ -54,7 +54,7 @@ class ShipmentInReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
     @classmethod
     def __setup__(cls):
         super(ShipmentInReturn, cls).__setup__()
-        cls.html_party.context = {'company': Eval('company')}
+        cls.html_party.context = {'company': Eval('company', -1)}
         cls.html_party.depends = ['company']
 
     def get_show_lots(self, name):
@@ -86,7 +86,7 @@ class ShipmentOut(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
     @classmethod
     def __setup__(cls):
         super(ShipmentOut, cls).__setup__()
-        cls.html_party.context = {'company': Eval('company')}
+        cls.html_party.context = {'company': Eval('company', -1)}
         cls.html_party.depends = ['company']
 
     def get_html_party(self, name):
@@ -160,7 +160,7 @@ class ShipmentInternal(HTMLPartyInfoMixin, metaclass=PoolMeta):
     @classmethod
     def __setup__(cls):
         super(ShipmentInternal, cls).__setup__()
-        cls.html_party.context = {'company': Eval('company')}
+        cls.html_party.context = {'company': Eval('company', -1)}
         cls.html_party.depends = ['company']
 
     def get_html_party(self, name):
