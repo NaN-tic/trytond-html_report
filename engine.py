@@ -253,7 +253,7 @@ class Formatter:
             return ''
         digits = field.digits
         if isinstance(digits, str):
-            digits = getattr(record, digits).digits
+            digits = getattr(record, digits).digits if getattr(record, digits) else None
         else:
             # TODO remove from issue10677
             if digits:
