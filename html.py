@@ -163,7 +163,7 @@ class HTMLPartyInfoMixin:
 
     def get_html_address(self, name):
         return (self.html_party and self.html_party.addresses
-            and self.html_party.addresses[0].id)
+            and self.html_party.addresses[0].id or None)
 
     def get_html_second_address(self, name):
         return
