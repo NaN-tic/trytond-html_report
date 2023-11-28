@@ -13,8 +13,7 @@
     <field name="parent"/>
     <notebook colspan="6">
       <page name="content">
-         <field name="content" widget="html" colspan="6"/>
-         <field name="content" height="500"/>
+         <field name="content" height="500" widget="code"/>
        </page>
 	     <page name="all_content">
           <field name="all_content" height="500"/>
