@@ -832,20 +832,21 @@ class HTMLReportMixin:
 
         now = datetime.now()
         context = {
-            'report': DualRecord(action),
+            'data': data,
+            'Decimal': Decimal,
+            'dualrecord': cls.dualrecord,
+            'qrcode': cls.qrcode,
+            'label': cls.label,
+            'pool': Pool(),
+            'raise_user_error': cls.raise_user_error,
             'record': record,
             'records': records,
-            'data': data,
-            'user': DualRecord(User(Transaction().user)),
+            'report': DualRecord(action),
             'time': now,
-            'utc_time': now,
-            'Decimal': Decimal,
-            'label': cls.label,
-            'qrcode': cls.qrcode,
-            'barcode': cls.barcode,
             'timedelta': timedelta,
-            'dualrecord': cls.dualrecord,
-            'raise_user_error': cls.raise_user_error,
+            'user': DualRecord(User(Transaction().user)),
+            'utc_time': now,
+            'barcode': cls.barcode,
             }
         company_id = Transaction().context.get('company')
         if Company and company_id:
