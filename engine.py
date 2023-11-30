@@ -278,9 +278,11 @@ class Formatter:
         value = binascii.b2a_base64(value)
         value = value.decode('ascii')
         filename = field.filename
-        mimetype = DEFAULT_MIME_TYPE
+        mimetype = None
         if filename:
             mimetype = mimetypes.guess_type(filename)[0]
+        if not mimetype:
+            mimetype = DEFAULT_MIME_TYPE
         return ('data:%s;base64,%s' % (mimetype, value)).strip()
 
     def _formatted_selection(self, record, field, value):
@@ -626,6 +628,8 @@ class HTMLReportMixin:
                 value = binascii.b2a_base64(f.read())
                 value = value.decode('ascii')
                 mimetype = mimetypes.guess_type(f.name)[0]
+                if not mimetype:
+                    mimetype = DEFAULT_MIME_TYPE
                 return ('data:%s;base64,%s' % (mimetype, value)).strip()
 
         def render(value, digits=2, lang=None, filename=None):
@@ -655,9 +659,11 @@ class HTMLReportMixin:
             if isinstance(value, bytes):
                 value = binascii.b2a_base64(value)
                 value = value.decode('ascii')
-                mimetype = DEFAULT_MIME_TYPE
+                mimetype = None
                 if filename:
                     mimetype = mimetypes.guess_type(filename)[0]
+                if not mimetype:
+                    mimetype = DEFAULT_MIME_TYPE
                 return ('data:%s;base64,%s' % (mimetype, value)).strip()
             return value
 
