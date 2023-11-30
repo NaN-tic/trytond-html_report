@@ -3,6 +3,7 @@ import io
 import mimetypes
 import os
 import logging
+import markdown
 import pytz
 import subprocess
 import zipfile
@@ -704,29 +705,30 @@ class HTMLReportMixin:
                 ], limit=1)
         lang = langs[0] if langs else 'en'
         return {
-            'modulepath': module_path,
             'base64': base64,
-            'render': partial(render, lang=lang),
-            'integer_to_words': words.integer_to_words,
-            'number_to_words': words.number_to_words,
+            'currencyformat': partial(numbers.format_currency, locale=locale),
+            'decimalformat': partial(numbers.format_decimal, locale=locale),
             'dateformat': partial(dates.format_date, locale=locale),
             'datetimeformat': partial(dates.format_datetime, locale=locale),
-            'timeformat': partial(dates.format_time, locale=locale),
-            'timedeltaformat': partial(dates.format_timedelta, locale=locale),
+            'integer_to_words': words.integer_to_words,
+            'format_currency': Report.format_currency,
+            'format_date': Report.format_date,
+            'format_datetime': Report.format_datetime,
+            'format_number': Report.format_number,
+            'format_timedelta': Report.format_timedelta,
+            'grouped_slice': grouped_slice,
+            'markdown': markdown.markdown,
+            'modulepath': module_path,
+            'nullslast': nullslast,
             'numberformat': partial(numbers.format_number, locale=locale),
-            'decimalformat': partial(numbers.format_decimal, locale=locale),
-            'currencyformat': partial(numbers.format_currency, locale=locale),
+            'number_to_words': words.number_to_words,
+            'render': partial(render, lang=lang),
             'percentformat': partial(numbers.format_percent, locale=locale),
             'scientificformat': partial(
                 numbers.format_scientific, locale=locale),
-            'grouped_slice': grouped_slice,
-            'nullslast': nullslast,
             'short_url': short_url,
-            'format_date': Report.format_date,
-            'format_datetime': Report.format_datetime,
-            'format_timedelta': Report.format_timedelta,
-            'format_currency': Report.format_currency,
-            'format_number': Report.format_number,
+            'timedeltaformat': partial(dates.format_timedelta, locale=locale),
+            'timeformat': partial(dates.format_time, locale=locale),
             }
 
     @classmethod
