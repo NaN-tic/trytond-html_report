@@ -1,5 +1,11 @@
 from weasyprint import HTML, CSS
-
+from trytond.i18n import gettext
+from trytond.exceptions import UserError
+from trytond.transaction import Transaction
+import os
+import json
+import tempfile
+import subprocess
 
 class PdfGenerator:
     """
@@ -182,6 +188,30 @@ class PdfGenerator:
 
         return main_doc
 
+    def render_pdf(self):
+        context = Transaction().context
+        timeout = context.get('timeout', None)
+        path = os.path.dirname(os.path.abspath(__file__)) + '/'
+        json_path = self.to_json_file()
+        process = subprocess.Popen(['python3', path+'generator_script.py', json_path],
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                    encoding='utf-8', errors='ignore')
+        out = None
+        try:
+            out, err = process.communicate(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            print('timeout')
+            process.kill()
+            out, err = process.communicate()
+            raise UserError(gettext('html_report.msg_error_timeout'))
+
+        document = None
+        if out and os.path.exists(out.strip()):
+            with open(out.strip(), 'rb') as file:
+                document = file.read()
+            os.remove(out.strip())
+        return document
+
     @staticmethod
     def get_element(boxes, element):
         """
@@ -196,3 +226,24 @@ class PdfGenerator:
             box_children = PdfGenerator.get_element(box.all_children(), element)
             if box_children:
                 return box_children
+
+    def to_json_file(self):
+        """
+        Write the PdfGenerator properties to a JSON file.
+
+        Parameters:
+        - filepath: The path to the JSON file.
+        """
+        data = {
+            "main_html": self.main_html,
+            "header_html": self.header_html,
+            "footer_html": self.footer_html,
+            "last_footer_html": self.last_footer_html,
+            "base_url": self.base_url,
+            "side_margin": self.side_margin,
+            "extra_vertical_margin": self.extra_vertical_margin
+        }
+        with tempfile.NamedTemporaryFile(mode='w', delete=False) as file:
+            filepath = file.name
+            json.dump(data, file)
+        return filepath

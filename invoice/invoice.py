@@ -3,7 +3,7 @@ from trytond.pool import Pool, PoolMeta
 from trytond.rpc import RPC
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
-from trytond.modules.html_report.html import HTMLPartyInfoMixin
+from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.html_report import HTMLReport
 
 

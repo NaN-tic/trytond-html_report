@@ -503,42 +503,8 @@ class HTMLReportMixin:
     def execute(cls, ids, data):
         cls.check_access()
         action, model = cls.get_action(data)
-        # in case is not jinja, call super()
         if action.template_extension != 'jinja':
             return super().execute(ids, data)
-
-        context = Transaction().context
-        if context.get('timeout'):
-            timeout = context['timeout']
-
-            queue = multiprocessing.SimpleQueue()
-            process = multiprocessing.Process(target=cls.__execute, args=(ids, data, queue,))
-            process.start()
-
-            try:
-                process.join(timeout=timeout)
-
-                if process.is_alive():
-                    process.terminate()
-                    raise UserError(gettext('html_report.msg_error_timeout'))
-                else:
-                    if queue.empty():
-                        raise UserError(gettext('html_report.msg_queue_empty'))
-                    else:
-                        result = queue.get()
-
-                        if isinstance(result, Exception):
-                            raise UserError(gettext('html_report.msg_exception_timeout',
-                                result=result))
-                        else:
-                            with open(result[1], "rb") as temp_file:
-                                content = temp_file.read()
-                                # TODO remove tmp file
-                                return (result[0], content, result[2], result[3])
-
-            except KeyboardInterrupt:
-                process.terminate()
-                process.join()
         return cls.__execute(ids, data, queue=None)
 
     @classmethod
@@ -596,7 +562,7 @@ class HTMLReportMixin:
                     last_footer_html=last_footer,
                     side_margin=side_margin,
                     extra_vertical_margin=extra_vertical_margin
-                    ).render_html().write_pdf()
+                    ).render_pdf()
             else:
                 document = content
         return extension, document

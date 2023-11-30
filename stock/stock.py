@@ -1,7 +1,7 @@
 from trytond.model import fields
 from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
-from trytond.modules.html_report.html import HTMLPartyInfoMixin
+from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import HTMLReportMixin
 
 
