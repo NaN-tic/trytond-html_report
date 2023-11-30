@@ -76,6 +76,9 @@ class ActionReport(metaclass=PoolMeta):
         }, depends=['single'],
         help='If set, a zip file with a document per record will be created.')
     html_copies = fields.Integer('Number of copies')
+    html_side_margin = fields.Integer('Side Margin (cm)')
+    html_extra_vertical_margin = fields.Integer('Extra Vertical Margin (cm)')
+
 
     @classmethod
     def __setup__(cls):

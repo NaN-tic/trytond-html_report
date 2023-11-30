@@ -425,6 +425,9 @@ class HTMLReportMixin:
         if action.template_extension != 'jinja':
             return super().execute(ids, data)
         action_name = cls.get_name(action)
+        side_margin = action.html_side_margin or cls.side_margin
+        extra_vertical_margin = (action.html_extra_vertical_margin
+            or cls.extra_vertical_margin)
 
         # use DualRecord when template extension is jinja
         data['html_dual_record'] = True
@@ -451,8 +454,8 @@ class HTMLReportMixin:
                             [record],
                             data,
                             action,
-                            side_margin=cls.side_margin,
-                            extra_vertical_margin=cls.extra_vertical_margin)
+                            side_margin=side_margin,
+                            extra_vertical_margin=extra_vertical_margin)
                         rfilename = '%s.%s' % (
                             slugify(record.render.rec_name),
                             oext)
@@ -466,8 +469,8 @@ class HTMLReportMixin:
                     records,
                     data,
                     action,
-                    side_margin=cls.side_margin,
-                    extra_vertical_margin=cls.extra_vertical_margin)
+                    side_margin=side_margin,
+                    extra_vertical_margin=extra_vertical_margin)
             if not isinstance(content, str):
                 content = bytearray(content) if bytes == str else bytes(content)
 

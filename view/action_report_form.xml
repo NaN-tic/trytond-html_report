@@ -18,6 +18,10 @@
             <field name="html_raise_user_error"/>
             <label name="html_copies"/>
             <field name="html_copies"/>
+            <label name="html_side_margin"/>
+            <field name="html_side_margin"/>
+            <label name="html_extra_vertical_margin"/>
+            <field name="html_extra_vertical_margin"/>
             <separator name="html_templates" colspan="4"/>
             <field name="html_templates" colspan="4"/>
         </page>
