@@ -1,8 +1,6 @@
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
-from trytond.rpc import RPC
 from trytond.pyson import Eval
-from trytond.transaction import Transaction
 from trytond.modules.html_report.html import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import HTMLReportMixin
 
@@ -71,25 +69,50 @@ class InvoiceReport(HTMLReportMixin, metaclass=PoolMeta):
         pool = Pool()
         Invoice = pool.get('account.invoice')
 
-        # Re-instantiate because records are DualRecord
-        invoice, = Invoice.browse([r.raw.id for r in records])
-        if invoice.invoice_report_cache:
-            return (
-                invoice.invoice_report_format,
-                invoice.invoice_report_cache)
+        to_invoice_cache = {}
+        to_cache = [r for r in records
+                        if r.raw.state in {'posted', 'paid'}
+                        and r.raw.type == 'out'
+                        and not r.raw.invoice_report_cache]
 
-        extension, document = super()._execute_html_report(records, data, action,
-                side_margin, extra_vertical_margin)
+        for record in to_cache:
+            extension, document = super()._execute_html_report([record], data, action,
+                    side_margin, extra_vertical_margin)
 
-        # If the invoice is posted or paid and the report not saved in
-        # invoice_report_cache there was an error somewhere. So we save it
-        # now in invoice_report_cache
-        if invoice.state in {'posted', 'paid'} and invoice.type == 'out':
-            if isinstance(data, str):
-                data = bytes(data, 'utf-8')
-            invoice.invoice_report_format = extension
-            invoice.invoice_report_cache = \
-                Invoice.invoice_report_cache.cast(document)
-            invoice.save()
+            if isinstance(document, str):
+                document = bytes(document, 'utf-8')
+
+            to_invoice_cache[record.raw.id] = {
+                'invoice_report_format': extension,
+                'invoice_report_cache': Invoice.invoice_report_cache.cast(document),
+                }
+
+        if to_invoice_cache:
+            to_write = []
+            for id, values in to_invoice_cache.items():
+                # Re-instantiate because records are DualRecord
+                to_write.extend(([Invoice(id)], {
+                    'invoice_report_format': values['invoice_report_format'],
+                    'invoice_report_cache': values['invoice_report_cache'],
+                    }))
+            Invoice.write(*to_write)
+
+        documents = []
+        for record in records:
+            if to_invoice_cache.get(record.raw.id):
+                extension = to_invoice_cache[record.raw.id]['invoice_report_format']
+                document = to_invoice_cache[record.raw.id]['invoice_report_cache']
+                documents.append(document)
+            elif record.raw.invoice_report_cache:
+                extension = record.raw.invoice_report_format
+                document = record.raw.invoice_report_cache
+                documents.append(document)
+            else:
+                extension, document = super()._execute_html_report([record], data, action,
+                    side_margin, extra_vertical_margin)
+                documents.append(document)
+        if len(documents) > 1:
+            extension = 'pdf'
+            document = cls.merge_pdfs(documents)
 
         return extension, document
