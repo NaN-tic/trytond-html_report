@@ -428,9 +428,12 @@ class HTMLReportMixin:
         if action.template_extension != 'jinja':
             return super().execute(ids, data)
         action_name = cls.get_name(action)
-        side_margin = action.html_side_margin or cls.side_margin
-        extra_vertical_margin = (action.html_extra_vertical_margin
-            or cls.extra_vertical_margin)
+        side_margin = action.html_side_margin
+        if side_margin is None:
+            side_margin = cls.side_margin
+        extra_vertical_margin = action.html_extra_vertical_margin
+        if extra_vertical_margin is None:
+            extra_vertical_margin = cls.extra_vertical_margin
 
         # use DualRecord when template extension is jinja
         data['html_dual_record'] = True
