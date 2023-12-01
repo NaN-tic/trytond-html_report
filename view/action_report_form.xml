@@ -26,7 +26,7 @@
             <field name="html_templates" colspan="4"/>
         </page>
         <page string="Jinja Template" id="jinja_template">
-            <field name="jinja_template" colspan="4"/>
+            <field name="jinja_template" colspan="4" widget="code"/>
         </page>
         <page name="html_content">
             <field name="html_content" colspan="4" widget="code"/>
