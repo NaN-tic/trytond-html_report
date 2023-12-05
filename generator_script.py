@@ -26,10 +26,13 @@ def from_json_file(filepath):
         side_margin=data["side_margin"],
         extra_vertical_margin=data["extra_vertical_margin"]
     )
-    os.remove(filepath)
     return reuslt
 
 def main(argv):
+    conunt = 0
+    for i in range(100000000):
+        conunt += 1
+
     json_filepath = argv[1]
     pdf_generator = from_json_file(json_filepath)
     result = pdf_generator.render_html().write_pdf()

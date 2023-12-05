@@ -484,20 +484,9 @@ class HTMLReportMixin:
             except KeyError:
                 logger.warning('Model "Printer" not found.')
             if Printer:
-                result = Printer.send_report(oext, content,
+                return Printer.send_report(oext, content,
                     action_name, action)
-                if result:
-                    oext, content, direct_print, filename = result
-
-        if queue and content:
-            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-                temp_file.write(content)
-            try:
-                queue.put((oext, temp_file.name, cls.get_direct_print(action), filename))
-            except Exception as e:
-                queue.put(e)
-        elif content:
-            return (oext, content, cls.get_direct_print(action), filename)
+            return oext, content, cls.get_direct_print(action), filename
 
     @classmethod
     def execute(cls, ids, data):

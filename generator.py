@@ -190,26 +190,31 @@ class PdfGenerator:
 
     def render_pdf(self):
         context = Transaction().context
-        timeout = context.get('timeout', None)
-        path = os.path.dirname(os.path.abspath(__file__)) + '/'
-        json_path = self.to_json_file()
-        process = subprocess.Popen(['python3', path+'generator_script.py', json_path],
-                    stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                    encoding='utf-8', errors='ignore')
-        out = None
-        try:
-            out, err = process.communicate(timeout=timeout)
-        except subprocess.TimeoutExpired:
-            print('timeout')
-            process.kill()
-            out, err = process.communicate()
-            raise UserError(gettext('html_report.msg_error_timeout'))
+        timeout_report = context.get('timeout_report', None)
 
-        document = None
-        if out and os.path.exists(out.strip()):
-            with open(out.strip(), 'rb') as file:
-                document = file.read()
-            os.remove(out.strip())
+        if timeout_report:
+            path = os.path.dirname(os.path.abspath(__file__)) + '/'
+            json_path = self.to_json_file()
+            process = subprocess.Popen(['python3', path+'generator_script.py', json_path],
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                        encoding='utf-8', errors='ignore')
+            out = None
+            try:
+                out, err = process.communicate(timeout=timeout_report)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                out, err = process.communicate()
+                raise UserError(gettext('html_report.msg_error_timeout', seconds=timeout_report))
+            finally:
+                os.remove(json_path)
+
+            document = None
+            if out and os.path.exists(out.strip()):
+                with open(out.strip(), 'rb') as file:
+                    document = file.read()
+                os.remove(out.strip())
+        else:
+            document = self.render_html().write_pdf()
         return document
 
     @staticmethod
