@@ -164,9 +164,17 @@ Render report::
     >>> oext, _, _, _ = InvoiceReport.execute([invoice])
     >>> oext == 'pdf'
     True
+    >>> invoice.invoice_report_cache == None
+    True
+    >>> invoice.invoice_report_format == None
+    True
 
 Post invoice::
 
     >>> invoice.click('post')
     >>> invoice.state
     'posted'
+    >>> invoice.invoice_report_cache != None
+    True
+    >>> invoice.invoice_report_format == 'pdf'
+    True
