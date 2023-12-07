@@ -1,10 +1,8 @@
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
-from trytond.rpc import RPC
 from trytond.pyson import Eval
-from trytond.transaction import Transaction
 from trytond.modules.html_report.html import HTMLPartyInfoMixin
-from trytond.modules.html_report.html_report import HTMLReport
+from trytond.modules.html_report.engine import HTMLReportMixin
 
 
 class Invoice(HTMLPartyInfoMixin, metaclass=PoolMeta):
@@ -61,41 +59,60 @@ class InvoiceLine(metaclass=PoolMeta):
         return ''
 
 
-class InvoiceReport(HTMLReport):
+class InvoiceReport(HTMLReportMixin, metaclass=PoolMeta):
     __name__ = 'account.invoice'
 
     @classmethod
-    def __setup__(cls):
-        super(InvoiceReport, cls).__setup__()
-        cls.__rpc__['execute'] = RPC(False)
+    def _execute_html_report(cls, records, data, action, side_margin=2,
+            extra_vertical_margin=30):
 
-    @classmethod
-    def execute(cls, ids, data):
         pool = Pool()
         Invoice = pool.get('account.invoice')
 
-        action, _ = cls.get_action(data)
+        to_invoice_cache = {}
+        to_cache = [r for r in records
+                        if r.raw.state in {'posted', 'paid'}
+                        and r.raw.type == 'out'
+                        and not r.raw.invoice_report_cache]
 
-        if len(ids) == 1:
-            # Re-instantiate because records are TranslateModel
-            invoice, = Invoice.browse(ids)
-            if invoice.invoice_report_cache:
-                return (
-                    invoice.invoice_report_format,
-                    bytes(invoice.invoice_report_cache),
-                    cls.get_direct_print(action),
-                    cls.get_name(action))
+        for record in to_cache:
+            extension, document = super()._execute_html_report([record], data, action,
+                    side_margin, extra_vertical_margin)
 
-        result = super(InvoiceReport, cls).execute(ids, data)
+            if isinstance(document, str):
+                document = bytes(document, 'utf-8')
 
-        if (len(ids) == 1 and invoice.state in {'posted', 'paid'}
-                and invoice.type == 'out'):
-            with Transaction().set_context(_check_access=False):
-                invoice, = Invoice.browse([invoice.id])
-                format_, data = result[0], result[1]
-                invoice.invoice_report_format = format_
-                invoice.invoice_report_cache = \
-                    Invoice.invoice_report_cache.cast(data)
-                invoice.save()
+            to_invoice_cache[record.raw.id] = {
+                'invoice_report_format': extension,
+                'invoice_report_cache': Invoice.invoice_report_cache.cast(document),
+                }
 
-        return result
+        if to_invoice_cache:
+            to_write = []
+            for id, values in to_invoice_cache.items():
+                # Re-instantiate because records are DualRecord
+                to_write.extend(([Invoice(id)], {
+                    'invoice_report_format': values['invoice_report_format'],
+                    'invoice_report_cache': values['invoice_report_cache'],
+                    }))
+            Invoice.write(*to_write)
+
+        documents = []
+        for record in records:
+            if to_invoice_cache.get(record.raw.id):
+                extension = to_invoice_cache[record.raw.id]['invoice_report_format']
+                document = to_invoice_cache[record.raw.id]['invoice_report_cache']
+                documents.append(document)
+            elif record.raw.invoice_report_cache:
+                extension = record.raw.invoice_report_format
+                document = record.raw.invoice_report_cache
+                documents.append(document)
+            else:
+                extension, document = super()._execute_html_report([record], data, action,
+                    side_margin, extra_vertical_margin)
+                documents.append(document)
+        if len(documents) > 1:
+            extension = 'pdf'
+            document = cls.merge_pdfs(documents)
+
+        return extension, document
