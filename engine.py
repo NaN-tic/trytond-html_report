@@ -421,9 +421,10 @@ class HTMLReportMixin:
         return pdf_data
 
     @classmethod
-    def execute(cls, ids, data):
+    def __execute(cls, ids, data, queue=None):
         cls.check_access()
         action, model = cls.get_action(data)
+
         # in case is not jinja, call super()
         if action.template_extension != 'jinja':
             return super().execute(ids, data)
@@ -482,7 +483,6 @@ class HTMLReportMixin:
 
             if action.html_copies and action.html_copies > 1:
                 content = cls.merge_pdfs([content] * action.html_copies)
-
             Printer = None
             try:
                 Printer = Pool().get('printer')
@@ -491,7 +491,15 @@ class HTMLReportMixin:
             if Printer:
                 return Printer.send_report(oext, content,
                     action_name, action)
-        return oext, content, cls.get_direct_print(action), filename
+            return oext, content, cls.get_direct_print(action), filename
+
+    @classmethod
+    def execute(cls, ids, data):
+        cls.check_access()
+        action, model = cls.get_action(data)
+        if action.template_extension != 'jinja':
+            return super().execute(ids, data)
+        return cls.__execute(ids, data, queue=None)
 
     @classmethod
     def _execute_html_report(cls, records, data, action, side_margin=2,
@@ -548,7 +556,7 @@ class HTMLReportMixin:
                     last_footer_html=last_footer,
                     side_margin=side_margin,
                     extra_vertical_margin=extra_vertical_margin
-                    ).render_html().write_pdf()
+                    ).render_pdf()
             else:
                 document = content
         return extension, document

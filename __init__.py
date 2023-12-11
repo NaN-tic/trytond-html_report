@@ -5,7 +5,7 @@ from trytond.pool import Pool
 from trytond.report import Report
 from . import action
 from . import translation
-from . import html
+from . import template
 from . import engine
 from . import product
 from . import invoice
@@ -20,10 +20,10 @@ def register():
     Pool.register(
         action.ActionReport,
         action.HTMLTemplateTranslation,
-        html.Signature,
-        html.Template,
-        html.TemplateUsage,
-        html.ReportTemplate,
+        template.Signature,
+        template.Template,
+        template.TemplateUsage,
+        template.ReportTemplate,
         module=module, type_='model')
     Pool.register(
         translation.ReportTranslationSet,

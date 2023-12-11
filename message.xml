@@ -22,5 +22,15 @@
         <record model="ir.message" id="nullslat_incorrect_format">
             <field name="text">The nullslast filter only accept a list of tuples.</field>
         </record>
+        <record model="ir.message" id="msg_error_timeout">
+            <field name="text">The process was interrupted by %(seconds)s seconds timeout.</field>
+        </record>
+        <record model="ir.message" id="msg_queue_empty">
+            <field name="text">The queue (timeout) was empty and can not render the report.</field>
+        </record>
+        <record model="ir.message" id="msg_exception_timeout">
+            <field name="text">There was an exception rendering the report:
+%(result)s</field>
+        </record>
     </data>
 </tryton>
