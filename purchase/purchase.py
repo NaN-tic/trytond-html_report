@@ -1,6 +1,6 @@
 from trytond.pool import PoolMeta
 from trytond.pyson import Eval
-from trytond.modules.html_report.html import HTMLPartyInfoMixin
+from trytond.modules.html_report.template import HTMLPartyInfoMixin
 
 
 class Purchase(HTMLPartyInfoMixin, metaclass=PoolMeta):
