@@ -1,6 +1,5 @@
 import sys
 import json
-import os
 import tempfile
 from generator import PdfGenerator
 
@@ -29,10 +28,6 @@ def from_json_file(filepath):
     return reuslt
 
 def main(argv):
-    conunt = 0
-    for i in range(100000000):
-        conunt += 1
-
     json_filepath = argv[1]
     pdf_generator = from_json_file(json_filepath)
     result = pdf_generator.render_html().write_pdf()

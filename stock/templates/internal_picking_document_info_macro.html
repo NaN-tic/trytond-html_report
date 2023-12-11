@@ -1,0 +1,18 @@
+{% set title = label(record.raw.__name__) %}
+
+{% set document_date = record.raw.effective_date and record.render.effective_date or ''%}
+{% set label_date = label(record.raw.__name__, 'effective_date') %}
+{% if record.raw.number_packages %}
+    {% set label_package = label(record.raw.__name__, 'number_packages') %}
+{% endif %}
+
+{% if record.raw.state not in ['assigned', 'picked', 'packed', 'done'] %}
+    <h1 class="document">{{ _('Draft') }}</h1>
+{% endif%}
+<h1 class="document">{{title}}: {{ record.raw.number and record.render.number }} <h1>
+<h2 class="document">{{label_date}}: {{ document_date }} </h2>
+{% if record.raw.number_packages %}
+    <h3 class="document">{{label_package}}: {{ record.render.number_packages }} </h3>
+{% endif %}
+<h3 class="document">{{ label('stock.shipment.internal', 'from_location') }}: {{ record.from_location.render.name }} </h3>
+<h3 class="document">{{ label('stock.shipment.internal', 'to_location') }}: {{ record.to_location.render.name }} </h3>

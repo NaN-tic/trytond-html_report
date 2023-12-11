@@ -74,7 +74,7 @@ class Template(sequence_ordered(), ModelSQL, ModelView):
         Signature = Pool().get('html.template.signature')
 
         res = []
-        match = re.findall("show_.*\(", self.content or '')
+        match = re.findall(r"show_.*\(", self.content or '')
         for name in match:
             res += Signature.search([('name', 'like', name + '%')])
         return [x.id for x in res]
@@ -163,7 +163,7 @@ class HTMLPartyInfoMixin:
 
     def get_html_address(self, name):
         return (self.html_party and self.html_party.addresses
-            and self.html_party.addresses[0].id)
+            and self.html_party.addresses[0].id or None)
 
     def get_html_second_address(self, name):
         return

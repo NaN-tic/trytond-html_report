@@ -3,21 +3,20 @@ import io
 import mimetypes
 import os
 import logging
+import pytz
 import subprocess
 import zipfile
 import tempfile
-import multiprocessing
+import traceback
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 from functools import partial
 from io import BytesIO
 from urllib.parse import urlparse
-
 try:
     from PyPDF2 import PdfMerger, PdfReader
 except ImportError:
     from PyPDF2 import PdfFileMerger as PdfMerger, PdfFileReader as PdfReader
-
 import re
 import barcode
 import jinja2
@@ -188,7 +187,8 @@ class Formatter:
         lang = self.__langs.get(locale)
         if lang:
             return lang
-        lang, = Lang.search([('code', '=', locale or 'en')], limit=1)
+        langs = Lang.search([('code', '=', locale or 'en')], limit=1)
+        lang = langs[0] if langs else 'en'
         self.__langs[locale] = lang
         return lang
 
@@ -226,8 +226,7 @@ class Formatter:
     def _formatted_datetime(self, record, field, value):
         if value is None:
             return ''
-        return (self._get_lang().strftime(value) + ' '
-            + value.strftime('%H:%M:%S'))
+        return self._get_lang().strftime(value)
 
     def _formatted_timestamp(self, record, field, value):
         return self._formatted_datetime(record, field, value)
@@ -257,7 +256,7 @@ class Formatter:
             return ''
         digits = field.digits
         if isinstance(digits, str):
-            digits = getattr(record, digits).digits
+            digits = getattr(record, digits).digits if getattr(record, digits) else None
         else:
             # TODO remove from issue10677
             if digits:
@@ -639,7 +638,8 @@ class HTMLReportMixin:
 
         def render(value, digits=2, lang=None, filename=None):
             if not lang:
-                lang, = Lang.search([('code', '=', 'en')], limit=1)
+                langs = Lang.search([('code', '=', 'en')], limit=1)
+                lang = langs[0] if langs else 'en'
             if isinstance(value, (float, Decimal)):
                 return lang.format('%.*f', (digits, value),
                     grouping=True)
@@ -653,7 +653,7 @@ class HTMLReportMixin:
             if hasattr(value, 'rec_name'):
                 return value.rec_name
             if isinstance(value, datetime):
-                return lang.strftime(value) + ' ' + value.strftime('%H:%M:%S')
+                return lang.strftime(value)
             if isinstance(value, date):
                 return lang.strftime(value)
             if isinstance(value, timedelta):
@@ -698,9 +698,10 @@ class HTMLReportMixin:
 
         locale = Transaction().context.get('report_lang',
             Transaction().language).split('_')[0]
-        lang, = Lang.search([
+        langs = Lang.search([
                 ('code', '=', locale or 'en'),
-                ])
+                ], limit=1)
+        lang = langs[0] if langs else 'en'
         return {
             'modulepath': module_path,
             'base64': base64,
@@ -815,6 +816,11 @@ class HTMLReportMixin:
         return DualRecord(record)
 
     @classmethod
+    def raise_user_error(cls, value):
+        raise UserError(value)
+
+
+    @classmethod
     def render_template_jinja(cls, action, template_string, record=None,
             records=None, data=None):
         """
@@ -832,23 +838,34 @@ class HTMLReportMixin:
         if records is None:
             records = []
 
+        now = datetime.now()
         context = {
-            'report': DualRecord(action),
+            'data': data,
+            'Decimal': Decimal,
+            'dualrecord': cls.dualrecord,
+            'qrcode': cls.qrcode,
+            'label': cls.label,
+            'pool': Pool(),
+            'raise_user_error': cls.raise_user_error,
             'record': record,
             'records': records,
-            'data': data,
-            'time': datetime.now(),
-            'user': DualRecord(User(Transaction().user)),
-            'Decimal': Decimal,
-            'label': cls.label,
-            'qrcode': cls.qrcode,
-            'barcode': cls.barcode,
+            'report': DualRecord(action),
+            'time': now,
             'timedelta': timedelta,
-            'dualrecord': cls.dualrecord,
+            'user': DualRecord(User(Transaction().user)),
+            'utc_time': now,
+            'barcode': cls.barcode,
             }
-        if Company:
-            context['company'] = DualRecord(Company(
-                    Transaction().context.get('company')))
+        company_id = Transaction().context.get('company')
+        if Company and company_id:
+            company = Company(company_id)
+            context['company'] = DualRecord(company)
+            if company.timezone:
+                timezone = pytz.timezone(company.timezone)
+                tznow = timezone.localize(now)
+                tznow = now + tznow.utcoffset()
+                context['time'] = tznow
+
         context.update(cls.local_context())
         try:
             report_template = env.from_string(template_string)
@@ -860,6 +877,27 @@ class HTMLReportMixin:
         try:
             res = report_template.render(**context)
         except Exception as e:
+            o = traceback.TracebackException.from_exception(e)
+            lineno = None
+            for line in reversed(o.stack):
+                if line.filename == '<template>':
+                    lineno = line.lineno
+                    break
+            if lineno:
+                location = []
+                location.append('Line %s' % lineno)
+                lines = template_string.splitlines()
+                for line in reversed(lines[:lineno]):
+                    if re.match(r'^\s*{%\s*endmacro\s+', line):
+                        location.append('(not in a macro)')
+                        break
+                    if re.match(r'^\s*{%\s*macro\s+', line):
+                        location.append('Macro %s' % line.split()[2])
+                        break
+                location.append('Expr: %s' %
+                    template_string.splitlines()[lineno-1])
+                e.args = e.args + tuple(location)
+
             if RAISE_USER_ERRORS or action.html_raise_user_error:
                 raise UserError(gettext('html_report.render_error',
                         report=action.rec_name, error=repr(e)))

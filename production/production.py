@@ -12,7 +12,7 @@ class Production(HTMLPartyInfoMixin, metaclass=PoolMeta):
     @classmethod
     def __setup__(cls):
         super(Production, cls).__setup__()
-        cls.html_party.context = {'company': Eval('company')}
+        cls.html_party.context = {'company': Eval('company', -1)}
         cls.html_party.depends = ['company']
 
     def get_show_lots(self, name):

@@ -9,7 +9,7 @@ class Purchase(HTMLPartyInfoMixin, metaclass=PoolMeta):
     @classmethod
     def __setup__(cls):
         super(Purchase, cls).__setup__()
-        cls.html_party.context = {'company': Eval('company')}
+        cls.html_party.context = {'company': Eval('company', -1)}
         cls.html_party.depends = ['company']
 
     def get_html_address(self, name):

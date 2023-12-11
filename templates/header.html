@@ -1,4 +1,7 @@
 <link rel="stylesheet" href="{{ 'html_report/templates/base.css'|modulepath }}">
+{% if show_css_extension is defined %}
+  <style>{{ show_css_extension() }}</style>
+{% endif %}
 {% set party = record.html_party %}
 {% set tax_identifier = record.html_tax_identifier %}
 {% set address = record.html_address %}
