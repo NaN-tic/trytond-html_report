@@ -25,6 +25,8 @@ class InvoiceLine(metaclass=PoolMeta):
         ), 'get_shipment_key')
     origin_line_key = fields.Function(fields.Char("Origin Line Key",
         ), 'get_origin_line_key')
+    html_product_code = fields.Function(fields.Char(
+        "HTML Code"), 'get_html_product_code')
 
     @classmethod
     def _get_shipment_origin(cls):
@@ -57,6 +59,9 @@ class InvoiceLine(metaclass=PoolMeta):
                 field = models.get(model)
                 return str(getattr(self.origin, field))
         return ''
+
+    def get_html_product_code(self, name):
+        return self.product and self.product.code or ''
 
 
 class InvoiceReport(HTMLReportMixin, metaclass=PoolMeta):
