@@ -70,9 +70,10 @@ class InvoiceReport(HTMLReportMixin, metaclass=PoolMeta):
     @classmethod
     def _execute_html_report(cls, records, data, action, side_margin=2,
             extra_vertical_margin=30):
-
         pool = Pool()
         Invoice = pool.get('account.invoice')
+
+        extension, document = None, None
 
         to_invoice_cache = {}
         to_cache = [r for r in records
