@@ -24,6 +24,7 @@ import jinja2
 import jinja2.ext
 import qrcode
 import qrcode.image.svg
+from ppf.datamatrix import DataMatrix
 import weasyprint
 from babel import dates, numbers, support
 from barcode.writer import SVGWriter
@@ -814,8 +815,14 @@ class HTMLReportMixin:
         ean_code = ean_class(value, writer=SVGWriter()).render(options, text)
         return cls.to_base64(ean_code)
 
-    def to_base64(image):
-        value = binascii.b2a_base64(image)
+    @classmethod
+    def datamatrix(cls, value):
+        matrix = DataMatrix(value)
+        return cls.to_base64(bytes(matrix.svg(), 'utf-8'))
+
+    @staticmethod
+    def to_base64(value):
+        value = binascii.b2a_base64(value)
         value = value.decode('ascii')
         mimetype = "image/svg+xml"
         return ('data:%s;base64,%s' % (mimetype, value)).strip()
@@ -854,7 +861,9 @@ class HTMLReportMixin:
 
         now = datetime.now()
         context = {
+            'barcode': cls.barcode,
             'data': data,
+            'datamatrix': cls.datamatrix,
             'Decimal': Decimal,
             'dualrecord': cls.dualrecord,
             'qrcode': cls.qrcode,
@@ -868,7 +877,6 @@ class HTMLReportMixin:
             'timedelta': timedelta,
             'user': DualRecord(User(Transaction().user)),
             'utc_time': now,
-            'barcode': cls.barcode,
             }
         company_id = Transaction().context.get('company')
         if Company and company_id:
