@@ -178,3 +178,25 @@ Post invoice::
     True
     >>> invoice.invoice_report_format == 'pdf'
     True
+
+Dissable invoice cache::
+
+    >>> Configuration = Model.get('account.configuration')
+    >>> configuration = Configuration(1)
+    >>> configuration.use_invoice_report_cache = False
+    >>> configuration.save()
+
+Duplicate invoice::
+
+    >>> invoice2, = Invoice.copy([invoice], config.context)
+    >>> invoice2 = Invoice(invoice2)
+
+Post invoice::
+
+    >>> invoice2.click('post')
+    >>> invoice2.state
+    'posted'
+    >>> invoice2.invoice_report_cache != None
+    False
+    >>> invoice2.invoice_report_format == 'pdf'
+    False

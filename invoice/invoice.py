@@ -72,26 +72,29 @@ class InvoiceReport(HTMLReportMixin, metaclass=PoolMeta):
             extra_vertical_margin=30):
         pool = Pool()
         Invoice = pool.get('account.invoice')
+        Configuration = Pool().get('account.configuration')
+        config = Configuration(1)
 
         extension, document = None, None
 
         to_invoice_cache = {}
-        to_cache = [r for r in records
-                        if r.raw.state in {'posted', 'paid'}
-                        and r.raw.type == 'out'
-                        and not r.raw.invoice_report_cache]
+        if config.use_invoice_report_cache:
+            to_cache = [r for r in records
+                            if r.raw.state in {'posted', 'paid'}
+                            and r.raw.type == 'out'
+                            and not r.raw.invoice_report_cache]
 
-        for record in to_cache:
-            extension, document = super()._execute_html_report([record], data, action,
-                    side_margin, extra_vertical_margin)
+            for record in to_cache:
+                extension, document = super()._execute_html_report([record], data, action,
+                        side_margin, extra_vertical_margin)
 
-            if isinstance(document, str):
-                document = bytes(document, 'utf-8')
+                if isinstance(document, str):
+                    document = bytes(document, 'utf-8')
 
-            to_invoice_cache[record.raw.id] = {
-                'invoice_report_format': extension,
-                'invoice_report_cache': Invoice.invoice_report_cache.cast(document),
-                }
+                to_invoice_cache[record.raw.id] = {
+                    'invoice_report_format': extension,
+                    'invoice_report_cache': Invoice.invoice_report_cache.cast(document),
+                    }
 
         if to_invoice_cache:
             to_write = []
