@@ -14,6 +14,7 @@ from . import purchase
 from . import sale
 from . import sale_product_customer
 from . import stock
+from . import account_configuration
 
 def register():
     module = 'html_report'
@@ -25,6 +26,10 @@ def register():
         template.TemplateUsage,
         template.ReportTemplate,
         module=module, type_='model')
+    Pool.register(
+        account_configuration.Configuration,
+        account_configuration.ConfigurationHTMLReport,
+        module=module, type_='model', depends=['account', 'company'])
     Pool.register(
         translation.ReportTranslationSet,
         module=module, type_='wizard')

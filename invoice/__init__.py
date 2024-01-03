@@ -9,4 +9,5 @@ def register(module):
         module=module, type_='model', depends=['account_invoice'])
     Pool.register(
         invoice.InvoiceReport,
-        module=module, type_='report', depends=['account_invoice', 'account_payment_type', 'account_bank'])
+        module=module, type_='report', depends=['account', 'account_invoice',
+                'account_payment_type', 'account_bank', 'company'])
