@@ -1,14 +1,17 @@
 #
+# Albert Cervera i Areny <albert@nan-tic.com>, 2024.
 msgid ""
-msgstr "Content-Type: text/plain; charset=utf-8\n"
-
-msgctxt "field:account.configuration,use_invoice_report_cache:"
-msgid "Use Invoice Report Cache"
-msgstr "Fer servir la cache amb les factures"
-
-msgctxt "field:account.configuration.html_report,use_invoice_report_cache:"
-msgid "Use Invoice Report Cache"
-msgstr "Fer servir la cache amb les factures"
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Last-Translator: Albert Cervera i Areny <albert@nan-tic.com>\n"
+"PO-Revision-Date: 2024-01-04 10:38+0100\n"
+"Project-Id-Version: \n"
+"Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
+"Language: ca_ES\n"
+"Content-Transfer-Encoding: 8bit\n"
+"MIME-Version: 1.0\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 msgctxt "field:html.report.template,report:"
 msgid "Report"
@@ -116,11 +119,11 @@ msgstr "Encapçalament"
 
 msgctxt "field:ir.action.report,html_last_footer_content:"
 msgid "Last Page Footer Content"
-msgstr ""
+msgstr "Contingut del peu de l'última pàgina"
 
 msgctxt "field:ir.action.report,html_last_footer_template:"
 msgid "Last Page Footer"
-msgstr ""
+msgstr "Peu de l'última pàgina"
 
 msgctxt "field:ir.action.report,html_raise_user_error:"
 msgid "Raise User Error"
@@ -140,19 +143,19 @@ msgstr "Traduccions"
 
 msgctxt "field:ir.action.report,html_zipped:"
 msgid "Zipped"
-msgstr ""
+msgstr "Cremallera"
 
 msgctxt "field:ir.action.report,jinja_template:"
 msgid "Jinja Template"
-msgstr ""
+msgstr "Plantilla Jinja"
 
 msgctxt "help:ir.action.report,html_raise_user_error:"
 msgid "Will raise a UserError in case of error in template parsing."
-msgstr ""
+msgstr "Generarà un UserError en cas d'error en l'anàlisi de plantilles."
 
 msgctxt "help:ir.action.report,html_zipped:"
 msgid "If set, a zip file with a document per record will be created."
-msgstr ""
+msgstr "Si s'estableix, es crearà un fitxer zip amb un document per registre."
 
 msgctxt "model:html.report.template,name:"
 msgid "HTML Report - Template"
@@ -208,13 +211,13 @@ msgstr "\"%(template)s\" es requereixien les fimres: %(missing)s"
 
 msgctxt "model:ir.message,text:msg_error_timeout"
 msgid "The process was interrupted by %(seconds)s seconds timeout."
-msgstr ""
+msgstr "El procés s'ha interromput per un temps d'espera de %(segons)s segons."
 
 msgctxt "model:ir.message,text:msg_exception_timeout"
 msgid ""
 "There was an exception rendering the report:\n"
 "%(result)s"
-msgstr ""
+msgstr "Hi ha hagut una excepció en generar l'informe: %(result)s"
 
 msgctxt "model:ir.message,text:msg_no"
 msgid "No"
@@ -222,7 +225,7 @@ msgstr "No"
 
 msgctxt "model:ir.message,text:msg_queue_empty"
 msgid "The queue (timeout) was empty and can not render the report."
-msgstr ""
+msgstr "La cua (temps d'espera) estava buida i no es pot generar l'informe."
 
 msgctxt "model:ir.message,text:msg_yes"
 msgid "Yes"
@@ -233,14 +236,19 @@ msgid "The nullslast filter only accept a list of tuples."
 msgstr "El filtre nullslast només accepta una llista de tuples."
 
 msgctxt "model:ir.message,text:render_error"
-msgid "The following error was found rendering report \"%(report)s\": %(error)s"
+msgid ""
+"The following error was found rendering report \"%(report)s\": %(error)s"
 msgstr ""
+"S'ha trobat l'error següent en generar l'informe \"%(report)s\": "
+"%(error)s"
 
 msgctxt "model:ir.message,text:template_error"
 msgid ""
 "The following template error was found parsing report \"%(report)s\": "
 "%(error)s"
 msgstr ""
+"S'ha trobat l'error de plantilla següent en analitzar l'informe "
+"\"%(report)s\": %(error)s"
 
 msgctxt "model:ir.message,text:unused_signatures"
 msgid "\"%(template)s\" unused signatures: %(unused)s"
@@ -300,4 +308,4 @@ msgstr "Informe HTML"
 
 msgctxt "view:ir.action.report:"
 msgid "Jinja Template"
-msgstr ""
+msgstr "Plantilla Jinja"
