@@ -25,7 +25,7 @@ class ActionReport(metaclass=PoolMeta):
     jinja_template = fields.Text('Jinja Template',
         states={
             'invisible': Eval('template_extension') != 'jinja',
-            }, depends=['template_extension'])
+            })
     html_header_template = fields.Many2One('html.template', 'Header',
         domain=[
             ('type', '=', 'header'),
@@ -73,7 +73,7 @@ class ActionReport(metaclass=PoolMeta):
             'Last Page Footer Content'), 'get_content')
     html_zipped = fields.Boolean('Zipped', states={
         'invisible': ~Eval('single'),
-        }, depends=['single'],
+        },
         help='If set, a zip file with a document per record will be created.')
     html_copies = fields.Integer('Number of copies')
     html_side_margin = fields.Integer('Side Margin (cm)')

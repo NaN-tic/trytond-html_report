@@ -35,7 +35,7 @@ class Template(sequence_ordered(), ModelSQL, ModelView):
             ], states={
             'required': Eval('type') == 'extension',
             'invisible': Eval('type') != 'extension',
-            }, depends=['type'])
+            })
     filename = fields.Char('Template path', states={
             'readonly': Bool(Eval('filename')),
             'invisible': ~Bool(Eval('filename')),
@@ -43,7 +43,7 @@ class Template(sequence_ordered(), ModelSQL, ModelView):
     data = fields.Text('Content')
     content = fields.Function(fields.Text('Content', states={
             'readonly': Bool(Eval('filename')),
-            }, depends=['filename']), 'get_content',
+            }), 'get_content',
             setter='set_content')
     all_content = fields.Function(fields.Text('All Content'),
         'get_all_content')
@@ -128,7 +128,7 @@ class ReportTemplate(ModelSQL, ModelView):
     template = fields.Many2One('html.template', 'Template',
         domain=[
             ('implements', '=', Eval('signature')),
-            ], depends=['signature'])
+            ])
     template_used = fields.Function(
         fields.Many2One('html.template', 'Template Used'), 'get_template_used')
 
