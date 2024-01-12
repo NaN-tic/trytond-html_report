@@ -474,6 +474,8 @@ class HTMLReportMixin:
                     side_margin=cls.side_margin,
                     extra_vertical_margin=cls.extra_vertical_margin)
             if not isinstance(content, str):
+                if content is None:
+                    content = ''
                 content = bytearray(content) if bytes == str else bytes(content)
 
             if action.html_copies and action.html_copies > 1:
