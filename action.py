@@ -20,8 +20,7 @@ class ActionReport(metaclass=PoolMeta):
             ],
         states={
             'invisible': Eval('template_extension') != 'jinja',
-            },
-        depends=['template_extension'])
+            })
     jinja_template = fields.Text('Jinja Template',
         states={
             'invisible': Eval('template_extension') != 'jinja',
@@ -32,34 +31,29 @@ class ActionReport(metaclass=PoolMeta):
             ],
         states={
             'invisible': Eval('template_extension') != 'jinja',
-            },
-        depends=['template_extension'])
+            })
     html_footer_template = fields.Many2One('html.template', 'Footer',
         domain=[
             ('type', '=', 'footer'),
             ],
         states={
             'invisible': Eval('template_extension') != 'jinja',
-            },
-        depends=['template_extension'])
+            })
     html_last_footer_template = fields.Many2One('html.template',
         'Last Page Footer', domain=[
             ('type', '=', 'footer'),
             ],
         states={
             'invisible': Eval('template_extension') != 'jinja',
-            },
-        depends=['template_extension'])
+            })
     html_templates = fields.One2Many('html.report.template', 'report', 'Templates',
         states={
             'invisible': Eval('template_extension') != 'jinja',
-            },
-        depends=['template_extension'])
+            })
     html_content = fields.Function(fields.Text('Content',
         states={
                 'invisible': Eval('template_extension') != 'jinja',
-        },
-        depends=['template_extension']), 'get_content')
+        }), 'get_content')
     html_raise_user_error = fields.Boolean('Raise User Error',
         help='Will raise a UserError in case of error in template parsing.')
     html_translations = fields.One2Many('html.template.translation', 'report',
