@@ -26,10 +26,10 @@
             <field name="html_templates" colspan="4"/>
         </page>
         <page string="Jinja Template" id="jinja_template">
-            <field name="jinja_template" colspan="4" widget="code"/>
+            <field name="jinja_template" colspan="4" widget="code" height="500"/>
         </page>
         <page name="html_content">
-            <field name="html_content" colspan="4" widget="code"/>
+            <field name="html_content" colspan="4" widget="code" height="500"/>
         </page>
     </xpath>
 </data>
