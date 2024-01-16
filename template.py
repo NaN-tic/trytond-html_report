@@ -104,7 +104,7 @@ class Template(sequence_ordered(), ModelSQL, ModelView):
         res = []
         default.setdefault('filename', None)
         for template in templates:
-            default.setdefault('content', template.all_content)
+            default.setdefault('data', template.all_content)
             res += super(Template, cls).copy([template], default=default)
         return res
 
