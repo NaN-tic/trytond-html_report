@@ -11,7 +11,8 @@
   </thead>
   <tbody class="border">
     {% for key, lines in document.raw.lines|groupby('shipment_key')|nullslast %}
-    <tr>{% set key = dualrecord(key) %}
+    {% if key %}{% set key = dualrecord(key) %}{% endif %}
+    <tr>
       <th class="sub_header_level1" colspan="6">
         {% if key %}
         {{ label(key.raw.__name__) }}: {{ key.render.number }} {% if key.raw.reference %}/ {{ key.render.reference }}{% endif %}
@@ -20,7 +21,8 @@
       </th>
     </tr>
       {% for key2, origin_lines in lines|groupby('origin_line_key')|nullslast %}
-      <tr>{% set key2 = dualrecord(key2) %}
+      {% if key2 %}{% set key2 = dualrecord(key2) %}{% endif %}
+      <tr>
         <th class="{% if key2 %}sub_header_level2{% else %}sub_header_level1{% endif %}" colspan="6">
           {% if key2 %}
           {{ label(key2.raw.__name__) }}: {{ key2.render.number }} {% if key2.render.reference %}/ {{ key2.render.reference }}{% endif %}
