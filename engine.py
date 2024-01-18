@@ -820,7 +820,10 @@ class HTMLReportMixin:
         if not record:
             return
         if isinstance(record, str):
-            model, id = record.split(',')
+            try:
+                model, id = record.split(',')
+            except ValueError:
+                return
             record = Pool().get(model)(id)
         return DualRecord(record)
 
