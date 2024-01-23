@@ -11,8 +11,7 @@
     </tr>
   </thead>
   <tbody class="border">
-    {% for line in invoice.move.lines|rejectattr('raw.maturity_date', 'none')|sort(attribute='raw.maturity_date') %}
-      {% if line.raw.maturity_date %}
+    {% for line in invoice.html_lines_to_pay %}
       <tr>
         <td class="tex-right">
           {{ line.render.maturity_date }}
@@ -21,7 +20,6 @@
           {{ (line.raw.debit - line.raw.credit) | render(digits=invoice.currency.raw.digits, lang=lang) }} {{invoice.currency.render.symbol}}
         </td>
       </tr>
-      {% endif %}
     {% endfor %}
   </tbody>
 </table>
