@@ -1,3 +1,4 @@
+from collections import defaultdict
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
@@ -7,6 +8,9 @@ from trytond.modules.html_report.engine import HTMLReportMixin
 
 class Invoice(HTMLPartyInfoMixin, metaclass=PoolMeta):
     __name__ = 'account.invoice'
+    html_lines_to_pay = fields.Function(fields.Many2Many(
+            'account.move.line', None, None, 'HTML Lines to Pay'),
+        'get_html_lines_to_pay')
 
     @classmethod
     def __setup__(cls):
@@ -17,6 +21,15 @@ class Invoice(HTMLPartyInfoMixin, metaclass=PoolMeta):
     def get_html_address(self, name):
         return (self.invoice_address and self.invoice_address.id
             or super().get_html_address(name))
+
+    @classmethod
+    def get_html_lines_to_pay(cls, invoices, name):
+        lines = defaultdict(list)
+        for invoice in invoices:
+            lines[invoice.id] = [l.id for l in sorted([line for line in invoice.lines_to_pay
+                if not line.reconciliation and line.maturity_date],
+                key=lambda x: x.maturity_date)]
+        return lines
 
 
 class InvoiceLine(metaclass=PoolMeta):
