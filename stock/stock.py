@@ -127,6 +127,8 @@ class Move(metaclass=PoolMeta):
     __name__ = 'stock.move'
 
     sort_key = fields.Function(fields.Char('key'), 'get_sorted_key')
+    origin_key = fields.Function(fields.Char("Origin Key",
+        ), 'get_origin_key')
 
     def get_sorted_key(self, name):
         pool = Pool()
@@ -146,12 +148,23 @@ class Move(metaclass=PoolMeta):
             if sale and sale not in key:
                 key.append(sale)
 
-        elif self.shipment_in and isinstance(self.shipment, ShipmentIn):
+        elif self.shipment and isinstance(self.shipment, ShipmentIn):
             if self.origin and 'purchase.line' in str(self.origin):
                 purchase = self.origin.purchase
                 if purchase in key:
                     key.append(purchase)
         return key
+
+    def get_origin_key(self, name):
+        Move = Pool().get('stock.move')
+
+        origin = self.origin
+        if self.shipment and origin and isinstance(origin, Move):
+            if origin.origin:
+                origin = origin.origin
+        if origin and hasattr(origin, 'document_origin') and origin.document_origin:
+            origin = origin.document_origin
+        return str(origin) if origin is not None else ''
 
 
 class ShipmentInternal(HTMLPartyInfoMixin, metaclass=PoolMeta):
