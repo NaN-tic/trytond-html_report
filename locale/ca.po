@@ -1,42 +1,16 @@
 #
 msgid ""
-msgstr "Content-Type: text/plain; charset=utf-8\n"
-
-msgctxt "field:account.invoice,html_address:"
-msgid "HTML Party Address"
 msgstr ""
-
-msgctxt "field:account.invoice,html_party:"
-msgid "HTML Party"
-msgstr ""
-
-msgctxt "field:account.invoice,html_second_address:"
-msgid "HTML Second Address"
-msgstr ""
-
-msgctxt "field:account.invoice,html_second_address_label:"
-msgid "HTML Second Address Label"
-msgstr ""
-
-msgctxt "field:account.invoice,html_tax_identifier:"
-msgid "HTML Party Tax Identifier"
-msgstr ""
-
-msgctxt "field:account.invoice,sorted_keys:"
-msgid "Sorted Key"
-msgstr "Clau ordenació"
-
-msgctxt "field:account.invoice.line,origin_line_key:"
-msgid "Origin Line Key"
-msgstr ""
-
-msgctxt "field:account.invoice.line,shipment_key:"
-msgid "Shipment Key"
-msgstr ""
-
-msgctxt "field:account.invoice.line,sort_key:"
-msgid "Sorted Key"
-msgstr "Clau ordenació"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.2.2\n"
 
 msgctxt "field:html.report.template,report:"
 msgid "Report"
@@ -143,17 +117,16 @@ msgid "Header"
 msgstr "Encapçalament"
 
 msgctxt "field:ir.action.report,html_last_footer_content:"
-msgid "Last Footer Content"
-msgstr "Contingut peu última pàgina"
+msgid "Last Page Footer Content"
+msgstr "Contingut del peu de pàgina de l'última pàgina"
 
 msgctxt "field:ir.action.report,html_last_footer_template:"
-msgid "Last Footer"
-msgstr "Peu última pàgina"
+msgid "Last Page Footer"
+msgstr "Peu de pàgina de l'última pàgina"
 
-#, fuzzy
 msgctxt "field:ir.action.report,html_raise_user_error:"
 msgid "Raise User Error"
-msgstr "Mostrar l'error al usuari"
+msgstr "Augmenta l'error d'usuari"
 
 msgctxt "field:ir.action.report,html_template:"
 msgid "Body"
@@ -167,189 +140,21 @@ msgctxt "field:ir.action.report,html_translations:"
 msgid "Translations"
 msgstr "Traduccions"
 
+msgctxt "field:ir.action.report,html_zipped:"
+msgid "Zipped"
+msgstr "Comprimit"
+
 msgctxt "field:ir.action.report,jinja_template:"
 msgid "Jinja Template"
-msgstr ""
-
-msgctxt "field:production,html_address:"
-msgid "HTML Party Address"
-msgstr ""
-
-msgctxt "field:production,html_party:"
-msgid "HTML Party"
-msgstr ""
-
-msgctxt "field:production,html_second_address:"
-msgid "HTML Second Address"
-msgstr ""
-
-msgctxt "field:production,html_second_address_label:"
-msgid "HTML Second Address Label"
-msgstr ""
-
-msgctxt "field:production,html_tax_identifier:"
-msgid "HTML Party Tax Identifier"
-msgstr ""
-
-msgctxt "field:production,show_lots:"
-msgid "Production"
-msgstr "Producció"
-
-msgctxt "field:purchase.purchase,html_address:"
-msgid "HTML Party Address"
-msgstr ""
-
-msgctxt "field:purchase.purchase,html_party:"
-msgid "HTML Party"
-msgstr ""
-
-msgctxt "field:purchase.purchase,html_second_address:"
-msgid "HTML Second Address"
-msgstr ""
-
-msgctxt "field:purchase.purchase,html_second_address_label:"
-msgid "HTML Second Address Label"
-msgstr ""
-
-msgctxt "field:purchase.purchase,html_tax_identifier:"
-msgid "HTML Party Tax Identifier"
-msgstr ""
-
-msgctxt "field:sale.product_customer,notes:"
-msgid "Notes"
-msgstr "Notes"
-
-msgctxt "field:sale.sale,html_address:"
-msgid "HTML Party Address"
-msgstr ""
-
-msgctxt "field:sale.sale,html_party:"
-msgid "HTML Party"
-msgstr ""
-
-msgctxt "field:sale.sale,html_second_address:"
-msgid "HTML Second Address"
-msgstr ""
-
-msgctxt "field:sale.sale,html_second_address_label:"
-msgid "HTML Second Address Label"
-msgstr ""
-
-msgctxt "field:sale.sale,html_tax_identifier:"
-msgid "HTML Party Tax Identifier"
-msgstr ""
-
-msgctxt "field:stock.move,sort_key:"
-msgid "key"
-msgstr "clau"
-
-msgctxt "field:stock.shipment.in,show_lots:"
-msgid "Show Lots"
-msgstr "Mostrar lots"
-
-msgctxt "field:stock.shipment.in.return,html_address:"
-msgid "HTML Party Address"
-msgstr ""
-
-msgctxt "field:stock.shipment.in.return,html_party:"
-msgid "HTML Party"
-msgstr ""
-
-msgctxt "field:stock.shipment.in.return,html_second_address:"
-msgid "HTML Second Address"
-msgstr ""
-
-msgctxt "field:stock.shipment.in.return,html_second_address_label:"
-msgid "HTML Second Address Label"
-msgstr ""
-
-msgctxt "field:stock.shipment.in.return,html_tax_identifier:"
-msgid "HTML Party Tax Identifier"
-msgstr ""
-
-msgctxt "field:stock.shipment.in.return,show_lots:"
-msgid "Show Lots"
-msgstr "Mostrar lots"
-
-msgctxt "field:stock.shipment.internal,html_address:"
-msgid "HTML Party Address"
-msgstr ""
-
-msgctxt "field:stock.shipment.internal,html_party:"
-msgid "HTML Party"
-msgstr ""
-
-msgctxt "field:stock.shipment.internal,html_second_address:"
-msgid "HTML Second Address"
-msgstr ""
-
-msgctxt "field:stock.shipment.internal,html_second_address_label:"
-msgid "HTML Second Address Label"
-msgstr ""
-
-msgctxt "field:stock.shipment.internal,html_tax_identifier:"
-msgid "HTML Party Tax Identifier"
-msgstr ""
-
-msgctxt "field:stock.shipment.out,html_address:"
-msgid "HTML Party Address"
-msgstr ""
-
-msgctxt "field:stock.shipment.out,html_party:"
-msgid "HTML Party"
-msgstr ""
-
-msgctxt "field:stock.shipment.out,html_second_address:"
-msgid "HTML Second Address"
-msgstr ""
-
-msgctxt "field:stock.shipment.out,html_second_address_label:"
-msgid "HTML Second Address Label"
-msgstr ""
-
-msgctxt "field:stock.shipment.out,html_tax_identifier:"
-msgid "HTML Party Tax Identifier"
-msgstr ""
-
-msgctxt "field:stock.shipment.out,show_lots:"
-msgid "Show Lots"
-msgstr "Mostrar lots"
-
-msgctxt "field:stock.shipment.out,sorted_keys:"
-msgid "key"
-msgstr "clau"
-
-msgctxt "field:stock.shipment.out,sorted_lines:"
-msgid "Sorted Lines"
-msgstr "Línies ordenades"
-
-msgctxt "field:stock.shipment.out.return,html_address:"
-msgid "HTML Party Address"
-msgstr ""
-
-msgctxt "field:stock.shipment.out.return,html_party:"
-msgid "HTML Party"
-msgstr ""
-
-msgctxt "field:stock.shipment.out.return,html_second_address:"
-msgid "HTML Second Address"
-msgstr ""
-
-msgctxt "field:stock.shipment.out.return,html_second_address_label:"
-msgid "HTML Second Address Label"
-msgstr ""
-
-msgctxt "field:stock.shipment.out.return,html_tax_identifier:"
-msgid "HTML Party Tax Identifier"
-msgstr ""
-
-msgctxt "field:stock.shipment.out.return,show_lots:"
-msgid "Show Lots"
-msgstr "Mostrar lots"
+msgstr "Plantilla Jinja"
 
 msgctxt "help:ir.action.report,html_raise_user_error:"
 msgid "Will raise a UserError in case of error in template parsing."
-msgstr ""
+msgstr "Generarà un UserError en cas d'error en l'anàlisi de plantilles."
+
+msgctxt "help:ir.action.report,html_zipped:"
+msgid "If set, a zip file with a document per record will be created."
+msgstr "Si s'estableix, es crearà un fitxer zip amb un document per registre."
 
 msgctxt "model:html.report.template,name:"
 msgid "HTML Report - Template"
@@ -370,6 +175,10 @@ msgstr "Plantilla HTML traduccions"
 msgctxt "model:html.template.usage,name:"
 msgid "HTML Template Usage"
 msgstr "Ús plantilla HTML"
+
+msgctxt "model:ir.action,name:"
+msgid "Customer Refund Note"
+msgstr "Albarà devolució"
 
 msgctxt "model:ir.action,name:act_action_report_form"
 msgid "Reports"
@@ -395,58 +204,6 @@ msgctxt "model:ir.action,name:act_template_translation_form"
 msgid "Template Translation"
 msgstr "Traducció plantilla"
 
-msgctxt "model:ir.action,name:html_report_customer_refund_note"
-msgid "Customer Refund Note"
-msgstr "Albarà devolució"
-
-msgctxt "model:ir.action,name:html_report_delivery_note"
-msgid "Delivery Note"
-msgstr "Nota d'enviament"
-
-msgctxt "model:ir.action,name:html_report_internal_picking_note"
-msgid "Internal Picking Note"
-msgstr "Llista recollida"
-
-msgctxt "model:ir.action,name:html_report_invoice"
-msgid "Invoice"
-msgstr "Factura"
-
-msgctxt "model:ir.action,name:html_report_picking_note"
-msgid "Picking Note"
-msgstr "Llista recollida"
-
-msgctxt "model:ir.action,name:html_report_production"
-msgid "Production"
-msgstr "Producció"
-
-msgctxt "model:ir.action,name:html_report_purchase"
-msgid "Purchase"
-msgstr "Compres"
-
-msgctxt "model:ir.action,name:html_report_purchase_simplified"
-msgid "Purchase Simplified"
-msgstr "Compres simplificades"
-
-msgctxt "model:ir.action,name:html_report_refund_note"
-msgid "Refund Note"
-msgstr "Albarà devolució"
-
-msgctxt "model:ir.action,name:html_report_sale"
-msgid "Sale"
-msgstr "Venda"
-
-msgctxt "model:ir.action,name:html_report_sale_proforma"
-msgid "Proforma"
-msgstr "Proforma"
-
-msgctxt "model:ir.action,name:html_report_shipment_in_restocking_list"
-msgid "Restocking List"
-msgstr "Llista de proveïment"
-
-msgctxt "model:ir.action,name:html_report_valued_delivery_note"
-msgid "Valued Delivery Note"
-msgstr "Nota d'enviament valorada"
-
 msgctxt "model:ir.message,text:missing_signatures"
 msgid "\"%(template)s\" missing signatures: %(missing)s"
 msgstr "\"%(template)s\" es requereixien les fimres: %(missing)s"
@@ -466,12 +223,15 @@ msgstr "El filtre nullslast només accepta una llista de tuples."
 msgctxt "model:ir.message,text:render_error"
 msgid "The following error was found rendering report \"%(report)s\": %(error)s"
 msgstr ""
+"S'ha trobat l'error següent en renderitzar l'informe \"%(report)s\": %(error)s"
 
 msgctxt "model:ir.message,text:template_error"
 msgid ""
 "The following template error was found parsing report \"%(report)s\": "
 "%(error)s"
 msgstr ""
+"S'ha trobat l'error de plantilla següent en analitzar l'informe "
+"\"%(report)s\": %(error)s"
 
 msgctxt "model:ir.message,text:unused_signatures"
 msgid "\"%(template)s\" unused signatures: %(unused)s"
@@ -531,4 +291,4 @@ msgstr "Informe HTML"
 
 msgctxt "view:ir.action.report:"
 msgid "Jinja Template"
-msgstr ""
+msgstr "Plantilla Jinja"
