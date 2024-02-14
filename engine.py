@@ -162,9 +162,9 @@ class SwitchableLanguageExtension(jinja2.ext.Extension):
         args = [parser.parse_expression()]
         # Parse everything between the start and end tag:
         body = parser.parse_statements(['name:endlanguage'], drop_needle=True)
+        node = self.call_method('_switch_language', args, lineno=lineno)
         # Call the _switch_language method with the given language code and body
-        return jinja2.ext.nodes.CallBlock(self.call_method('_switch_language',
-                args), [], [], body).set_lineno(lineno)
+        return jinja2.ext.nodes.CallBlock(node, [], [], body).set_lineno(lineno)
 
     def _switch_language(self, language_code, caller):
         if self.translations:
@@ -321,9 +321,10 @@ class FormattedRecord:
 class DualRecord:
     def __init__(self, record, formatter=None):
         self.raw = record
-        if not formatter:
-            formatter = Formatter()
-        self.render = FormattedRecord(record, formatter)
+        self._formatter = formatter
+        if not self._formatter:
+            self._formatter = Formatter()
+        self.render = FormattedRecord(record, self._formatter)
 
     def __getattr__(self, name):
         field = self.raw._fields.get(name)
@@ -340,22 +341,29 @@ class DualRecord:
         if not value:
             return value
         if field._type in {'many2one', 'one2one', 'reference'}:
-            return DualRecord(value)
-        return [DualRecord(x) for x in value]
+            return DualRecord(value, self._formatter)
+        return [DualRecord(x, self._formatter) for x in value]
 
     @property
     def _attachments(self):
         pool = Pool()
         Attachment = pool.get('ir.attachment')
-        return [DualRecord(x) for x in
+        return [DualRecord(x, self._formatter) for x in
             Attachment.search([('resource', '=', str(self.raw))])]
 
     @property
     def _notes(self):
         pool = Pool()
         Note = pool.get('ir.note')
-        return [DualRecord(x) for x in
+        return [DualRecord(x, self._formatter) for x in
             Note.search([('resource', '=', str(self.raw))])]
+
+    def refresh(self):
+        'Re-instantiates the object using the current context. '
+        'This can be useful if the DualRecord instance was outside '
+        'the {% language %} tag.'
+        self.raw = self.raw.__class__(self.raw.id)
+        self.render = FormattedRecord(self.raw, self._formatter)
 
 
 class HTMLReportMixin:
