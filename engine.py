@@ -156,17 +156,26 @@ class SwitchableLanguageExtension(jinja2.ext.Extension):
     def parse(self, parser):
         lineno = next(parser.stream).lineno
         # Parse the language code argument
-        args = [parser.parse_expression()]
+        context = jinja2.nodes.ContextReference()
+        args = [parser.parse_expression(), context]
         # Parse everything between the start and end tag:
         body = parser.parse_statements(['name:endlanguage'], drop_needle=True)
         node = self.call_method('_switch_language', args, lineno=lineno)
         # Call the _switch_language method with the given language code and body
         return jinja2.ext.nodes.CallBlock(node, [], [], body).set_lineno(lineno)
 
-    def _switch_language(self, language_code, caller):
+    def _switch_language(self, language_code, context, caller):
         if self.translations:
             self.translations.set_language(language_code)
         with Transaction().set_context(language=language_code):
+            record = context.get('record')
+            if isinstance(record, DualRecord):
+                record.refresh()
+            records = context.get('records')
+            if isinstance(records, (tuple, list)):
+                for record in records:
+                    if isinstance(record, DualRecord):
+                        record.refresh()
             output = caller()
         return output
 
