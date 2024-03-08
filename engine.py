@@ -319,6 +319,12 @@ class FormattedRecord:
     def __getattr__(self, name):
         value = getattr(self._raw_record, name)
         field = self._raw_record._fields.get(name)
+        # Evaluate lazy_gettext
+        if '.' in field.string:
+            try:
+                field.string = gettext(field.string)
+            except:
+                pass
         if not field:
             return value
         return self.__formatter.format(self._raw_record, field, value)
