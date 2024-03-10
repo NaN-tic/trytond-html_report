@@ -1,6 +1,6 @@
 {% if invoice.move.lines %}
 {% set lang = invoice.party.lang and invoice.party.raw.lang or company.party.lang and company.party.raw.lang %}
-<table id="due-dates" widht="200px">
+<table id="due-dates" width="200px">
   <thead>
     <tr>
     <th colspan="2"><center>{{ label('account.move.line', 'maturity_date') }}</center></th>
