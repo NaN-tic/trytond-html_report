@@ -476,7 +476,7 @@ class HTMLReportMixin:
             if not isinstance(content, str):
                 if content is None:
                     content = ''
-                content = bytearray(content) if bytes == str else bytes(content)
+                content = bytes(content, 'utf-8')
 
             if action.html_copies and action.html_copies > 1:
                 content = cls.merge_pdfs([content] * action.html_copies)
