@@ -473,10 +473,10 @@ class HTMLReportMixin:
                     action,
                     side_margin=cls.side_margin,
                     extra_vertical_margin=cls.extra_vertical_margin)
+            if content is None:
+                content = ''
             if not isinstance(content, str):
-                if content is None:
-                    content = ''
-                content = bytes(content, 'utf-8')
+                content = bytes(content)
 
             if action.html_copies and action.html_copies > 1:
                 content = cls.merge_pdfs([content] * action.html_copies)
