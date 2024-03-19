@@ -26,12 +26,12 @@ class ShipmentOutReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta)
         return self.customer and self.customer.id
 
     def get_html_second_address(self, name):
-        return self.delivery_address and self.delivery_address.id
+        return self.contact_address and self.contact_address.id
 
     def get_html_second_address_label(self, name):
         pool = Pool()
         Report = pool.get('stock.shipment.out.return')
-        return Report.label(self.__name__, "delivery_address")
+        return Report.label(self.__name__, "contact_address")
 
 
 class ShipmentIn(HTMLReportMixin, metaclass=PoolMeta):
