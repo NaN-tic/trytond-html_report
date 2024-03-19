@@ -18,7 +18,7 @@ class ShipmentOutReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta)
 
     def get_show_lots(self, name):
         for move in self.incoming_moves:
-            if getattr(move, 'lot'):
+            if hasattr(move, 'lot') and getattr(move, 'lot'):
                 return True
         return False
 
@@ -41,7 +41,7 @@ class ShipmentIn(HTMLReportMixin, metaclass=PoolMeta):
 
     def get_show_lots(self, name):
         for move in self.moves:
-            if getattr(move, 'lot'):
+            if hasattr(move, 'lot') and getattr(move, 'lot'):
                 return True
         return False
 
@@ -59,7 +59,7 @@ class ShipmentInReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
 
     def get_show_lots(self, name):
         for move in self.moves:
-            if getattr(move, 'lot'):
+            if hasattr(move, 'lot') and getattr(move, 'lot'):
                 return True
         return False
 
@@ -118,7 +118,7 @@ class ShipmentOut(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
 
     def get_show_lots(self, name):
         for move in self.inventory_moves or self.outgoing_moves:
-            if getattr(move, 'lot'):
+            if hasattr(move, 'lot') and getattr(move, 'lot'):
                 return True
         return False
 
