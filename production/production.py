@@ -17,7 +17,7 @@ class Production(HTMLPartyInfoMixin, metaclass=PoolMeta):
 
     def get_show_lots(self, name):
         for move in self.inputs:
-            if getattr(move, 'lot'):
+            if hasattr(move, 'lot') and getattr(move, 'lot'):
                 return True
         return False
 
