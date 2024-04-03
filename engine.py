@@ -39,6 +39,7 @@ from trytond.tools import file_open, slugify
 from trytond.transaction import Transaction
 from trytond.tools import grouped_slice
 from trytond.report import Report
+from trytond.modules.widgets import tools
 
 from . import words
 from .generator import PdfGenerator
@@ -745,6 +746,9 @@ class HTMLReportMixin:
             'format_number': Report.format_number,
             'format_timedelta': Report.format_timedelta,
             'grouped_slice': grouped_slice,
+            'js_plus_js': tools.js_plus_js,
+            'js_to_html': partial(tools.js_to_html, url_prefix='base64'),
+            'js_to_text': tools.js_to_text,
             'markdown': markdown.markdown,
             'modulepath': module_path,
             'nullslast': nullslast,
