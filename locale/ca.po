@@ -143,7 +143,7 @@ msgstr "Traduccions"
 
 msgctxt "field:ir.action.report,html_zipped:"
 msgid "Zipped"
-msgstr "Cremallera"
+msgstr "Comprimit"
 
 msgctxt "field:ir.action.report,jinja_template:"
 msgid "Jinja Template"
