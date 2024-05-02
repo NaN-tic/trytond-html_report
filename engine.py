@@ -14,10 +14,7 @@ from decimal import Decimal
 from functools import partial
 from io import BytesIO
 from urllib.parse import urlparse
-try:
-    from PyPDF2 import PdfMerger, PdfReader
-except ImportError:
-    from PyPDF2 import PdfFileMerger as PdfMerger, PdfFileReader as PdfReader
+from pypdf import PdfMerger, PdfReader
 import re
 import barcode
 import jinja2
