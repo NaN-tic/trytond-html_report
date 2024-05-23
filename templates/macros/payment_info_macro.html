@@ -8,7 +8,7 @@
 {% endif %}
 {% if document.raw.bank_account %}
  <strong>{{ label(document.raw.__name__, 'bank_account') }}: </strong>{{ document.bank_account.render.rec_name }}
- {% if document.bank_account.bank.raw.bic %}
+ {% if document.bank_account.bank and document.bank_account.bank.raw.bic %}
    ({{ document.bank_account.bank.render.bic }})
  {% endif %}
  <br/>
