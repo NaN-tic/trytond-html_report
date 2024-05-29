@@ -211,7 +211,7 @@ msgstr "\"%(template)s\" es requereixien les fimres: %(missing)s"
 
 msgctxt "model:ir.message,text:msg_error_timeout"
 msgid "The process was interrupted by %(seconds)s seconds timeout."
-msgstr "El procés s'ha interromput per un temps d'espera de %(segons)s segons."
+msgstr "El procés s'ha interromput per un temps d'espera de %(seconds)s segons."
 
 msgctxt "model:ir.message,text:msg_exception_timeout"
 msgid ""
@@ -252,7 +252,7 @@ msgstr ""
 
 msgctxt "model:ir.message,text:unused_signatures"
 msgid "\"%(template)s\" unused signatures: %(unused)s"
-msgstr "\"%(template)s\" no es fan us de les firmes: %(missing)s"
+msgstr "\"%(template)s\" no es fan us de les firmes: %(unused)s"
 
 msgctxt "model:ir.ui.menu,name:menu_action_report_form"
 msgid "Reports"
