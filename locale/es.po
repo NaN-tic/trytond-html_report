@@ -1,17 +1,54 @@
 #
-# Albert Cervera i Areny <albert@nan-tic.com>, 2024.
 msgid ""
-msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
-"Last-Translator: Albert Cervera i Areny <albert@nan-tic.com>\n"
-"PO-Revision-Date: 2024-01-04 10:36+0100\n"
-"Project-Id-Version: \n"
-"Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
-"Language: ca_ES\n"
-"Content-Transfer-Encoding: 8bit\n"
-"MIME-Version: 1.0\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.3\n"
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "field:account.configuration,use_invoice_report_cache:"
+msgid "Use Invoice Report Cache"
+msgstr "Utilitzar cache informe factura"
+
+msgctxt "field:account.configuration.html_report,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:account.configuration.html_report,use_invoice_report_cache:"
+msgid "Use Invoice Report Cache"
+msgstr "Utilitzar cache informe factura"
+
+msgctxt "field:account.invoice,html_address:"
+msgid "HTML Party Address"
+msgstr "HTML dirección tercero"
+
+msgctxt "field:account.invoice,html_lines_to_pay:"
+msgid "HTML Lines to Pay"
+msgstr "HTML lineas a pagar"
+
+msgctxt "field:account.invoice,html_party:"
+msgid "HTML Party"
+msgstr "HTML tercero"
+
+msgctxt "field:account.invoice,html_second_address:"
+msgid "HTML Second Address"
+msgstr "HTML segunda dirección"
+
+msgctxt "field:account.invoice,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr "HTML etiqueta segunda dirección"
+
+msgctxt "field:account.invoice,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr "HTML indentificador tercero"
+
+msgctxt "field:account.invoice.line,html_product_code:"
+msgid "HTML Code"
+msgstr "Código HTML"
+
+msgctxt "field:account.invoice.line,origin_line_key:"
+msgid "Origin Line Key"
+msgstr "Clave linea origen"
+
+msgctxt "field:account.invoice.line,shipment_key:"
+msgid "Shipment Key"
+msgstr "Clave albarán"
 
 msgctxt "field:html.report.template,report:"
 msgid "Report"
@@ -101,6 +138,10 @@ msgctxt "field:ir.action.report,html_copies:"
 msgid "Number of copies"
 msgstr "Número de copias"
 
+msgctxt "field:ir.action.report,html_extra_vertical_margin:"
+msgid "Extra Vertical Margin (cm)"
+msgstr "Margen extra vertical (cm)"
+
 msgctxt "field:ir.action.report,html_footer_content:"
 msgid "Footer Content"
 msgstr "Contenido pie"
@@ -129,6 +170,10 @@ msgctxt "field:ir.action.report,html_raise_user_error:"
 msgid "Raise User Error"
 msgstr "Mostrar el error al usuario"
 
+msgctxt "field:ir.action.report,html_side_margin:"
+msgid "Side Margin (cm)"
+msgstr "Margen lateral (cml)"
+
 msgctxt "field:ir.action.report,html_template:"
 msgid "Body"
 msgstr "Cuerpo"
@@ -149,14 +194,175 @@ msgctxt "field:ir.action.report,jinja_template:"
 msgid "Jinja Template"
 msgstr "Plantilla Jinja"
 
+msgctxt "field:product.product,html_code:"
+msgid "HTML Code"
+msgstr "Código HTML"
+
+msgctxt "field:purchase.purchase,html_address:"
+msgid "HTML Party Address"
+msgstr "HTML dirección tercero"
+
+msgctxt "field:purchase.purchase,html_party:"
+msgid "HTML Party"
+msgstr "HTML tercero"
+
+msgctxt "field:purchase.purchase,html_second_address:"
+msgid "HTML Second Address"
+msgstr "HTML segunda dirección"
+
+msgctxt "field:purchase.purchase,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr "HTML etiqueta segunda dirección"
+
+msgctxt "field:purchase.purchase,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr "HTML indentificador tercero"
+
+msgctxt "field:sale.sale,html_address:"
+msgid "HTML Party Address"
+msgstr "HTML dirección tercero"
+
+msgctxt "field:sale.sale,html_party:"
+msgid "HTML Party"
+msgstr "HTML tercero"
+
+msgctxt "field:sale.sale,html_second_address:"
+msgid "HTML Second Address"
+msgstr "HTML segunda dirección"
+
+msgctxt "field:sale.sale,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr "HTML etiqueta segunda dirección"
+
+msgctxt "field:sale.sale,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr "HTML indentificador tercero"
+
+msgctxt "field:stock.move,origin_key:"
+msgid "Origin Key"
+msgstr "Clave origen"
+
+msgctxt "field:stock.move,sort_key:"
+msgid "key"
+msgstr "clave"
+
+msgctxt "field:stock.shipment.in,show_lots:"
+msgid "Show Lots"
+msgstr "Mostrar lotes"
+
+msgctxt "field:stock.shipment.in.return,html_address:"
+msgid "HTML Party Address"
+msgstr "HTML dirección tercero"
+
+msgctxt "field:stock.shipment.in.return,html_party:"
+msgid "HTML Party"
+msgstr "HTML tercero"
+
+msgctxt "field:stock.shipment.in.return,html_second_address:"
+msgid "HTML Second Address"
+msgstr "HTML segunda dirección"
+
+msgctxt "field:stock.shipment.in.return,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr "HTML etiqueta segunda dirección"
+
+msgctxt "field:stock.shipment.in.return,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr "HTML indentificador tercero"
+
+msgctxt "field:stock.shipment.in.return,show_lots:"
+msgid "Show Lots"
+msgstr "Mostrar lotes"
+
+msgctxt "field:stock.shipment.internal,html_address:"
+msgid "HTML Party Address"
+msgstr "HTML dirección tercero"
+
+msgctxt "field:stock.shipment.internal,html_party:"
+msgid "HTML Party"
+msgstr "HTML tercero"
+
+msgctxt "field:stock.shipment.internal,html_second_address:"
+msgid "HTML Second Address"
+msgstr "HTML segunda dirección"
+
+msgctxt "field:stock.shipment.internal,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr "HTML etiqueta segunda dirección"
+
+msgctxt "field:stock.shipment.internal,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr "HTML indentificador tercero"
+
+msgctxt "field:stock.shipment.out,html_address:"
+msgid "HTML Party Address"
+msgstr "HTML dirección tercero"
+
+msgctxt "field:stock.shipment.out,html_party:"
+msgid "HTML Party"
+msgstr "HTML tercero"
+
+msgctxt "field:stock.shipment.out,html_second_address:"
+msgid "HTML Second Address"
+msgstr "HTML segunda dirección"
+
+msgctxt "field:stock.shipment.out,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr "HTML etiqueta segunda dirección"
+
+msgctxt "field:stock.shipment.out,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr "HTML indentificador tercero"
+
+msgctxt "field:stock.shipment.out,show_lots:"
+msgid "Show Lots"
+msgstr "Mostrar lotes"
+
+msgctxt "field:stock.shipment.out,sorted_keys:"
+msgid "key"
+msgstr "clave"
+
+msgctxt "field:stock.shipment.out,sorted_lines:"
+msgid "Sorted Lines"
+msgstr "Ordenación lateral"
+
+msgctxt "field:stock.shipment.out.return,html_address:"
+msgid "HTML Party Address"
+msgstr "HTML dirección tercero"
+
+msgctxt "field:stock.shipment.out.return,html_party:"
+msgid "HTML Party"
+msgstr "HTML tercero"
+
+msgctxt "field:stock.shipment.out.return,html_second_address:"
+msgid "HTML Second Address"
+msgstr "HTML segunda dirección"
+
+msgctxt "field:stock.shipment.out.return,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr "HTML etiqueta segunda dirección"
+
+msgctxt "field:stock.shipment.out.return,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr "HTML indentificador tercero"
+
+msgctxt "field:stock.shipment.out.return,show_lots:"
+msgid "Show Lots"
+msgstr "Mostrar lotes"
+
 msgctxt "help:ir.action.report,html_raise_user_error:"
 msgid "Will raise a UserError in case of error in template parsing."
-msgstr "Generará un UserError en caso de error en el análisis de la plantilla."
+msgstr ""
+"Generará un UserError en caso de error en el análisis de la plantilla."
 
 msgctxt "help:ir.action.report,html_zipped:"
 msgid "If set, a zip file with a document per record will be created."
 msgstr ""
 "Si se configura, se creará un archivo zip con un documento por registro."
+
+msgctxt "model:account.configuration.html_report,name:"
+msgid "Account Configuration HTML Report"
+msgstr "Configuración contable informe HTML"
 
 msgctxt "model:html.report.template,name:"
 msgid "HTML Report - Template"
@@ -206,6 +412,54 @@ msgctxt "model:ir.action,name:act_template_translation_form"
 msgid "Template Translation"
 msgstr "Traducción plantilla"
 
+msgctxt "model:ir.action,name:html_report_customer_refund_note"
+msgid "Customer Refund Note"
+msgstr "Albarán devolución"
+
+msgctxt "model:ir.action,name:html_report_delivery_note"
+msgid "Delivery Note"
+msgstr "Nota de envío"
+
+msgctxt "model:ir.action,name:html_report_internal_picking_note"
+msgid "Internal Picking Note"
+msgstr "Nota recogida interna"
+
+msgctxt "model:ir.action,name:html_report_inventory"
+msgid "Inventory"
+msgstr "Inventario"
+
+msgctxt "model:ir.action,name:html_report_invoice"
+msgid "Invoice"
+msgstr "Factura"
+
+msgctxt "model:ir.action,name:html_report_picking_note"
+msgid "Picking Note"
+msgstr "Nota recogida"
+
+msgctxt "model:ir.action,name:html_report_purchase"
+msgid "Purchase"
+msgstr "Compras"
+
+msgctxt "model:ir.action,name:html_report_purchase_simplified"
+msgid "Purchase Simplified"
+msgstr "Compra simplificada"
+
+msgctxt "model:ir.action,name:html_report_refund_note"
+msgid "Refund Note"
+msgstr "Nota devolución"
+
+msgctxt "model:ir.action,name:html_report_sale"
+msgid "Sale"
+msgstr "Venta"
+
+msgctxt "model:ir.action,name:html_report_sale_proforma"
+msgid "Proforma"
+msgstr "Proforma"
+
+msgctxt "model:ir.action,name:html_report_shipment_in_restocking_list"
+msgid "Restocking List"
+msgstr "Lista de reabastecimiento"
+
 msgctxt "model:ir.message,text:missing_signatures"
 msgid "\"%(template)s\" missing signatures: %(missing)s"
 msgstr "\"%(template)s\" se requieren las firmas: %(missing)s"
@@ -239,8 +493,7 @@ msgid "The nullslast filter only accept a list of tuples."
 msgstr "El filtro nullslast solo acepta una lista de tuplas."
 
 msgctxt "model:ir.message,text:render_error"
-msgid ""
-"The following error was found rendering report \"%(report)s\": %(error)s"
+msgid "The following error was found rendering report \"%(report)s\": %(error)s"
 msgstr ""
 "Se encontró el siguiente error al generar el informe \"%(report)s\": "
 "%(error)s"
@@ -304,6 +557,10 @@ msgstr "Encabezado"
 msgctxt "selection:html.template,type:"
 msgid "Macro"
 msgstr "Macro"
+
+msgctxt "view:account.configuration:"
+msgid "HTML Report"
+msgstr "Informe HTML"
 
 msgctxt "view:ir.action.report:"
 msgid "HTML Report"
