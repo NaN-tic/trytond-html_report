@@ -13,10 +13,10 @@
     <field name="parent"/>
     <notebook colspan="6">
       <page name="content">
-         <field name="content" height="600" />
+         <field name="content" height="600" widget="code"/>
        </page>
 	     <page name="all_content">
-          <field name="all_content" height="600" />
+          <field name="all_content" height="600" widget="code"/>
       </page>
       <page name="uses">
           <field name="uses" height="500"/>

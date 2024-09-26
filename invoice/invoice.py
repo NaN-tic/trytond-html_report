@@ -31,11 +31,6 @@ class Invoice(HTMLPartyInfoMixin, metaclass=PoolMeta):
                 key=lambda x: x.maturity_date)]
         return lines
 
-    @property
-    def sort_lines(self, key):
-        print('AAAAAAAAAA ' * 10)
-        print(self, key)
-        return self
 
 class InvoiceLine(metaclass=PoolMeta):
     __name__ = 'account.invoice.line'
