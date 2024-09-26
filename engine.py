@@ -14,7 +14,7 @@ from decimal import Decimal
 from functools import partial
 from io import BytesIO
 from urllib.parse import urlparse
-from pypdf import PdfReader, PdfWriter
+from pypdf import PdfMerger, PdfReader
 import re
 import barcode
 import jinja2
@@ -399,7 +399,7 @@ class HTMLReportMixin:
 
     @classmethod
     def merge_pdfs(cls, pdfs_data):
-        merger = PdfWriter()
+        merger = PdfMerger()
         for pdf_data in pdfs_data:
             tmppdf = BytesIO(pdf_data)
             merger.append(PdfReader(tmppdf))
