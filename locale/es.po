@@ -384,10 +384,6 @@ msgctxt "model:html.template.usage,name:"
 msgid "HTML Template Usage"
 msgstr "Ús plantilla HTML"
 
-msgctxt "model:ir.action,name:"
-msgid "Customer Refund Note"
-msgstr "Albarán devolución"
-
 msgctxt "model:ir.action,name:act_action_report_form"
 msgid "Reports"
 msgstr "Informes"
