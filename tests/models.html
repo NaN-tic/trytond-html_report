@@ -6,7 +6,8 @@
     <tr>
       <th scope="col">#</th>
       <th scope="col">{{ _('Name') }}</th>
-      <th scope="col">{{ _('Model') }}</th>
+      <th scope="col">{{ _('Model') }} ({{ label('ir.model', 'model') }})</th>
+      <th scope="col">{{ message('ir.msg_created_by') }}</th>
     </tr>
   </thead>
   <tbody>
@@ -14,6 +15,7 @@
       <th scope="row">{{ model.raw.id }}</th>
       <td>{{ model.render.name }}</td>
       <td>{{ model.render.model }}</td>
+      <td>{{ model.render.created_by }}</td>
     </tr>{% endfor %}
   </tbody>
 </table>

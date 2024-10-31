@@ -89,6 +89,8 @@ class HtmlReportTestCase(CompanyTestMixin, ModuleTestCase):
             self.assertTrue('ir.model' in content, True)
             self.assertTrue('Nombre' in content, True)
             self.assertTrue('Modelo' in content, True)
+            # has not translation because test not load locale/es.po translations (-l es)
+            self.assertTrue('Created by' in content, True)
 
     @with_transaction()
     def test_check_reports(self):

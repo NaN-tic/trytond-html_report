@@ -818,6 +818,10 @@ class HTMLReportMixin:
             return getattr(ModelObject, field).string
 
     @classmethod
+    def message(cls, message_id, *args, **variables):
+        return gettext(message_id, *args, **variables)
+
+    @classmethod
     def qrcode(cls, value):
         qr_code = qrcode.make(value, image_factory=qrcode.image.svg.SvgImage)
         stream = io.BytesIO()
@@ -885,6 +889,7 @@ class HTMLReportMixin:
             'dualrecord': cls.dualrecord,
             'qrcode': cls.qrcode,
             'label': cls.label,
+            'message': cls.message,
             'pool': Pool(),
             'raise_user_error': cls.raise_user_error,
             'record': record,
