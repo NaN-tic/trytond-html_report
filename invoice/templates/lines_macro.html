@@ -16,7 +16,7 @@
       <th class="sub_header_level1" colspan="6">
         {% if key %}
         {{ label(key.raw.__name__) }}: {{ key.render.number }} {% if key.raw.reference %}/ {{ key.render.reference }}{% endif %}
-        {% if key.raw.effective_date %}{{ label(key.raw.__name__, 'effective_date') }}: {{ key.render.effective_date }}{% endif %}
+        {% if key.raw.effective_date %}{{ message('stock.msg_shipment_effective_date') }}: {{ key.render.effective_date }}{% endif %}
         {% endif %}
       </th>
     </tr>
