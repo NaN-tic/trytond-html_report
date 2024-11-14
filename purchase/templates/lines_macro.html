@@ -26,22 +26,18 @@
 
           <td class="text-right">{{ line.render.quantity }} {{ line.unit and line.unit.render.symbol or '' }}</td>
 
-          {% if line.raw.gross_unit_price %}
-            <td class="text-right">{{ line.render.gross_unit_price }} {{ line.purchase.currency.render.symbol }}</td>
-            {% if line.raw.discount1 or line.raw.discount2 or line.raw.discount3 %}
+          {% if line.raw.base_price %}
+            <td class="text-right">{{ line.render.base_price }} {{ line.purchase.currency.render.symbol }}</td>
+            {% if line.raw.html_discount_formula or line.raw.discount_rate or line.raw.discount_amount %}
               <td class="text-right">
-                  {% if line.raw.discount1 %}
-                    {{ '-{0:.2F}'.format(line.raw.discount1*100) }}% <br>
-                  {%endif%}
-                  {% if line.raw.discount2 %}
-                    {{ '-{0:.2F}'.format(line.raw.discount2*100) }}%<br>
-                  {%endif%}
-                  {% if line.raw.discount3 %}
-                    {{ '-{0:.2F}'.format(line.raw.discount3*100) }}%<br>
+                  {% if line.raw.html_discount_formula %}
+                    {{ line.render.html_discount_formula }}% <br>
+                  {% elif line.raw.discount_rate and line.raw.discount_rate > 0 %}
+                    {{ '-{0:.2F}'.format(line.raw.discount_rate*100) }}%<br>
+                  {% elif line.raw.discount_amount and line.raw.discount_amount > 0 %}
+                    {{ line.render.discount_amount }}%<br>
                   {%endif%}
               </td>
-            {% elif line.raw.discount and line.raw.discount > 0 %}
-              <td class="text-right">{{ '-{0:.2F}'.format(line.raw.discount*100) }}%</td>
             {% else %}
               <td> </td>
             {% endif %}
