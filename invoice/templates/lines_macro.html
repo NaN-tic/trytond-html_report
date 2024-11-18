@@ -46,16 +46,8 @@
 
           {% if line.raw.base_price %}
             <td class="text-right">{{ line.render.base_price }} {{ line.invoice.currency.render.symbol }}</td>
-            {% if line.raw.html_discount_formula or line.raw.discount_rate or line.raw.discount_amount %}
-              <td class="text-right">
-                  {% if line.raw.html_discount_formula %}
-                    {{ line.render.html_discount_formula }}% <br>
-                  {% elif line.raw.discount_rate and line.raw.discount_rate > 0 %}
-                    {{ '-{0:.2F}'.format(line.raw.discount_rate*100) }}%<br>
-                  {% elif line.raw.discount_amount and line.raw.discount_amount > 0 %}
-                    {{ line.render.discount_amount }}%<br>
-                  {%endif%}
-              </td>
+            {% if line.raw.discount %}
+              <td class="text-right">{{ line.render.discount }}</td>
             {% else %}
               <td> </td>
             {% endif %}
