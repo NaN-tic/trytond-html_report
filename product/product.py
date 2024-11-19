@@ -9,4 +9,4 @@ class Product(metaclass=PoolMeta):
         "HTML Code"), 'get_html_code')
 
     def get_html_code(self, name):
-        return self.code or ''
+        return self.code or '#%s' % self.id
