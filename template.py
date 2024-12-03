@@ -1,8 +1,9 @@
 import re
-from trytond.model import ModelSQL, ModelView, fields, sequence_ordered
+from trytond.model import Model, ModelSQL, ModelView, fields, sequence_ordered
 from trytond.pyson import Eval, Bool
 from trytond.tools import file_open
 from trytond.pool import Pool
+from .engine import DualRecord, HTMLReportMixin
 
 
 class Signature(ModelSQL, ModelView):
@@ -47,6 +48,12 @@ class Template(sequence_ordered(), ModelSQL, ModelView):
             setter='set_content')
     all_content = fields.Function(fields.Text('All Content'),
         'get_all_content')
+    preview_record = fields.Reference('Preview Record',
+        selection='get_preview_record')
+    preview = fields.Function(fields.Binary('Preview',
+            filename='preview_filename'), 'on_change_with_preview')
+    preview_filename = fields.Function(fields.Char('Preview Filename'),
+        'on_change_with_preview_filename')
 
     @classmethod
     def __register__(cls, module_name):
@@ -78,6 +85,47 @@ class Template(sequence_ordered(), ModelSQL, ModelView):
         for name in match:
             res += Signature.search([('name', 'like', name + '%')])
         return [x.id for x in res]
+
+    @classmethod
+    def get_preview_record(cls):
+        Model = Pool().get('ir.model')
+        return Model.get_name_items()
+
+    @fields.depends('preview_record', 'data')
+    def on_change_with_preview(self, name=None):
+        preview = '''<!DOCTYPE html>
+             <html>
+             <head>
+             </head>
+             <body>%s</body></html>
+        ''' % self.data
+        if isinstance(self.preview_record, Model):
+            macros = []
+            for use in self.uses:
+                # Compute HTML color based on a hash of the name
+                import hashlib
+                bgcolor = hashlib.md5(use.name.encode()).hexdigest()
+                bgcolor = bgcolor[:6]
+                # If bgcolor is too dark, make the text white
+                color = 'ffffff' if int(bgcolor, 16) < 0x888888 else '000000'
+                macros.append(
+                    '{%% macro %s %%}\n'
+                    '<span style="background-color: #%s; color: #%s">%s</span>\n'
+                    '{%% endmacro %%}' % (use.name, bgcolor, color, use.name))
+            preview = '\n'.join(macros) + preview
+            print('preview', preview)
+            record = DualRecord(self.preview_record)
+            records = [record, record, record]
+            try:
+                preview = HTMLReportMixin.render_template_jinja(None, preview,
+                    record=record, records=records)
+            except Exception as e:
+                preview = f'<pre>{e}</pre>'
+        return preview.encode()
+
+    @fields.depends('id')
+    def on_change_with_preview_filename(self, name=None):
+        return f'file{self.id}.html'
 
     def get_rec_name(self, name):
         res = self.name
