@@ -894,7 +894,7 @@ class HTMLReportMixin:
             'raise_user_error': cls.raise_user_error,
             'record': record,
             'records': records,
-            'report': DualRecord(action),
+            'report': DualRecord(action) if action else None,
             'time': now,
             'timedelta': timedelta,
             'user': DualRecord(User(Transaction().user)),
@@ -942,7 +942,7 @@ class HTMLReportMixin:
                     template_string.splitlines()[lineno-1])
                 e.args = e.args + tuple(location)
 
-            if RAISE_USER_ERRORS or action.html_raise_user_error:
+            if RAISE_USER_ERRORS or action and action.html_raise_user_error:
                 raise UserError(gettext('html_report.render_error',
                         report=action.rec_name, error=repr(e)))
             raise

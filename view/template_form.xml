@@ -12,14 +12,19 @@
     <label name="parent"/>
     <field name="parent"/>
     <notebook colspan="6">
-      <page name="content">
-         <field name="content" height="600" widget="code"/>
-       </page>
-	     <page name="all_content">
-          <field name="all_content" height="600" widget="code"/>
-      </page>
-      <page name="uses">
-          <field name="uses" height="500"/>
-      </page>
+        <page name="content">
+            <field name="content" colspan="4" height="600" widget="code"/>
+        </page>
+        <page name="preview">
+            <label name="preview_record"/>
+            <field name="preview_record" colspan="3"/>
+            <field name="preview" colspan="4" height="600" widget="document"/>
+        </page>
+        <page name="all_content">
+            <field name="all_content" colspan="4" height="600" widget="code"/>
+        </page>
+        <page name="uses">
+            <field name="uses" colspan="4" height="500"/>
+        </page>
     </notebook>
 </form>
