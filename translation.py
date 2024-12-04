@@ -6,8 +6,6 @@ from trytond.transaction import Transaction
 from babel.messages.extract import extract as babel_extract
 import jinja2
 
-__all__ = ['ReportTranslationSet']
-
 
 class ReportTranslationSet(metaclass=PoolMeta):
     __name__ = "ir.translation.set"

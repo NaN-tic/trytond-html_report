@@ -17,7 +17,9 @@
         </page>
         <page name="preview">
             <label name="preview_record"/>
-            <field name="preview_record" colspan="3"/>
+            <field name="preview_record"/>
+            <label name="preview_placeholder_macros"/>
+            <field name="preview_placeholder_macros"/>
             <field name="preview" colspan="4" height="600" widget="document"/>
         </page>
         <page name="all_content">

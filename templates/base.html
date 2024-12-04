@@ -8,7 +8,7 @@
     {% if show_css is defined %}
       <style>{{ show_css() }}</style>
     {% else %}
-      {% if report.raw.extension == 'html' %}
+      {% if not report or report.raw.extension == 'html' %}
       <link href="{{ 'html_report/templates/base.css'|base64 }}" rel="stylesheet" type="text/css">
       {% else %}
       <link href="{{ 'html_report/templates/base.css'|modulepath }}" rel="stylesheet" type="text/css">
