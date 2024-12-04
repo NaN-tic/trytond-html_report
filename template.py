@@ -1,3 +1,4 @@
+import hashlib
 import re
 from trytond.model import Model, ModelSQL, ModelView, fields, sequence_ordered
 from trytond.pyson import Eval, Bool
@@ -10,6 +11,16 @@ class Signature(ModelSQL, ModelView):
     'HTML Template Signature'
     __name__ = 'html.template.signature'
     name = fields.Char('Name', required=True)
+    templates = fields.One2Many('html.template', 'implements', 'Templates')
+
+    @classmethod
+    def copy(cls, signatures, default=None):
+        if default is None:
+            default = {}
+        else:
+            default = default.copy()
+        default.setdefault('templates')
+        return super().copy(signatures, default=default)
 
 
 class Template(sequence_ordered(), ModelSQL, ModelView):
@@ -51,9 +62,10 @@ class Template(sequence_ordered(), ModelSQL, ModelView):
     preview_record = fields.Reference('Preview Record',
         selection='get_preview_record')
     preview = fields.Function(fields.Binary('Preview',
-            filename='preview_filename'), 'on_change_with_preview')
+            filename='preview_filename'), 'get_preview')
     preview_filename = fields.Function(fields.Char('Preview Filename'),
-        'on_change_with_preview_filename')
+        'get_preview_filename')
+    preview_placeholder_macros = fields.Boolean('Use Placeholder for Macros')
 
     @classmethod
     def __register__(cls, module_name):
@@ -89,21 +101,21 @@ class Template(sequence_ordered(), ModelSQL, ModelView):
     @classmethod
     def get_preview_record(cls):
         Model = Pool().get('ir.model')
-        return Model.get_name_items()
+        return [(None, '')] + Model.get_name_items()
 
     @fields.depends('preview_record', 'data')
-    def on_change_with_preview(self, name=None):
-        preview = '''<!DOCTYPE html>
-             <html>
-             <head>
-             </head>
-             <body>%s</body></html>
-        ''' % self.data
+    def get_preview(self, name=None):
+        if self.type in ('base', 'extension'):
+            preview = self.all_content
+        else:
+            preview = self.data
+
         if isinstance(self.preview_record, Model):
             macros = []
             for use in self.uses:
-                # Compute HTML color based on a hash of the name
-                import hashlib
+                if not self.preview_placeholder_macros and use.templates:
+                    macros.append(use.templates[0].all_content)
+                    continue
                 bgcolor = hashlib.md5(use.name.encode()).hexdigest()
                 bgcolor = bgcolor[:6]
                 # If bgcolor is too dark, make the text white
@@ -111,9 +123,10 @@ class Template(sequence_ordered(), ModelSQL, ModelView):
                 macros.append(
                     '{%% macro %s %%}\n'
                     '<span style="background-color: #%s; color: #%s">%s</span>\n'
-                    '{%% endmacro %%}' % (use.name, bgcolor, color, use.name))
-            preview = '\n'.join(macros) + preview
-            print('preview', preview)
+                    '{%% endmacro %%}' % (use.name, bgcolor, color, use.name)
+                    )
+
+            preview = '\n\n'.join(macros) + '\n\n' + preview
             record = DualRecord(self.preview_record)
             records = [record, record, record]
             try:
@@ -121,10 +134,11 @@ class Template(sequence_ordered(), ModelSQL, ModelView):
                     record=record, records=records)
             except Exception as e:
                 preview = f'<pre>{e}</pre>'
+        preview = f'<!DOCTYPE html>{preview}<html>'
         return preview.encode()
 
     @fields.depends('id')
-    def on_change_with_preview_filename(self, name=None):
+    def get_preview_filename(self, name=None):
         return f'file{self.id}.html'
 
     def get_rec_name(self, name):

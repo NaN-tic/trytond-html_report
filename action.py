@@ -9,9 +9,6 @@ from trytond.cache import Cache
 from trytond.ir.lang import get_parent_language
 
 
-__all__ = ['ActionReport', 'HTMLTemplateTranslation']
-
-
 class ActionReport(metaclass=PoolMeta):
     __name__ = 'ir.action.report'
     html_template = fields.Many2One('html.template', 'Body',
@@ -186,7 +183,6 @@ class ActionReport(metaclass=PoolMeta):
             templates.append(record)
 
         self.html_templates = templates
-
 
     @classmethod
     def gettext(cls, *args, **variables):
