@@ -26,8 +26,6 @@
             <field name="html_templates" colspan="4"/>
         </page>
         <page name="preview">
-            <label name="preview_record"/>
-            <field name="preview_record" colspan="3"/>
             <field name="preview" colspan="4" widget="document" height="500"/>
         </page>
         <page string="Jinja Template" id="jinja_template">
