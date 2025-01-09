@@ -438,8 +438,8 @@ class HTMLReportMixin:
 
     @classmethod
     def __execute(cls, ids, data, queue=None):
-        cls.check_access()
         action, model = cls.get_action(data)
+        cls.check_access(action, model, ids)
 
         # in case is not jinja, call super()
         if action.template_extension != 'jinja':
@@ -513,8 +513,8 @@ class HTMLReportMixin:
 
     @classmethod
     def execute(cls, ids, data):
-        cls.check_access()
         action, model = cls.get_action(data)
+        cls.check_access(action, model, ids)
         if action.template_extension != 'jinja':
             return super().execute(ids, data)
         return cls.__execute(ids, data, queue=None)
