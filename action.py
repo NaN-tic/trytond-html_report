@@ -56,11 +56,11 @@ class ActionReport(metaclass=PoolMeta):
     html_translations = fields.One2Many('html.template.translation', 'report',
         'Translations')
     _html_translation_cache = Cache('html.template.translation', context=False)
-    html_header_content = fields.Function(fields.Binary('Header Content'),
+    html_header_content = fields.Function(fields.Text('Header Content'),
         'get_content')
-    html_footer_content = fields.Function(fields.Binary('Footer Content'),
+    html_footer_content = fields.Function(fields.Text('Footer Content'),
         'get_content')
-    html_last_footer_content = fields.Function(fields.Binary(
+    html_last_footer_content = fields.Function(fields.Text(
             'Last Page Footer Content'), 'get_content')
     html_zipped = fields.Boolean('Zipped', states={
         'invisible': ~Eval('single'),
