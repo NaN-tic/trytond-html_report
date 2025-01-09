@@ -120,12 +120,14 @@ class HtmlReportTestCase(CompanyTestMixin, ModuleTestCase):
 
             account_revenue, = Account.search([
                         ('type.revenue', '=', True),
+                        ('closed', '=', False),
                         ('company', '=', company.id),
-                        ])
+                        ], limit=1)
             account_expense, = Account.search([
                         ('type.expense', '=', True),
+                        ('closed', '=', False),
                         ('company', '=', company.id),
-                        ])
+                        ], limit=1)
 
             payment_term, = PaymentTerm.create([{
                         'name': 'Test',
