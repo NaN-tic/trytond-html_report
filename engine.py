@@ -799,8 +799,8 @@ class HTMLReportMixin:
             return ''
 
         if field == None:
-            model, = Model.search([('model', '=', model)])
-            return model.name
+            model, = Model.search([('name', '=', model)])
+            return model.string
         else:
             args = ("%s,%s" % (model, field), 'field', lang, None)
             translation = Translation.get_sources([args])

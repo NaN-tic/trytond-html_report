@@ -39,7 +39,7 @@ class HtmlReportTestCase(CompanyTestMixin, ModuleTestCase):
         HTMLTemplateTranslation = pool.get('html.template.translation')
         Model = pool.get('ir.model')
 
-        model, = Model.search([('model', '=', 'ir.model')], limit=1)
+        model, = Model.search([('name', '=', 'ir.model')], limit=1)
 
         with file_open('html_report/tests/base.html') as f:
             tpl_base, = Template.create([{
@@ -65,7 +65,7 @@ class HtmlReportTestCase(CompanyTestMixin, ModuleTestCase):
             'html_template': tpl_models,
             }])
 
-        models = Model.search([('model', 'like', 'ir.model%')])
+        models = Model.search([('name', 'like', 'ir.model%')])
 
         self.assertTrue(report.id)
         self.assertTrue('block body' in report.html_content, True)
