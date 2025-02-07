@@ -5,5 +5,5 @@
 {% set label_reference = label(record.raw.__name__, 'reference') %}
 
 <h1 class="document">{{title}}:{{ record.raw.number and record.render.number }} <h1>
-<h2 class="document">{{label_reference}}:{{ record.raw.reference }} </h2>
+<h2 class="document">{{label_reference}}:{{ record.raw.reference or '' }} </h2>
 <h2 class="document">{{label_date}}:{{ document_date or '' }} </h2>
