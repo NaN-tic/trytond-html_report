@@ -135,6 +135,7 @@ class HTMLReport(Report):
     def render(cls, report, report_context):
         pool = Pool()
         Company = pool.get('company.company')
+        User = pool.get('res.user')
 
         # Convert to str as buffer from DB is not supported by StringIO
         report_content = (report.report_content if report.report_content
@@ -148,7 +149,8 @@ class HTMLReport(Report):
         company_id = Transaction().context.get('company')
         report_context['company'] = Company(company_id)
 
-        company_id = Transaction().context.get('company')
+        user_id = Transaction().context.get('user', None)
+        report_context['user'] = User(user_id) if user_id else None
 
         ids = Transaction().context.get('html_report_ids')
         data = Transaction().context.get('html_report_data')
