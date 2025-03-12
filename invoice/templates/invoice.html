@@ -1,14 +1,14 @@
 {% set invoice = record %}
 
 {% block title %}
-  {% language invoice.party.lang and invoice.party.raw.lang.code or company.party.lang and company.party.raw.lang.code or 'en' %}
+  {% language invoice.party and invoice.party.lang and invoice.party.raw.lang.code or company.party.lang and company.party.raw.lang.code or 'en' %}
     {{ super() }}
     {{ label('account.invoice') }}
   {% endlanguage %}
 {% endblock %}
 
 {% block main %}
-{% language invoice.party.lang and invoice.party.raw.lang.code or company.party.lang and company.party.raw.lang.code or 'en' %}
+{% language invoice.party and invoice.party.lang and invoice.party.raw.lang.code or company.party.lang and company.party.raw.lang.code or 'en' %}
 
   {% set invoice = record %}
   {{ show_invoice_lines(invoice) }}
