@@ -2,6 +2,7 @@ from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import HTMLReportMixin
+from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 
 
 class Sale(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
@@ -25,3 +26,7 @@ class Sale(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
         pool = Pool()
         Report = pool.get('sale.sale')
         return Report.label(self.__name__, 'shipment_address')
+
+
+class SaleLineDiscount(HTMLDiscountReportMixin, metaclass=PoolMeta):
+    __name__ = 'sale.line'
