@@ -3,6 +3,7 @@ from trytond.pool import PoolMeta, Pool
 from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import HTMLReportMixin
+from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 
 
 class ShipmentOutReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
@@ -165,6 +166,10 @@ class Move(metaclass=PoolMeta):
         if origin and hasattr(origin, 'document_origin') and origin.document_origin:
             origin = origin.document_origin
         return str(origin) if origin is not None else ''
+
+
+class MoveDiscount(HTMLDiscountReportMixin, metaclass=PoolMeta):
+    __name__ = 'stock.move'
 
 
 class ShipmentInternal(HTMLPartyInfoMixin, metaclass=PoolMeta):
