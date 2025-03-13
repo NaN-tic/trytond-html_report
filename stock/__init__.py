@@ -11,3 +11,8 @@ def register(module):
         stock.Move,
         stock.StockInventory,
         module=module, type_='model', depends=['stock'])
+    Pool.register(
+        stock.MoveDiscount,
+        module=module,
+        type_='model',
+        depends=['stock_valued'])
