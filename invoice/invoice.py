@@ -4,6 +4,7 @@ from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import HTMLReportMixin
+from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 
 
 class Invoice(HTMLPartyInfoMixin, metaclass=PoolMeta):
@@ -75,6 +76,10 @@ class InvoiceLine(metaclass=PoolMeta):
 
     def get_html_product_code(self, name):
         return self.product and self.product.code or ''
+
+
+class InvoiceLineDiscount(HTMLDiscountReportMixin, metaclass=PoolMeta):
+    __name__ = 'account.invoice.line'
 
 
 class InvoiceReport(HTMLReportMixin, metaclass=PoolMeta):
