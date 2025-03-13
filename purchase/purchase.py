@@ -1,6 +1,7 @@
 from trytond.pool import PoolMeta
 from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
+from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 
 
 class Purchase(HTMLPartyInfoMixin, metaclass=PoolMeta):
@@ -15,3 +16,7 @@ class Purchase(HTMLPartyInfoMixin, metaclass=PoolMeta):
     def get_html_address(self, name):
         return (self.invoice_address and self.invoice_address.id
             or super().get_html_address(name))
+
+
+class PurchaseLineDiscount(HTMLDiscountReportMixin, metaclass=PoolMeta):
+    __name__ = 'purchase.line'
