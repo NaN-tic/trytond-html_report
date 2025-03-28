@@ -448,7 +448,7 @@ msgstr "Venda"
 
 msgctxt "model:ir.action,name:html_report_sale_proforma"
 msgid "Proforma"
-msgstr "Prodforma"
+msgstr "Proforma"
 
 msgctxt "model:ir.action,name:html_report_shipment_in_restocking_list"
 msgid "Restocking List"
