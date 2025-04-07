@@ -37,9 +37,7 @@
               <td>{{ move.unit.render.name }}</td>
               {%if valued == True %}
                 <td class="text-right" nowrap>{{ move.render.base_price }} {{ document.currency.render.symbol }}</td>
-                {% if move.raw.discount %}
-                   <td class="text-right" nowrap>{{ move.render.discount }}</td>
-                {% endif %}
+                <td class="text-right" nowrap>{% if move.raw.discount %}{{ move.render.discount }}{% endif %}</td>
                 <td class="text-right" nowrap>{{ move.render.amount }} {{ document.currency.render.symbol }}</td>
               {%else%}
                 <td class="hide"/>
