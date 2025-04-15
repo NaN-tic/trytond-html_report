@@ -191,6 +191,11 @@ class PdfGenerator:
     def render_pdf(self):
         context = Transaction().context
         timeout_report = context.get('timeout_report', None)
+        if timeout_report > 1000000:
+            # Python does not allow a timeout greater than 1000000 seconds (at
+            # least it does not allow an order of magnitude larger than that)
+            # That is more than 11 days so it should not be a problem
+            timeout_report = 1000000
 
         if timeout_report:
             path = os.path.dirname(os.path.abspath(__file__)) + '/'
