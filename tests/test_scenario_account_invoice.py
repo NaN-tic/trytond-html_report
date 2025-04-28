@@ -76,11 +76,7 @@ class Test(unittest.TestCase):
 
         # Create Write Off method
         WriteOff = Model.get('account.move.reconcile.write_off')
-        sequence_journal, = Sequence.find(
-            [('sequence_type.name', '=', "Account Journal")], limit=1)
-        journal_writeoff = Journal(name='Write-Off',
-                                   type='write-off',
-                                   sequence=sequence_journal)
+        journal_writeoff = Journal(name='Write-Off', type='write-off')
         journal_writeoff.save()
         writeoff_method = WriteOff()
         writeoff_method.name = 'Rate loss'
