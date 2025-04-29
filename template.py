@@ -189,7 +189,7 @@ class ReportTemplate(ModelSQL, ModelView):
         required=True)
     template = fields.Many2One('html.template', 'Template',
         domain=[
-            ('implements', '=', Eval('signature')),
+            ('implements', '=', Eval('signature', -1)),
             ])
     template_used = fields.Function(
         fields.Many2One('html.template', 'Template Used'), 'get_template_used')
