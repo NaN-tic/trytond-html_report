@@ -1,0 +1,7 @@
+{% if record.raw.aeat_qr_url %}
+    <div style='text-align:center;'>
+        <p style="margin:0;">QR Tributario:</p>
+        <img src="{{ qrcode(record.raw.aeat_qr_url) | render }}" style="width: 30mm; height: 30mm;"/>
+        {% if 'ValidarQRNoVerifactu' not in record.raw.aeat_qr_url %} <p style="margin:0;">VERI*FACTU</p> {% endif %}
+    </div>
+{% endif %}
