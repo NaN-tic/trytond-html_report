@@ -10,6 +10,13 @@
           <field name="parent" ref="base_template"/>
       </record>
 
+    <record model='html.template' id="invoice_header_template">
+        <field name="name">Invoice Header</field>
+        <field name="type">header</field>
+        <field name="sequence" eval="99"/>
+        <field name="filename">html_report/invoice/templates/invoice_header.html</field>
+    </record>
+
      <record model='html.template' id="invoice_last_footer_template">
          <field name="name">Invoice Last Footer</field>
          <field name="type">footer</field>
@@ -70,6 +77,17 @@
         <field name="implements" ref="html_report.document_info_macro_signature"/>
     </record>
 
+    <record model='html.template.signature' id="tax_code_macro_signature">
+        <field name="name">show_tax_code(record)</field>
+    </record>
+    <record model='html.template' id="tax_code_macro_id">
+        <field name="name">Tax Code</field>
+        <field name="type">macro</field>
+        <field name="sequence" eval="99"/>
+        <field name="filename">html_report/invoice/templates/macros/tax_code_macro.html</field>
+        <field name="implements" ref="html_report.tax_code_macro_signature"/>
+    </record>
+
     <!-- Invoice Report -->
     <record model="ir.action.report" id="account_invoice.report_invoice">
         <field name="active" eval="False"/>
@@ -83,7 +101,7 @@
         <field name="template_extension">jinja</field>
         <field name="single" eval="True"/>
         <field name="html_template" ref="invoice_template_id"/>
-        <field name="html_header_template" ref="header_template"/>
+        <field name="html_header_template" ref="invoice_header_template"/>
         <field name="html_footer_template" ref="footer_template"/>
         <field name="html_last_footer_template" ref="invoice_last_footer_template"/>
         <field name="extension">pdf</field>
@@ -159,6 +177,10 @@
     <record model="html.report.template" id="report_invoice_footer_id">
       <field name="report" ref="html_report_invoice"/>
       <field name="signature" ref="show_footer_signature"/>
+    </record>
+    <record model="html.report.template" id="report_invoice_tax_code_id">
+      <field name="report" ref="html_report_invoice"/>
+      <field name="signature" ref="tax_code_macro_signature"/>
     </record>
   </data>
 </tryton>
