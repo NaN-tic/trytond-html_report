@@ -84,7 +84,7 @@
         <field name="name">Tax Code</field>
         <field name="type">macro</field>
         <field name="sequence" eval="99"/>
-        <field name="filename">html_report/invoice/templates/macros/tax_code_macro.html</field>
+        <field name="filename">html_report/invoice/templates/tax_code_macro.html</field>
         <field name="implements" ref="html_report.tax_code_macro_signature"/>
     </record>
 
