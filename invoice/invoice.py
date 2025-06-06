@@ -1,9 +1,10 @@
 from collections import defaultdict
+from decimal import Decimal
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
-from trytond.modules.html_report.engine import HTMLReportMixin
+from trytond.modules.html_report.engine import DualRecord, HTMLReportMixin
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 
 
@@ -31,6 +32,20 @@ class Invoice(HTMLPartyInfoMixin, metaclass=PoolMeta):
                 if not line.reconciliation and line.maturity_date],
                 key=lambda x: x.maturity_date)]
         return lines
+
+    @property
+    def html_taxes(self):
+        currency_digits = self.currency.digits
+        precision = '0.' + '0' * currency_digits if currency_digits > 0 else '0'
+
+        def default_amount():
+            return {'base': Decimal(precision), 'amount': Decimal(precision)}
+
+        taxes = defaultdict(default_amount)
+        for tax in self.taxes:
+            taxes[tax.tax]['base'] += tax.base
+            taxes[tax.tax]['amount'] += tax.amount
+        return {DualRecord(k): v for k, v in taxes.items()}
 
 
 class InvoiceLine(metaclass=PoolMeta):
