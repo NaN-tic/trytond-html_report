@@ -25,6 +25,8 @@ from ppf.datamatrix import DataMatrix
 import weasyprint
 from babel import dates, numbers, support
 from barcode.writer import SVGWriter
+from openpyxl import Workbook
+from bs4 import BeautifulSoup
 
 from trytond.config import config
 from trytond.exceptions import UserError
@@ -40,6 +42,7 @@ from trytond.modules.widgets import tools
 
 from . import words
 from .generator import PdfGenerator
+from .tools import save_virtual_workbook, _convert_str_to_float
 
 MEDIA_TYPE = config.get('html_report', 'type', default='screen')
 RAISE_USER_ERRORS = config.getboolean('html_report', 'raise_user_errors',
@@ -580,6 +583,20 @@ class HTMLReportMixin:
                     ).render_pdf()
             else:
                 document = content
+
+        if extension == 'xlsx':
+            soup = BeautifulSoup(document, "html.parser")
+            table = soup.find("table")
+
+            wb = Workbook()
+            ws = wb.active
+
+            for row in table.find_all("tr"):
+                data = []
+                for cell in row.find_all(["td", "th"]):
+                    data.append(_convert_str_to_float(cell.text))
+                ws.append(data)
+            document = save_virtual_workbook(wb)
         return extension, document
 
     @classmethod
