@@ -452,11 +452,14 @@ class HTMLReportMixin:
         if extra_vertical_margin is None:
             extra_vertical_margin = cls.extra_vertical_margin
 
+        output_format = data.get('output_format', action.extension or 'pdf')
         # use DualRecord when template extension is jinja
         data['html_dual_record'] = True
         records = []
-        with Transaction().set_context(html_report=action.id,
-            address_with_party=False):
+        with Transaction().set_context(
+                html_report=action.id,
+                address_with_party=False,
+                output_format=output_format):
             if model and ids:
                 records = cls._get_dual_records(ids, model, data)
 
@@ -663,12 +666,13 @@ class HTMLReportMixin:
                 return ('data:%s;base64,%s' % (mimetype, value)).strip()
 
         def render(value, digits=2, lang=None, filename=None):
+            context = Transaction().context
             if not lang:
                 langs = Lang.search([('code', '=', 'en')], limit=1)
                 lang = langs[0] if langs else 'en'
             if isinstance(value, (float, Decimal)):
-                return lang.format('%.*f', (digits, value),
-                    grouping=True)
+                grouping = not context.get('output_format') in ['xls', 'xlsx']
+                return lang.format('%.*f', (digits, value), grouping=grouping)
             if value is None or value == '':
                 return ''
             if isinstance(value, bool):
