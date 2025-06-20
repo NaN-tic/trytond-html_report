@@ -25,6 +25,8 @@ from ppf.datamatrix import DataMatrix
 import weasyprint
 from babel import dates, numbers, support
 from barcode.writer import SVGWriter
+from openpyxl import Workbook
+from bs4 import BeautifulSoup
 
 from trytond.config import config
 from trytond.exceptions import UserError
@@ -40,6 +42,7 @@ from trytond.modules.widgets import tools
 
 from . import words
 from .generator import PdfGenerator
+from .tools import save_virtual_workbook, _convert_str_to_float
 
 MEDIA_TYPE = config.get('html_report', 'type', default='screen')
 RAISE_USER_ERRORS = config.getboolean('html_report', 'raise_user_errors',
@@ -452,11 +455,14 @@ class HTMLReportMixin:
         if extra_vertical_margin is None:
             extra_vertical_margin = cls.extra_vertical_margin
 
+        output_format = data.get('output_format', action.extension or 'pdf')
         # use DualRecord when template extension is jinja
         data['html_dual_record'] = True
         records = []
-        with Transaction().set_context(html_report=action.id,
-            address_with_party=False):
+        with Transaction().set_context(
+                html_report=action.id,
+                address_with_party=False,
+                output_format=output_format):
             if model and ids:
                 records = cls._get_dual_records(ids, model, data)
 
@@ -577,6 +583,20 @@ class HTMLReportMixin:
                     ).render_pdf()
             else:
                 document = content
+
+        if extension == 'xlsx':
+            soup = BeautifulSoup(document, "html.parser")
+            table = soup.find("table")
+
+            wb = Workbook()
+            ws = wb.active
+
+            for row in table.find_all("tr"):
+                data = []
+                for cell in row.find_all(["td", "th"]):
+                    data.append(_convert_str_to_float(cell.text))
+                ws.append(data)
+            document = save_virtual_workbook(wb)
         return extension, document
 
     @classmethod
@@ -663,12 +683,13 @@ class HTMLReportMixin:
                 return ('data:%s;base64,%s' % (mimetype, value)).strip()
 
         def render(value, digits=2, lang=None, filename=None):
+            context = Transaction().context
             if not lang:
                 langs = Lang.search([('code', '=', 'en')], limit=1)
                 lang = langs[0] if langs else 'en'
             if isinstance(value, (float, Decimal)):
-                return lang.format('%.*f', (digits, value),
-                    grouping=True)
+                grouping = not context.get('output_format') in ['xls', 'xlsx']
+                return lang.format('%.*f', (digits, value), grouping=grouping)
             if value is None or value == '':
                 return ''
             if isinstance(value, bool):
