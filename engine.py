@@ -585,18 +585,17 @@ class HTMLReportMixin:
                 document = content
 
         if extension == 'xlsx':
-            soup = BeautifulSoup(document, "html.parser")
-            table = soup.find("table")
-
             wb = Workbook()
             ws = wb.active
 
-            for row in table.find_all("tr"):
-                data = []
-                for cell in row.find_all(["td", "th"]):
-                    data.append(_convert_str_to_float(cell.text))
-                ws.append(data)
-            document = save_virtual_workbook(wb)
+            soup = BeautifulSoup(document, 'html.parser')
+            for table in soup.find_all('table'):
+                for row in table.find_all('tr'):
+                    data = []
+                    for cell in row.find_all(['td', 'th']):
+                        data.append(_convert_str_to_float(cell.text))
+                    ws.append(data)
+                document = save_virtual_workbook(wb)
         return extension, document
 
     @classmethod
