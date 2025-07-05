@@ -32,5 +32,10 @@
             <field name="text">There was an exception rendering the report:
 %(result)s</field>
         </record>
+        <record model="ir.message" id="msg_merge_pdf_error">
+            <field name="text">There was an error merging PDF file %(count)s out of %(total)s. Error was:
+
+%(error)s</field>
+        </record>
     </data>
 </tryton>

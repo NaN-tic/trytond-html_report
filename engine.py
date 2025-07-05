@@ -403,9 +403,17 @@ class HTMLReportMixin:
     @classmethod
     def merge_pdfs(cls, pdfs_data):
         merger = PdfWriter()
+        count = 0
         for pdf_data in pdfs_data:
+            count += 1
             tmppdf = BytesIO(pdf_data)
-            merger.append(PdfReader(tmppdf))
+            try:
+                item = PdfReader(tmppdf)
+            except Exception as e:
+                raise UserError(gettext('html_report.msg_merge_pdf_error',
+                        count=count, total=len(pdfs_data),
+                        error=repr(e)))
+            merger.append(item)
             tmppdf.close()
 
         if COMPACT_ON_MERGE:
