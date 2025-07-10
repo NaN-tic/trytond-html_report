@@ -6,6 +6,7 @@ from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import DualRecord, HTMLReportMixin
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
+from trytond.transaction import Transaction
 
 
 class Invoice(HTMLPartyInfoMixin, metaclass=PoolMeta):
@@ -106,9 +107,10 @@ class InvoiceReport(HTMLReportMixin, metaclass=PoolMeta):
         pool = Pool()
         Invoice = pool.get('account.invoice')
         Configuration = Pool().get('account.configuration')
-        config = Configuration(1)
 
+        config = Configuration(1)
         extension, document = None, None
+        is_html = Transaction().context.get('output_format') == 'html'
 
         to_invoice_cache = {}
         if config.use_invoice_report_cache:
@@ -129,7 +131,7 @@ class InvoiceReport(HTMLReportMixin, metaclass=PoolMeta):
                     'invoice_report_cache': Invoice.invoice_report_cache.cast(document),
                     }
 
-        if to_invoice_cache:
+        if to_invoice_cache and not is_html:
             to_write = []
             for id, values in to_invoice_cache.items():
                 # Re-instantiate because records are DualRecord
@@ -153,7 +155,7 @@ class InvoiceReport(HTMLReportMixin, metaclass=PoolMeta):
                 extension, document = super()._execute_html_report([record], data, action,
                     side_margin, extra_vertical_margin)
                 documents.append(document)
-        if len(documents) > 1:
+        if len(documents) > 1 and not is_html:
             extension = 'pdf'
             document = cls.merge_pdfs(documents)
 
