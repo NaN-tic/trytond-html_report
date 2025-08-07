@@ -928,7 +928,7 @@ class HTMLReportMixin:
                 tznow = timezone.localize(now)
                 tznow = now + tznow.utcoffset()
                 context['time'] = tznow
-        else:
+        if not 'time' in context:
             context['time'] = now
         context['today'] = context['time'].date()
 
