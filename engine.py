@@ -915,7 +915,6 @@ class HTMLReportMixin:
             'record': record,
             'records': records,
             'report': DualRecord(action) if action else None,
-            'time': now,
             'timedelta': timedelta,
             'user': DualRecord(User(Transaction().user)),
             'utc_time': now,
@@ -929,6 +928,9 @@ class HTMLReportMixin:
                 tznow = timezone.localize(now)
                 tznow = now + tznow.utcoffset()
                 context['time'] = tznow
+        else:
+            context['time'] = now
+        context['today'] = context['time'].date()
 
         context.update(cls.local_context())
         try:
