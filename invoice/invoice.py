@@ -3,6 +3,7 @@ from decimal import Decimal
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
+from trytond.transaction import Transaction
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import DualRecord, HTMLReportMixin
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
@@ -129,7 +130,8 @@ class InvoiceReport(HTMLReportMixin, metaclass=PoolMeta):
                     'invoice_report_cache': Invoice.invoice_report_cache.cast(document),
                     }
 
-        if to_invoice_cache:
+        # Check if the transaction is readonly
+        if to_invoice_cache and not Transaction().readonly:
             to_write = []
             for id, values in to_invoice_cache.items():
                 # Re-instantiate because records are DualRecord
