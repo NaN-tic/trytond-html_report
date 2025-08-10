@@ -78,7 +78,7 @@ class ShipmentInReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
 
 class ShipmentOut(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.out'
-    sorted_lines = fields.Function(fields.Many2Many(None, None, 'stock.move',
+    sorted_lines = fields.Function(fields.Many2Many('stock.move', None, None,
         'Sorted Lines'), 'get_sorted_lines')
     sorted_keys = fields.Function(fields.Char('key'), 'get_sorted_keys')
     show_lots = fields.Function(fields.Boolean('Show Lots'),
