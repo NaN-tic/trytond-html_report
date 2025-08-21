@@ -455,7 +455,19 @@ class HTMLReportMixin:
         if extra_vertical_margin is None:
             extra_vertical_margin = cls.extra_vertical_margin
 
-        output_format = data.get('output_format', action.extension or 'pdf')
+        if Transaction().context.get('output_format') == 'html':
+            is_zip, is_merge_pdf, Printer = None, None, None
+            output_format = data['output_format'] = 'html'
+        else:
+            is_zip = action.single and len(ids) > 1 and action.html_zipped
+            is_merge_pdf = action.html_copies and action.html_copies > 1
+            Printer = None
+            try:
+                Printer = Pool().get('printer')
+            except KeyError:
+                logger.warning('Model "Printer" not found.')
+            output_format = data.get('output_format', action.extension or 'pdf')
+
         # use DualRecord when template extension is jinja
         data['html_dual_record'] = True
         records = []
@@ -475,7 +487,7 @@ class HTMLReportMixin:
                 filename = slugify(action_name)
 
             # report single and len > 1, return zip file
-            if action.single and len(ids) > 1 and action.html_zipped:
+            if is_zip:
                 content = BytesIO()
                 with zipfile.ZipFile(content, 'w') as content_zip:
                     for record in records:
@@ -505,13 +517,8 @@ class HTMLReportMixin:
             if not isinstance(content, str):
                 content = bytes(content)
 
-            if action.html_copies and action.html_copies > 1:
+            if is_merge_pdf:
                 content = cls.merge_pdfs([content] * action.html_copies)
-            Printer = None
-            try:
-                Printer = Pool().get('printer')
-            except KeyError:
-                logger.warning('Model "Printer" not found.')
             if Printer:
                 return Printer.send_report(oext, content,
                     action_name, action)
@@ -668,8 +675,11 @@ class HTMLReportMixin:
 
         def module_path(name):
             module, path = name.split('/', 1)
-            with file_open(os.path.join(module, path)) as f:
-                return 'file://' + f.name
+            try:
+                with file_open(os.path.join(module, path)) as f:
+                    return 'file://' + f.name
+            except FileNotFoundError:
+                pass
 
         def base64(name):
             module, path = name.split('/', 1)
