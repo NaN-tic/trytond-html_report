@@ -92,6 +92,16 @@ class HtmlReportTestCase(CompanyTestMixin, ModuleTestCase):
             # has not translation because test not load locale/es.po translations (-l es)
             self.assertTrue('Created by' in content, True)
 
+
+        report2, = ActionReport.copy([report], {'report_name': 'ir.model.report2', 'extension': None})
+        ModelReport2 = Pool().get('ir.model.report2', type='report')
+        ext, content, _, _ = ModelReport2.execute([m.id for m in models], {})
+        self.assertTrue(isinstance(content, bytes))
+        with Transaction().set_context(output_format='html'):
+            ext, content, _, _ = ModelReport2.execute([m.id for m in models], {})
+            self.assertTrue(isinstance(content, str))
+            self.assertTrue(content.startswith('<!DOCTYPE html>'))
+
     @with_transaction()
     def test_check_reports(self):
         pool = Pool()
