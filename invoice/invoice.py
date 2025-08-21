@@ -7,7 +7,6 @@ from trytond.transaction import Transaction
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import DualRecord, HTMLReportMixin
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
-from trytond.transaction import Transaction
 
 
 class Invoice(HTMLPartyInfoMixin, metaclass=PoolMeta):
