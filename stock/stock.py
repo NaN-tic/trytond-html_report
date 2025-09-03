@@ -80,7 +80,6 @@ class ShipmentOut(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.out'
     sorted_lines = fields.Function(fields.Many2Many('stock.move', None, None,
         'Sorted Lines'), 'get_sorted_lines')
-    sorted_keys = fields.Function(fields.Char('key'), 'get_sorted_keys')
     show_lots = fields.Function(fields.Boolean('Show Lots'),
         'get_show_lots')
 
@@ -109,7 +108,8 @@ class ShipmentOut(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
         lines.sort(key=lambda k: k.sort_key, reverse=True)
         return [x.id for x in lines]
 
-    def get_sorted_keys(self, name):
+    @property
+    def sorted_keys(self):
         keys = []
         for x in self.sorted_lines:
             if x.sort_key in keys:
@@ -126,12 +126,11 @@ class ShipmentOut(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
 
 class Move(metaclass=PoolMeta):
     __name__ = 'stock.move'
-
-    sort_key = fields.Function(fields.Char('key'), 'get_sorted_key')
     origin_key = fields.Function(fields.Char("Origin Key",
         ), 'get_origin_key')
 
-    def get_sorted_key(self, name):
+    @property
+    def sort_key(self):
         pool = Pool()
         ShipmentOut = pool.get('stock.shipment.out')
         ShipmentIn = pool.get('stock.shipment.in')
