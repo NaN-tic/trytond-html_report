@@ -173,6 +173,8 @@ class MoveDiscount(HTMLDiscountReportMixin, metaclass=PoolMeta):
 
 class ShipmentInternal(HTMLPartyInfoMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.internal'
+    show_lots = fields.Function(fields.Boolean('Show Lots'),
+        'get_show_lots')
 
     @classmethod
     def __setup__(cls):
@@ -182,6 +184,12 @@ class ShipmentInternal(HTMLPartyInfoMixin, metaclass=PoolMeta):
 
     def get_html_party(self, name):
         return
+
+    def get_show_lots(self, name):
+        for move in self.moves:
+            if hasattr(move, 'lot') and getattr(move, 'lot'):
+                return True
+        return False
 
 
 class StockInventory(HTMLReportMixin, metaclass=PoolMeta):
