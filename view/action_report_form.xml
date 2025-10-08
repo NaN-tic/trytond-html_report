@@ -22,6 +22,8 @@
             <field name="html_side_margin"/>
             <label name="html_extra_vertical_margin"/>
             <field name="html_extra_vertical_margin"/>
+            <label name="html_file_name"/>
+            <field name="html_file_name"/>
             <separator name="html_templates" colspan="4"/>
             <field name="html_templates" colspan="4"/>
         </page>

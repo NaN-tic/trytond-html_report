@@ -478,10 +478,15 @@ class HTMLReportMixin:
             if model and ids:
                 records = cls._get_dual_records(ids, model, data)
 
-                suffix = '-'.join(r.render.rec_name for r in records[:5])
-                if len(records) > 5:
-                    suffix += '__' + str(len(records[5:]))
-                filename = slugify('%s-%s' % (action_name, suffix))
+                if action.html_file_name:
+                    template = jinja2.Template(action.html_file_name)
+                    filename = slugify('-'.join(template.render(record=record)
+                                                for record in records[:5]))
+                else:
+                    suffix = '-'.join(r.render.rec_name for r in records[:5])
+                    if len(records) > 5:
+                        suffix += '__' + str(len(records[5:]))
+                    filename = slugify('%s-%s' % (action_name, suffix))
             else:
                 records = []
                 filename = slugify(action_name)
