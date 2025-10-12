@@ -69,7 +69,10 @@ class ActionReport(metaclass=PoolMeta):
     html_copies = fields.Integer('Number of copies')
     html_side_margin = fields.Integer('Side Margin (cm)')
     html_extra_vertical_margin = fields.Integer('Extra Vertical Margin (cm)')
-
+    html_file_name = fields.Char('Report File Name Pattern', translate=True,
+        help='By default, the file name is generated from the report name and '
+        'the record’s full name. To customize the file name, you can define a jinja2 pattern. '
+        'Eg. {{ record.render.rec_name }}-{{ record.render.id }}')
 
     @classmethod
     def __setup__(cls):

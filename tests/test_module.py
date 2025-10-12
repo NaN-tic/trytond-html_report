@@ -84,19 +84,25 @@ class HtmlReportTestCase(CompanyTestMixin, ModuleTestCase):
 
         with Transaction().set_context(language='es'):
             ModelReport = Pool().get('ir.model.report', type='report')
-            ext, content, _, _ = ModelReport.execute([m.id for m in models], {})
+            ext, content, _, filename = ModelReport.execute([m.id for m in models], {})
             self.assertTrue(ext, 'html')
             self.assertTrue('ir.model' in content, True)
             self.assertTrue('Nombre' in content, True)
             self.assertTrue('Modelo' in content, True)
             # has not translation because test not load locale/es.po translations (-l es)
             self.assertTrue('Created by' in content, True)
+            self.assertTrue(filename.startswith('Models'))
 
+            report.html_file_name = '{{ record.render.rec_name }} {{ record.render.id }}'
+            report.save()
+            ext, content, _, filename = ModelReport.execute([m.id for m in models], {})
+            self.assertTrue(filename.startswith('Model-'))
 
         report2, = ActionReport.copy([report], {'report_name': 'ir.model.report2', 'extension': None})
         ModelReport2 = Pool().get('ir.model.report2', type='report')
         ext, content, _, _ = ModelReport2.execute([m.id for m in models], {})
         self.assertTrue(isinstance(content, bytes))
+
         with Transaction().set_context(output_format='html'):
             ext, content, _, _ = ModelReport2.execute([m.id for m in models], {})
             self.assertTrue(isinstance(content, str))
