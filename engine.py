@@ -857,8 +857,10 @@ class HTMLReportMixin:
         return gettext(message_id, *args, **variables)
 
     @classmethod
-    def qrcode(cls, value):
-        qr_code = qrcode.make(value, image_factory=qrcode.image.svg.SvgImage)
+    def qrcode(cls, value, error_correction=qrcode.ERROR_CORRECT_M):
+        # Using ERROR_CORRECT_M as default because AEAT requirement
+        qr_code = qrcode.make(value, image_factory=qrcode.image.svg.SvgImage,
+                    error_correction=error_correction)
         stream = io.BytesIO()
         qr_code.save(stream=stream)
         return cls.to_base64(stream.getvalue())
