@@ -25,6 +25,8 @@ from ppf.datamatrix import DataMatrix
 import weasyprint
 from babel import dates, numbers, support
 from barcode.writer import SVGWriter
+from openpyxl import Workbook
+from bs4 import BeautifulSoup
 
 from trytond.config import config
 from trytond.exceptions import UserError
@@ -40,6 +42,7 @@ from trytond.modules.widgets import tools
 
 from . import words
 from .generator import PdfGenerator
+from .tools import save_virtual_workbook, _convert_str_to_float
 
 MEDIA_TYPE = config.get('html_report', 'type', default='screen')
 RAISE_USER_ERRORS = config.getboolean('html_report', 'raise_user_errors',
@@ -452,24 +455,44 @@ class HTMLReportMixin:
         if extra_vertical_margin is None:
             extra_vertical_margin = cls.extra_vertical_margin
 
+        if Transaction().context.get('output_format') == 'html':
+            is_zip, is_merge_pdf, Printer = None, None, None
+            output_format = data['output_format'] = 'html'
+        else:
+            is_zip = action.single and len(ids) > 1 and action.html_zipped
+            is_merge_pdf = action.html_copies and action.html_copies > 1
+            Printer = None
+            try:
+                Printer = Pool().get('printer')
+            except KeyError:
+                logger.warning('Model "Printer" not found.')
+            output_format = data.get('output_format', action.extension or 'pdf')
+
         # use DualRecord when template extension is jinja
         data['html_dual_record'] = True
         records = []
-        with Transaction().set_context(html_report=action.id,
-            address_with_party=False):
+        with Transaction().set_context(
+                html_report=action.id,
+                address_with_party=False,
+                output_format=output_format):
             if model and ids:
                 records = cls._get_dual_records(ids, model, data)
 
-                suffix = '-'.join(r.render.rec_name for r in records[:5])
-                if len(records) > 5:
-                    suffix += '__' + str(len(records[5:]))
-                filename = slugify('%s-%s' % (action_name, suffix))
+                if action.html_file_name:
+                    template = jinja2.Template(action.html_file_name)
+                    filename = slugify('-'.join(template.render(record=record)
+                                                for record in records[:5]))
+                else:
+                    suffix = '-'.join(r.render.rec_name for r in records[:5])
+                    if len(records) > 5:
+                        suffix += '__' + str(len(records[5:]))
+                    filename = slugify('%s-%s' % (action_name, suffix))
             else:
                 records = []
                 filename = slugify(action_name)
 
             # report single and len > 1, return zip file
-            if action.single and len(ids) > 1 and action.html_zipped:
+            if is_zip:
                 content = BytesIO()
                 with zipfile.ZipFile(content, 'w') as content_zip:
                     for record in records:
@@ -499,13 +522,8 @@ class HTMLReportMixin:
             if not isinstance(content, str):
                 content = bytes(content)
 
-            if action.html_copies and action.html_copies > 1:
+            if is_merge_pdf:
                 content = cls.merge_pdfs([content] * action.html_copies)
-            Printer = None
-            try:
-                Printer = Pool().get('printer')
-            except KeyError:
-                logger.warning('Model "Printer" not found.')
             if Printer:
                 return Printer.send_report(oext, content,
                     action_name, action)
@@ -577,6 +595,19 @@ class HTMLReportMixin:
                     ).render_pdf()
             else:
                 document = content
+
+        if extension == 'xlsx':
+            wb = Workbook()
+            ws = wb.active
+
+            soup = BeautifulSoup(document, 'html.parser')
+            for table in soup.find_all('table'):
+                for row in table.find_all('tr'):
+                    data = []
+                    for cell in row.find_all(['td', 'th']):
+                        data.append(_convert_str_to_float(cell.text))
+                    ws.append(data)
+                document = save_virtual_workbook(wb)
         return extension, document
 
     @classmethod
@@ -649,8 +680,11 @@ class HTMLReportMixin:
 
         def module_path(name):
             module, path = name.split('/', 1)
-            with file_open(os.path.join(module, path)) as f:
-                return 'file://' + f.name
+            try:
+                with file_open(os.path.join(module, path)) as f:
+                    return 'file://' + f.name
+            except FileNotFoundError:
+                pass
 
         def base64(name):
             module, path = name.split('/', 1)
@@ -663,12 +697,13 @@ class HTMLReportMixin:
                 return ('data:%s;base64,%s' % (mimetype, value)).strip()
 
         def render(value, digits=2, lang=None, filename=None):
+            context = Transaction().context
             if not lang:
                 langs = Lang.search([('code', '=', 'en')], limit=1)
                 lang = langs[0] if langs else 'en'
             if isinstance(value, (float, Decimal)):
-                return lang.format('%.*f', (digits, value),
-                    grouping=True)
+                grouping = not context.get('output_format') in ['xls', 'xlsx']
+                return lang.format('%.*f', (digits, value), grouping=grouping)
             if value is None or value == '':
                 return ''
             if isinstance(value, bool):
@@ -897,7 +932,6 @@ class HTMLReportMixin:
             'record': record,
             'records': records,
             'report': DualRecord(action) if action else None,
-            'time': now,
             'timedelta': timedelta,
             'user': DualRecord(User(Transaction().user)),
             'utc_time': now,
@@ -911,6 +945,9 @@ class HTMLReportMixin:
                 tznow = timezone.localize(now)
                 tznow = now + tznow.utcoffset()
                 context['time'] = tznow
+        if not 'time' in context:
+            context['time'] = now
+        context['today'] = context['time'].date()
 
         context.update(cls.local_context())
         try:

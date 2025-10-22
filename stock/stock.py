@@ -78,8 +78,8 @@ class ShipmentInReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
 
 class ShipmentOut(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.out'
-    sorted_lines = fields.Function(fields.One2Many('stock.move',
-        'line', 'Sorted Lines'), 'get_sorted_lines')
+    sorted_lines = fields.Function(fields.Many2Many('stock.move', None, None,
+        'Sorted Lines'), 'get_sorted_lines')
     sorted_keys = fields.Function(fields.Char('key'), 'get_sorted_keys')
     show_lots = fields.Function(fields.Boolean('Show Lots'),
         'get_show_lots')
@@ -174,6 +174,8 @@ class MoveDiscount(HTMLDiscountReportMixin, metaclass=PoolMeta):
 
 class ShipmentInternal(HTMLPartyInfoMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.internal'
+    show_lots = fields.Function(fields.Boolean('Show Lots'),
+        'get_show_lots')
 
     @classmethod
     def __setup__(cls):
@@ -183,6 +185,12 @@ class ShipmentInternal(HTMLPartyInfoMixin, metaclass=PoolMeta):
 
     def get_html_party(self, name):
         return
+
+    def get_show_lots(self, name):
+        for move in self.moves:
+            if hasattr(move, 'lot') and getattr(move, 'lot'):
+                return True
+        return False
 
 
 class StockInventory(HTMLReportMixin, metaclass=PoolMeta):
