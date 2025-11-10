@@ -24,11 +24,14 @@
               {{ show_image("logo", company.render.logo) }}
               {% endblock company_logo %}
           </td>
-          <td rowspan="2">
+
+	  {% if record.raw.aeat_qr_url %}
+          <td style="width: 1%">
               {% block tax_code scoped %}
               {{ show_tax_code(record) }}
               {% endblock tax_code %}
           </td>
+	  {% endif %}
           <td>
               {% block document_info scoped %}
               {{ show_document_info(record) }}
@@ -41,6 +44,10 @@
               {{ show_company_info(company) }}
               {% endblock company_info %}
           </td>
+	  {% if record.raw.aeat_qr_url %}
+	  <td style="width: 1%">
+	  </td>
+	  {% endif %}
           <td class="party_info">
               {% block party_info scoped %}
               {{ show_party_info(party, tax_identifier, address, second_address_label, second_address) }}
