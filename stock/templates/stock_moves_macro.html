@@ -22,7 +22,14 @@
         {% if key %}
           <th class="sub_header" colspan="9">
             {% for item in key %}
-              {{ label(item.__name__) }} : {{ item.number }} {% if item.effective_date %}{{ label(item.__name__, 'effective_date') }} : {{ item.effective_date|dateformat('short') }}{% endif %}<br/>
+              {% if item.sale_date %}
+               {% set label_date = label(item.__name__, 'sale_date') %}
+               {% set item_date = item.sale_date and item.sale_date|dateformat('short') or none %}
+              {% else %}
+               {% set label_date = label(item.__name__, 'effective_date') %}
+               {% set item_date = item.effective_date and item.effective_date|dateformat('short') or none %}
+              {% endif %}
+              {{ label(item.__name__) }} : {{ item.number }} {% if item_date %}{{ label_date }} : {{ item_date }}{% endif %}<br/>
             {% endfor %}
            </th>
         {% endif %}
