@@ -14,7 +14,7 @@
         <field name="name">Invoice Header</field>
         <field name="type">header</field>
         <field name="sequence" eval="99"/>
-        <field name="filename">html_report/invoice/templates/invoice_header.html</field>
+        <field name="filename">html_report/invoice/templates/header.html</field>
     </record>
 
      <record model='html.template' id="invoice_last_footer_template">

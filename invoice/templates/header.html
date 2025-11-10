@@ -20,31 +20,30 @@
     <table>
       <tr>
           <td class="company_logo">
-          {% block company_logo scoped %}
-            {{ show_image("logo", company.render.logo) }}
-          {% endblock company_logo %}
+              {% block company_logo scoped %}
+              {{ show_image("logo", company.render.logo) }}
+              {% endblock company_logo %}
           </td>
           <td rowspan="2">
-          {% block tax_code scoped %}
-            {{ show_tax_code(record) }}
-          {% endblock tax_code %}
+              {% block tax_code scoped %}
+              {{ show_tax_code(record) }}
+              {% endblock tax_code %}
           </td>
-      <td>
-          {% block document_info scoped %}
-            {{ show_document_info(record) }}
-          {% endblock document_info %}
-      </td>
-
+          <td>
+              {% block document_info scoped %}
+              {{ show_document_info(record) }}
+              {% endblock document_info %}
+          </td>
       </tr>
       <tr>
-        <td class="party_info">
-            {% block company_info scoped %}
+          <td class="party_info">
+              {% block company_info scoped %}
               {{ show_company_info(company) }}
-            {% endblock company_info %}
+              {% endblock company_info %}
           </td>
           <td class="party_info">
               {% block party_info scoped %}
-                {{ show_party_info(party, tax_identifier, address, second_address_label, second_address) }}
+              {{ show_party_info(party, tax_identifier, address, second_address_label, second_address) }}
               {% endblock party_info %}
           </td>
         </tr>
