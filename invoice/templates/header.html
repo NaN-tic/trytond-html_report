@@ -1,20 +1,22 @@
 <link rel="stylesheet" href="{{ 'html_report/templates/base.css'|modulepath }}">
-{% if show_css_extension is defined %}
-  <style>{{ show_css_extension() }}</style>
-{% endif %}
+
+{% if show_css_extension is defined %}<style>
+{{ show_css_extension() }}
+</style>{% endif %}
+
+{% if record.raw.aeat_qr_url %}<style>
+  .company_logo {
+    width: 15%;
+  }
+</style>{% endif %}
+
 {% set party = record.html_party %}
 {% set tax_identifier = record.html_tax_identifier %}
 {% set address = record.html_address %}
 {% set second_address_label = record.html_address %}
 {% set second_address = record.html_address %}
 
-
 {% language party and party.raw.lang and party.lang.raw.code or company.party.lang and company.party.raw.lang.code or 'en' %}
-<style>
-  .company_logo {
-    width: 15%;
-  }
-</style>
 
 <header id="header">
     <table>
