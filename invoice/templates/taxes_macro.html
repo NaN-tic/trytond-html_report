@@ -19,14 +19,11 @@
            {{ value['amount'] }} {{ invoice.currency.render.symbol }}
          </td>
        </tr>
-       {% if tax.raw.legal_notice %}
+       {% if value['legal_notice'] %}
           <tr>
-            <td></td>
-            <td>
-            <strong>{{ label('account.tax', 'legal_notice') }}</strong>
-              {{ tax.render.legal_notice }}
+            <td colspan="3">
+              <strong>{{ label('account.invoice.tax', 'legal_notice') }}:</strong> {{ value['legal_notice'] }}
             </td>
-            <td></td>
           </tr>
       {% endif %}
      {% endfor %}
