@@ -3,7 +3,7 @@
 from trytond.pool import PoolMeta, Pool
 from trytond.model import ModelSQL, ModelView, fields
 from trytond.pyson import Eval
-from trytond.exceptions import UserError
+from trytond.model.exceptions import ValidationError
 from trytond.i18n import gettext
 from trytond.cache import Cache
 from trytond.ir.lang import get_parent_language
@@ -120,13 +120,13 @@ class ActionReport(metaclass=PoolMeta):
             return
         missing, unused = self.get_missing_unused_signatures()
         if missing:
-            raise UserError(gettext('html_report.missing_signatures', {
+            raise ValidationError(gettext('html_report.missing_signatures', {
                         'template': self.rec_name,
                         'missing': '\n'.join(sorted([x.rec_name for x in
                                     missing]))
                         }))
         if unused:
-            raise UserError(gettext('html_report.unused_signatures', {
+            raise ValidationError(gettext('html_report.unused_signatures', {
                         'template': self.rec_name,
                         'unused': '\n'.join(sorted([x.rec_name for x in
                                     unused]))
