@@ -11,6 +11,7 @@ from trytond.tools import file_open
 from trytond.pool import Pool
 from trytond.transaction import Transaction
 from trytond.report import Report
+from .engine import DualRecord
 
 
 class SwitchableTranslations:
@@ -114,6 +115,29 @@ class SwitchableLanguageExtension(jinja2.ext.Extension):
         with Transaction().set_context(language=language_code):
             output = caller()
         return output
+
+
+class DominateReport(Report):
+
+    @classmethod
+    def render(cls, report, report_context):
+        pool = Pool()
+
+        data = report_context.get('data', {})
+        header = report_context.get('header', {})
+        model = data.get('model')
+        records = []
+        if model:
+            Model = pool.get(data.get('model'))
+            ids = [x.id for x in report_context.get('reports', [])]
+            records = [DualRecord(x) for x in Model.browse(ids)]
+        html = cls.html(report, records, header, data)
+        html = html.render()
+        return html
+
+    @classmethod
+    def html(cls, report, records, header, data):
+        raise NotImplementedError
 
 
 class HTMLReport(Report):
