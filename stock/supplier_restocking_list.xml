@@ -88,5 +88,20 @@
       <!-- <field name="lang" ref="ir.lang_es"/> -->
       <field name="lang">es</field>
     </record>
+
+    <record model="html.template.translation" id="report_translation_restocking_list_supplier_ca">
+      <field name="report" ref="html_report_shipment_in_restocking_list"/>
+      <field name="src">Supplier Shipment</field>
+      <field name="value">Albarà de proveïdor</field>
+      <!-- <field name="lang" ref="ir.lang_ca"/> -->
+      <field name="lang">ca</field>
+    </record>
+    <record model="html.template.translation" id="report_translation_restocking_list_supplier_es">
+      <field name="report" ref="html_report_shipment_in_restocking_list"/>
+      <field name="src">Supplier Shipment</field>
+      <field name="value">Albarán de proveedor</field>
+      <!-- <field name="lang" ref="ir.lang_es"/> -->
+      <field name="lang">es</field>
+    </record>
   </data>
 </tryton>
