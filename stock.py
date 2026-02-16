@@ -1,6 +1,6 @@
 from dominate.util import raw
 from dominate.tags import (br, div, footer as footer_tag, h1, h2, h3, h4,
-    header as header_tag, link, p, strong, table, tbody, td, th, thead, tr)
+    header as header_tag, img, link, p, strong, table, tbody, td, th, thead, tr)
 
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
@@ -226,7 +226,8 @@ class StockReportMixin(DominateReportMixin):
                 with table():
                     with tr():
                         with td():
-                            dh.show_image('logo', company.render.logo)
+                            if company.render.logo:
+                                img(cls='logo', src=company.render.logo)
                         with td():
                             document_info_node
                     with tr():

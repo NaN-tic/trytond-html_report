@@ -8,7 +8,7 @@ from trytond.modules.html_report import dominate_helpers as dh
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 from dominate.util import raw
 from dominate.tags import (div, footer as footer_tag, h1, h2, h3, h4,
-    header as header_tag, link, p, strong, table, tbody, td, th, thead, tr)
+    header as header_tag, img, link, p, strong, table, tbody, td, th, thead, tr)
 
 
 class Sale(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
@@ -153,7 +153,8 @@ class SaleReport(DominateReportMixin, metaclass=PoolMeta):
                 with table():
                     with tr():
                         with td():
-                            dh.show_image('logo', company.render.logo)
+                            if company.render.logo:
+                                img(cls='logo', src=company.render.logo)
                         with td():
                             cls._document_info(record, is_proforma=is_proforma)
                     with tr():

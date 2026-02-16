@@ -11,7 +11,6 @@ from .engine import DualRecord
 
 
 class DominateReportMixin(HTMLReportMixin):
-    """Render reports using Dominate nodes instead of Jinja templates."""
     _single = False
 
     @classmethod

@@ -2,8 +2,8 @@ import os
 
 from dominate import document
 from dominate.util import raw
-from dominate.tags import (b, body as body_tag, br, div, hr, img, link, meta,
-    span, strong, style, table, td, th, tr)
+from dominate.tags import (b, body as body_tag, br, div, hr, link, meta, span,
+    strong, style, table, td, th, tr)
 
 from trytond.pool import Pool
 from trytond.tools import file_open
@@ -88,12 +88,6 @@ def build_document(action, title, body_nodes):
                 else:
                     body_node.add(node)
     return doc
-
-
-def show_image(image_class, image):
-    if not image:
-        return raw('')
-    return img(cls=image_class, src=image)
 
 
 def show_footer():

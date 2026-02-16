@@ -439,7 +439,8 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
                 with table():
                     with tr():
                         with td(cls='company_logo'):
-                            dh.show_image('logo', company.render.logo)
+                            if company.render.logo:
+                                img(cls='logo', src=company.render.logo)
                         if getattr(record.raw, 'aeat_qr_url', None):
                             with td(style='width: 1%'):
                                 cls._tax_code(record)

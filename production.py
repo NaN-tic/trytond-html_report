@@ -1,5 +1,5 @@
 from dominate.tags import (div, footer as footer_tag, h1, h2, header as header_tag,
-    link, table, tbody, td, th, thead, tr)
+    img, link, table, tbody, td, th, thead, tr)
 
 from trytond.model import fields
 from trytond.pool import PoolMeta
@@ -203,7 +203,8 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
                 with table():
                     with tr():
                         with td():
-                            dh.show_image('logo', company.render.logo)
+                            if company.render.logo:
+                                img(cls='logo', src=company.render.logo)
                         with td():
                             cls._document_info(record)
                     with tr():
@@ -256,4 +257,3 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
             body_nodes.append(cls._show_operations(record.operations))
         title = HTMLReportMixin.label('production')
         return dh.build_document(action, title, body_nodes)
-
