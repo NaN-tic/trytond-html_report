@@ -1,154 +1,154 @@
 <tryton>
-  <data>
-    <record model='html.template' id="base_template">
-        <field name="name">Base</field>
-        <field name="type">base</field>
-        <field name="sequence" eval="99"/>
-        <field name="filename">html_report/templates/base.html</field>
-    </record>
+    <data>
+        <record model='html.template' id="base_template">
+                <field name="name">Base</field>
+                <field name="type">base</field>
+                <field name="sequence" eval="99"/>
+                <field name="filename">html_report/templates/base.html</field>
+        </record>
 
-    <record model='html.template' id="header_template">
-        <field name="name">Header</field>
-        <field name="type">header</field>
-        <field name="sequence" eval="99"/>
-        <field name="filename">html_report/templates/header.html</field>
-    </record>
+        <record model='html.template' id="header_template">
+                <field name="name">Header</field>
+                <field name="type">header</field>
+                <field name="sequence" eval="99"/>
+                <field name="filename">html_report/templates/header.html</field>
+        </record>
 
-    <record model='html.template' id="footer_template">
-        <field name="name">Footer</field>
-        <field name="type">footer</field>
-        <field name="sequence" eval="99"/>
-        <field name="filename">html_report/templates/footer.html</field>
-    </record>
-
-
-    <record model='html.template.signature' id="show_footer_signature">
-        <field name="name">show_footer(record)</field>
-    </record>
-    <record model='html.template' id="show_footer_macro_id">
-        <field name="name">Show Footer</field>
-        <field name="type">macro</field>
-        <field name="sequence" eval="99"/>
-        <field name="filename">html_report/templates/macros/show_footer_macro.html</field>
-        <field name="implements" ref="html_report.show_footer_signature"/>
-    </record>
+        <record model='html.template' id="footer_template">
+                <field name="name">Footer</field>
+                <field name="type">footer</field>
+                <field name="sequence" eval="99"/>
+                <field name="filename">html_report/templates/footer.html</field>
+        </record>
 
 
-    <record model='html.template.signature' id="simplified_hr_macro_signature">
-        <field name="name">show_simplified_hr()</field>
-    </record>
+        <record model='html.template.signature' id="show_footer_signature">
+                <field name="name">show_footer(record)</field>
+        </record>
+        <record model='html.template' id="show_footer_macro_id">
+                <field name="name">Show Footer</field>
+                <field name="type">macro</field>
+                <field name="sequence" eval="99"/>
+                <field name="filename">html_report/templates/macros/show_footer_macro.html</field>
+                <field name="implements" ref="html_report.show_footer_signature"/>
+        </record>
 
-    <record model='html.template' id="simplified_hr_macro_template">
-      <field name="name">Simplified Hr</field>
-      <field name="type">macro</field>
-      <field name="sequence" eval="99"/>
-      <field name="filename">html_report/templates/macros/simplified_hr_macro.html</field>
-      <field name="implements" ref="html_report.simplified_hr_macro_signature"/>
-    </record>
 
-    <record model='html.template.signature' id="show_image_signature">
-        <field name="name">show_image(class, image)</field>
-    </record>
-    <record model='html.template' id="show_image_macro_id">
-        <field name="name">Show Image</field>
-        <field name="type">macro</field>
-        <field name="sequence" eval="99"/>
-        <field name="filename">html_report/templates/macros/show_image.html</field>
-        <field name="implements" ref="html_report.show_image_signature"/>
-    </record>
+        <record model='html.template.signature' id="simplified_hr_macro_signature">
+                <field name="name">show_simplified_hr()</field>
+        </record>
 
-    <record model='html.template.signature' id="company_info_macro_signature">
-        <field name="name">show_company_info(company, show_party=True, show_contact_mechanism=True)</field>
-    </record>
-    <record model='html.template' id="company_info_macro_id">
-        <field name="name">Company info</field>
-        <field name="type">macro</field>
-        <field name="sequence" eval="99"/>
-        <field name="filename">html_report/templates/macros/company_info_macro.html</field>
-        <field name="implements" ref="html_report.company_info_macro_signature"/>
-    </record>
+        <record model='html.template' id="simplified_hr_macro_template">
+            <field name="name">Simplified Hr</field>
+            <field name="type">macro</field>
+            <field name="sequence" eval="99"/>
+            <field name="filename">html_report/templates/macros/simplified_hr_macro.html</field>
+            <field name="implements" ref="html_report.simplified_hr_macro_signature"/>
+        </record>
 
-    <record model='html.template.signature' id="css_macro_signature">
-        <field name="name">show_css()</field>
-    </record>
-    <record model='html.template' id="css_macro_id">
-        <field name="name">CSS</field>
-        <field name="type">macro</field>
-        <field name="sequence" eval="99"/>
-        <field name="filename">html_report/templates/base.css</field>
-        <field name="implements" ref="css_macro_signature"/>
-    </record>
+        <record model='html.template.signature' id="show_image_signature">
+                <field name="name">show_image(class, image)</field>
+        </record>
+        <record model='html.template' id="show_image_macro_id">
+                <field name="name">Show Image</field>
+                <field name="type">macro</field>
+                <field name="sequence" eval="99"/>
+                <field name="filename">html_report/templates/macros/show_image.html</field>
+                <field name="implements" ref="html_report.show_image_signature"/>
+        </record>
 
-    <record model='html.template.signature' id="css_extension_macro_signature">
-        <field name="name">show_css_extension()</field>
-    </record>
-    <record model='html.template' id="css_extension_macro_id">
-        <field name="name">CSS Extension</field>
-        <field name="type">macro</field>
-        <field name="sequence" eval="99"/>
-        <field name="implements" ref="css_extension_macro_signature"/>
-    </record>
+        <record model='html.template.signature' id="company_info_macro_signature">
+                <field name="name">show_company_info(company, show_party=True, show_contact_mechanism=True)</field>
+        </record>
+        <record model='html.template' id="company_info_macro_id">
+                <field name="name">Company info</field>
+                <field name="type">macro</field>
+                <field name="sequence" eval="99"/>
+                <field name="filename">html_report/templates/macros/company_info_macro.html</field>
+                <field name="implements" ref="html_report.company_info_macro_signature"/>
+        </record>
 
-    <record model='html.template.signature' id="party_macro_signature">
-        <field name="name">show_party_info(party, tax_identifier, address, second_address_label, second_address)</field>
-    </record>
-    <record model='html.template' id="party_macro_id">
-        <field name="name">Party Info</field>
-        <field name="type">macro</field>
-        <field name="sequence" eval="99"/>
-        <field name="filename">html_report/templates/macros/party_info_macro.html</field>
-        <field name="implements" ref="html_report.party_macro_signature"/>
-    </record>
+        <record model='html.template.signature' id="css_macro_signature">
+                <field name="name">show_css()</field>
+        </record>
+        <record model='html.template' id="css_macro_id">
+                <field name="name">CSS</field>
+                <field name="type">macro</field>
+                <field name="sequence" eval="99"/>
+                <field name="filename">html_report/templates/base.css</field>
+                <field name="implements" ref="css_macro_signature"/>
+        </record>
 
-    <record model='html.template.signature' id="document_totals_macro_signature">
-        <field name="name">show_totals(record)</field>
-    </record>
-    <record model='html.template' id="document_totals_macro_id">
-        <field name="name">Document Totals</field>
-        <field name="type">macro</field>
-        <field name="sequence" eval="99"/>
-        <field name="filename">html_report/templates/macros/totals_macro.html</field>
-        <field name="implements" ref="html_report.document_totals_macro_signature"/>
-    </record>
+        <record model='html.template.signature' id="css_extension_macro_signature">
+                <field name="name">show_css_extension()</field>
+        </record>
+        <record model='html.template' id="css_extension_macro_id">
+                <field name="name">CSS Extension</field>
+                <field name="type">macro</field>
+                <field name="sequence" eval="99"/>
+                <field name="implements" ref="css_extension_macro_signature"/>
+        </record>
 
-    <record model='html.template.signature' id="document_totals_horizontal_macro_signature">
-        <field name="name">show_totals_horizontal(record)</field>
-    </record>
-    <record model='html.template' id="document_totals_horizontal_macro_id">
-        <field name="name">Document Totals Horitzontal</field>
-        <field name="type">macro</field>
-        <field name="sequence" eval="99"/>
-        <field name="filename">html_report/templates/macros/totals_horizontal_macro.html</field>
-        <field name="implements" ref="html_report.document_totals_horizontal_macro_signature"/>
-    </record>
+        <record model='html.template.signature' id="party_macro_signature">
+                <field name="name">show_party_info(party, tax_identifier, address, second_address_label, second_address)</field>
+        </record>
+        <record model='html.template' id="party_macro_id">
+                <field name="name">Party Info</field>
+                <field name="type">macro</field>
+                <field name="sequence" eval="99"/>
+                <field name="filename">html_report/templates/macros/party_info_macro.html</field>
+                <field name="implements" ref="html_report.party_macro_signature"/>
+        </record>
 
-    <record model='html.template.signature' id="payment_info_macro_signature">
-        <field name="name">show_payment_info(document)</field>
-    </record>
-    <record model='html.template' id="payment_info_macro_id">
-        <field name="name">Payment Info</field>
-        <field name="type">macro</field>
-        <field name="sequence" eval="99"/>
-        <field name="filename">html_report/templates/macros/payment_info_macro.html</field>
-        <field name="implements" ref="html_report.payment_info_macro_signature"/>
-    </record>
+        <record model='html.template.signature' id="document_totals_macro_signature">
+                <field name="name">show_totals(record)</field>
+        </record>
+        <record model='html.template' id="document_totals_macro_id">
+                <field name="name">Document Totals</field>
+                <field name="type">macro</field>
+                <field name="sequence" eval="99"/>
+                <field name="filename">html_report/templates/macros/totals_macro.html</field>
+                <field name="implements" ref="html_report.document_totals_macro_signature"/>
+        </record>
 
-    <record model='html.template.signature' id="document_info_macro_signature">
-        <field name="name">show_document_info(record)</field>
-    </record>
-  </data>
+        <record model='html.template.signature' id="document_totals_horizontal_macro_signature">
+                <field name="name">show_totals_horizontal(record)</field>
+        </record>
+        <record model='html.template' id="document_totals_horizontal_macro_id">
+                <field name="name">Document Totals Horitzontal</field>
+                <field name="type">macro</field>
+                <field name="sequence" eval="99"/>
+                <field name="filename">html_report/templates/macros/totals_horizontal_macro.html</field>
+                <field name="implements" ref="html_report.document_totals_horizontal_macro_signature"/>
+        </record>
 
-  <data depends="carrier">
-   <record model='html.template.signature' id="show_carrier_signature">
-       <field name="name">show_carrier(carrier)</field>
-   </record>
-   <record model='html.template' id="show_carrier_macro_id">
-        <field name="name">Show Carrier</field>
-        <field name="type">macro</field>
-        <field name="sequence" eval="99"/>
-        <field name="filename">html_report/templates/macros/show_carrier.html</field>
-        <field name="implements" ref="html_report.show_carrier_signature"/>
-    </record>
-  </data>
+        <record model='html.template.signature' id="payment_info_macro_signature">
+                <field name="name">show_payment_info(document)</field>
+        </record>
+        <record model='html.template' id="payment_info_macro_id">
+                <field name="name">Payment Info</field>
+                <field name="type">macro</field>
+                <field name="sequence" eval="99"/>
+                <field name="filename">html_report/templates/macros/payment_info_macro.html</field>
+                <field name="implements" ref="html_report.payment_info_macro_signature"/>
+        </record>
+
+        <record model='html.template.signature' id="document_info_macro_signature">
+                <field name="name">show_document_info(record)</field>
+        </record>
+    </data>
+
+    <data depends="carrier">
+      <record model='html.template.signature' id="show_carrier_signature">
+              <field name="name">show_carrier(carrier)</field>
+      </record>
+      <record model='html.template' id="show_carrier_macro_id">
+                <field name="name">Show Carrier</field>
+                <field name="type">macro</field>
+                <field name="sequence" eval="99"/>
+                <field name="filename">html_report/templates/macros/show_carrier.html</field>
+                <field name="implements" ref="html_report.show_carrier_signature"/>
+        </record>
+    </data>
 
 </tryton>

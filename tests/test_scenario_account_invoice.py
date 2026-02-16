@@ -25,10 +25,9 @@ class Test(unittest.TestCase):
     def test(self):
 
         # Install modules
-        config = activate_modules([
-            'html_report', 'account_invoice', 'account_payment_type',
-            'account_bank', 'account_invoice_stock'
-        ])
+        config = activate_modules(['html_report', 'account_invoice',
+                'account_payment_type', 'account_bank',
+                'account_invoice_stock'])
 
         # Create company
         _ = create_company()
@@ -65,7 +64,6 @@ class Test(unittest.TestCase):
         # Create payment method
         Journal = Model.get('account.journal')
         PaymentMethod = Model.get('account.invoice.payment.method')
-        Sequence = Model.get('ir.sequence')
         journal_cash, = Journal.find([('type', '=', 'cash')])
         payment_method = PaymentMethod()
         payment_method.name = 'Cash'

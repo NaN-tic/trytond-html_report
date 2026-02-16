@@ -375,6 +375,18 @@ class DualRecord:
         self.raw = self.raw.__class__(self.raw.id)
         self.render = FormattedRecord(self.raw, self._formatter)
 
+    def __eq__(self, other):
+        if isinstance(other, DualRecord):
+            return (self.raw.__name__ == other.raw.__name__
+                and self.raw.id == other.raw.id)
+        raw = getattr(other, 'raw', other)
+        if hasattr(raw, '__name__') and hasattr(raw, 'id'):
+            return self.raw.__name__ == raw.__name__ and self.raw.id == raw.id
+        return False
+
+    def __hash__(self):
+        return hash((self.raw.__name__, self.raw.id))
+
 
 class HTMLReportMixin:
     __slots__ = ()
