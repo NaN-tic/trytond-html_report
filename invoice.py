@@ -6,7 +6,7 @@ from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
-from trytond.modules.html_report.engine import DualRecord, HTMLReportMixin
+from trytond.modules.html_report.engine import DualRecord
 from trytond.modules.html_report.dominate_report import DominateReportMixin
 from trytond.modules.html_report import dominate_helpers as dh
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
@@ -185,42 +185,42 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
         with lines_table:
             with thead():
                 with tr():
-                    th(HTMLReportMixin.label('product.product', 'code'),
+                    th(cls.label('product.product', 'code'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('product.template', 'name'),
+                    th(cls.label('product.template', 'name'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('account.invoice.line',
+                    th(cls.label('account.invoice.line',
                         'quantity'), cls='text-right', nowrap=True)
-                    th(HTMLReportMixin.label('account.invoice.line',
+                    th(cls.label('account.invoice.line',
                         'unit_price'), cls='text-right', nowrap=True)
                     th('')
-                    th(HTMLReportMixin.label('account.invoice.line',
+                    th(cls.label('account.invoice.line',
                         'amount'), cls='text-right', nowrap=True)
             with tbody(cls='border'):
                 lines = list(document.raw.lines or [])
                 for key, grouped in cls._group_sorted(lines,
                         lambda line: line.shipment_key):
                     if key:
-                        key_record = HTMLReportMixin.dualrecord(key)
+                        key_record = cls.dualrecord(key)
                     else:
                         key_record = None
                     with tr():
                         header_cell = th(cls='sub_header_level1', colspan='6')
                         if key_record:
                             header_cell.add(raw('%s: %s' % (
-                                HTMLReportMixin.label(key_record.raw.__name__),
+                                cls.label(key_record.raw.__name__),
                                 key_record.render.number)))
                             if key_record.raw.reference:
                                 header_cell.add(raw(' / %s' % key_record.render.reference))
                             if key_record.raw.effective_date:
                                 header_cell.add(raw(' %s: %s' % (
-                                    HTMLReportMixin.message(
+                                    cls.message(
                                         'stock.msg_shipment_effective_date'),
                                     key_record.render.effective_date)))
                     for key2, origin_lines in cls._group_sorted(grouped,
                             lambda line: line.origin_line_key):
                         if key2:
-                            key2_record = HTMLReportMixin.dualrecord(key2)
+                            key2_record = cls.dualrecord(key2)
                         else:
                             key2_record = None
                         with tr():
@@ -229,13 +229,13 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
                                 colspan='6')
                             if key2_record:
                                 header_cell.add(raw('%s: %s' % (
-                                    HTMLReportMixin.label(key2_record.raw.__name__),
+                                    cls.label(key2_record.raw.__name__),
                                     key2_record.render.number)))
                                 if key2_record.render.reference:
                                     header_cell.add(raw(' / %s' % key2_record.render.reference))
                                 if key2_record.render.sale_date:
                                     header_cell.add(raw(' %s: %s' % (
-                                        HTMLReportMixin.label(
+                                        cls.label(
                                             key2_record.raw.__name__, 'sale_date'),
                                         key2_record.render.sale_date)))
                         for line in origin_lines:
@@ -298,15 +298,15 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
         lines_table = table(cls='table borderless', width='100%')
         with lines_table:
             with thead():
-                th(HTMLReportMixin.label('product.product', 'code'),
+                th(cls.label('product.product', 'code'),
                     nowrap=True)
-                th(HTMLReportMixin.label('account.invoice.line',
+                th(cls.label('account.invoice.line',
                     'description'), nowrap=True)
-                th(HTMLReportMixin.label('account.invoice.line',
+                th(cls.label('account.invoice.line',
                     'quantity'), cls='text-right', nowrap=True)
-                th(HTMLReportMixin.label('account.invoice.line',
+                th(cls.label('account.invoice.line',
                     'unit_price'), cls='text-right', nowrap=True)
-                th(HTMLReportMixin.label('account.invoice.line',
+                th(cls.label('account.invoice.line',
                     'amount'), cls='text-right', nowrap=True)
             with tbody():
                 for line in document.lines:
@@ -332,18 +332,18 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
             return raw('')
         lang = (invoice.party.lang and invoice.party.raw.lang
             or company.party.lang and company.party.raw.lang)
-        render = HTMLReportMixin.get_jinja_filters().get('render')
+        render = cls.get_jinja_filters().get('render')
         due_table = table(id='due-dates', width='200px')
         with due_table:
             with thead():
                 with tr():
-                    th(div(HTMLReportMixin.label(
+                    th(div(cls.label(
                         'account.move.line', 'maturity_date'),
                         align='center'), colspan='2')
                 with tr():
-                    th(HTMLReportMixin.label('account.move.line',
+                    th(cls.label('account.move.line',
                         'maturity_date'))
-                    th(HTMLReportMixin.label('account.move.line', 'amount'),
+                    th(cls.label('account.move.line', 'amount'),
                         cls='text-right')
             with tbody(cls='border'):
                 for line in invoice.html_lines_to_pay:
@@ -362,16 +362,16 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
             return raw('')
         container = div()
         with container:
-            div(strong(HTMLReportMixin.label('account.invoice', 'taxes')),
+            div(strong(cls.label('account.invoice', 'taxes')),
                 align='center')
             taxes_table = table(cls='condensed')
             with taxes_table:
                 with thead():
-                    th(HTMLReportMixin.label('account.invoice.tax',
+                    th(cls.label('account.invoice.tax',
                         'description'))
-                    th(HTMLReportMixin.label('account.invoice.tax', 'base'),
+                    th(cls.label('account.invoice.tax', 'base'),
                         cls='text-right')
-                    th(HTMLReportMixin.label('account.invoice.tax', 'amount'),
+                    th(cls.label('account.invoice.tax', 'amount'),
                         cls='text-right')
                 with tbody(cls='border'):
                     for tax, value in invoice.raw.html_taxes.items():
@@ -386,17 +386,17 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
                         if value.get('legal_notice'):
                             with tr():
                                 with td(colspan='3'):
-                                    strong('%s:' % HTMLReportMixin.label(
+                                    strong('%s:' % cls.label(
                                         'account.invoice.tax', 'legal_notice'))
                                     raw(' %s' % value['legal_notice'])
         return container
 
     @classmethod
     def _document_info(cls, record):
-        title = HTMLReportMixin.label(record.raw.__name__)
+        title = cls.label(record.raw.__name__)
         document_date = (record.raw.invoice_date
             and record.render.invoice_date)
-        label_date = HTMLReportMixin.label(record.raw.__name__, 'invoice_date')
+        label_date = cls.label(record.raw.__name__, 'invoice_date')
         container = div()
         with container:
             h1('%s: %s' % (title, record.render.number
@@ -405,7 +405,7 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
                 h2('%s: %s' % (label_date, document_date), cls='document')
             if record.raw.reference:
                 h2('%s: %s' % (
-                    HTMLReportMixin.label(record.raw.__name__, 'reference'),
+                    cls.label(record.raw.__name__, 'reference'),
                     record.render.reference), cls='document')
         return container
 
@@ -419,7 +419,7 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
         with container:
             p('QR Tributario:', style='margin:0;')
             img(
-                src=HTMLReportMixin.qrcode(record.raw.aeat_qr_url),
+                src=cls.qrcode(record.raw.aeat_qr_url),
                 style='width: 30mm; height: 30mm;')
             if 'ValidarQRNoVerifactu' not in record.raw.aeat_qr_url:
                 p('VERI*FACTU', style='margin:0;')
@@ -535,9 +535,9 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
         body_nodes = []
         body_nodes.append(cls._show_invoice_lines(record))
         if record.raw.comment:
-            body_nodes.append(h4(HTMLReportMixin.label(
+            body_nodes.append(h4(cls.label(
                 'account.invoice', 'comment')))
             body_nodes.append(p(raw(record.render.comment)))
 
-        title = HTMLReportMixin.label('account.invoice')
+        title = cls.label('account.invoice')
         return dh.build_document(action, title, body_nodes)

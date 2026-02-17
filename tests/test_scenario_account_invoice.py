@@ -154,6 +154,8 @@ class Test(unittest.TestCase):
         self.assertEqual(invoice.state, 'posted')
         self.assertNotEqual(invoice.invoice_report_cache, None)
         self.assertEqual(invoice.invoice_report_format, 'pdf')
+        oext, _, _, _ = InvoiceReport.execute([invoice])
+        self.assertEqual(oext, 'pdf')
 
         # Dissable invoice cache
         Configuration = Model.get('account.configuration')

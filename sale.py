@@ -74,16 +74,16 @@ class SaleReport(DominateReportMixin, metaclass=PoolMeta):
         with lines_table:
             with thead():
                 with tr():
-                    th(HTMLReportMixin.label('product.product', 'code'),
+                    th(cls.label('product.product', 'code'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('product.template', 'name'),
+                    th(cls.label('product.template', 'name'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('sale.line', 'quantity'),
+                    th(cls.label('sale.line', 'quantity'),
                         cls='text-right', nowrap=True)
-                    th(HTMLReportMixin.label('sale.line', 'unit_price'),
+                    th(cls.label('sale.line', 'unit_price'),
                         cls='text-right', nowrap=True)
                     th('')
-                    th(HTMLReportMixin.label('sale.line', 'amount'),
+                    th(cls.label('sale.line', 'amount'),
                         cls='text-right', nowrap=True)
             with tbody(cls='border'):
                 for line in document.lines:
@@ -145,10 +145,10 @@ class SaleReport(DominateReportMixin, metaclass=PoolMeta):
             if record.raw.state in ('quotation', 'draft'):
                 title = record.render.state
             else:
-                title = HTMLReportMixin.label(record.raw.__name__)
+                title = cls.label(record.raw.__name__)
 
         document_date = record.raw.sale_date and record.render.sale_date or ''
-        label_date = HTMLReportMixin.label(record.raw.__name__, 'sale_date')
+        label_date = cls.label(record.raw.__name__, 'sale_date')
 
         container = div()
         with container:
@@ -158,11 +158,11 @@ class SaleReport(DominateReportMixin, metaclass=PoolMeta):
                 h2('%s: %s' % (label_date, document_date), cls='document')
             if record.raw.reference:
                 h2('%s: %s' % (
-                    HTMLReportMixin.label(record.raw.__name__, 'reference'),
+                    cls.label(record.raw.__name__, 'reference'),
                     record.render.reference), cls='document')
             if getattr(record.raw, 'carrier', None) and not is_proforma:
                 h3('%s: %s' % (
-                    HTMLReportMixin.label(record.raw.__name__, 'carrier'),
+                    cls.label(record.raw.__name__, 'carrier'),
                     record.carrier.party.render.name), cls='document')
         return container
 
@@ -238,9 +238,9 @@ class SaleReport(DominateReportMixin, metaclass=PoolMeta):
         body_nodes = []
         body_nodes.append(cls._show_sale_lines(record))
         if record.raw.comment:
-            body_nodes.append(h4(HTMLReportMixin.label(
+            body_nodes.append(h4(cls.label(
                 'sale.sale', 'comment')))
             body_nodes.append(p(raw(record.render.comment)))
 
-        title = HTMLReportMixin.label('sale.sale')
+        title = cls.label('sale.sale')
         return dh.build_document(action, title, body_nodes)

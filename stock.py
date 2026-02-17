@@ -292,21 +292,21 @@ class StockReportMixin(DominateReportMixin):
         with moves_table:
             with thead():
                 with tr():
-                    th(HTMLReportMixin.label('product.product', 'code'),
+                    th(cls.label('product.product', 'code'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('product.template', 'name'),
+                    th(cls.label('product.template', 'name'),
                         nowrap=True)
                     if document.raw.show_lots:
-                        th(HTMLReportMixin.label('stock.move', 'lot'))
-                    th(HTMLReportMixin.label('stock.move', 'quantity'),
+                        th(cls.label('stock.move', 'lot'))
+                    th(cls.label('stock.move', 'quantity'),
                         cls='text-right', nowrap=True)
-                    th(HTMLReportMixin.label('stock.move', 'unit'),
+                    th(cls.label('stock.move', 'unit'),
                         nowrap=True)
                     if valued:
-                        th(HTMLReportMixin.label('stock.move', 'base_price'),
+                        th(cls.label('stock.move', 'base_price'),
                             cls='text-right')
                         th('', cls='text-right')
-                        th(HTMLReportMixin.label('stock.move', 'amount'),
+                        th(cls.label('stock.move', 'amount'),
                             cls='text-right')
                     else:
                         th('', cls='hide')
@@ -320,19 +320,19 @@ class StockReportMixin(DominateReportMixin):
                             lines = []
                             for item in key:
                                 if getattr(item.raw, 'sale_date', None):
-                                    label_date = HTMLReportMixin.label(
+                                    label_date = cls.label(
                                         item.raw.__name__, 'sale_date')
                                     item_date = (item.render.sale_date
                                         if getattr(item.raw, 'sale_date', None)
                                         else None)
                                 else:
-                                    label_date = HTMLReportMixin.label(
+                                    label_date = cls.label(
                                         item.raw.__name__, 'effective_date')
                                     item_date = (item.render.effective_date
                                         if getattr(item.raw, 'effective_date',
                                             None) else None)
                                 text = '%s : %s' % (
-                                    HTMLReportMixin.label(item.raw.__name__),
+                                    cls.label(item.raw.__name__),
                                     item.render.number
                                     if getattr(item.raw, 'number', None) else '')
                                 if item_date:
@@ -393,15 +393,15 @@ class StockReportMixin(DominateReportMixin):
         with moves_table:
             with thead():
                 with tr():
-                    th(HTMLReportMixin.label('product.product', 'code'),
+                    th(cls.label('product.product', 'code'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('product.template', 'name'),
+                    th(cls.label('product.template', 'name'),
                         nowrap=True)
                     if show_lots:
-                        th(HTMLReportMixin.label('stock.move', 'lot'))
-                    th(HTMLReportMixin.label('stock.move', 'quantity'),
+                        th(cls.label('stock.move', 'lot'))
+                    th(cls.label('stock.move', 'quantity'),
                         cls='text-right', nowrap=True)
-                    th(HTMLReportMixin.label('stock.move', 'unit'),
+                    th(cls.label('stock.move', 'unit'),
                         nowrap=True)
             with tbody(cls='border'):
                 for move in moves:
@@ -430,15 +430,15 @@ class StockReportMixin(DominateReportMixin):
         with moves_table:
             with thead():
                 with tr():
-                    th(HTMLReportMixin.label('product.product', 'code'),
+                    th(cls.label('product.product', 'code'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('product.template', 'name'),
+                    th(cls.label('product.template', 'name'),
                         nowrap=True)
                     if show_lots:
-                        th(HTMLReportMixin.label('stock.move', 'lot'))
-                    th(HTMLReportMixin.label('stock.move', 'quantity'),
+                        th(cls.label('stock.move', 'lot'))
+                    th(cls.label('stock.move', 'quantity'),
                         cls='text-right', nowrap=True)
-                    th(HTMLReportMixin.label('stock.move', 'unit'),
+                    th(cls.label('stock.move', 'unit'),
                         nowrap=True)
             with tbody(cls='border'):
                 for move in moves:
@@ -470,28 +470,28 @@ class StockReportMixin(DominateReportMixin):
         with moves_table:
             with thead():
                 with tr():
-                    th(HTMLReportMixin.label('product.product', 'code'),
+                    th(cls.label('product.product', 'code'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('product.template', 'name'),
+                    th(cls.label('product.template', 'name'),
                         nowrap=True)
                     if show_lots:
-                        th(HTMLReportMixin.label('stock.move', 'lot'))
+                        th(cls.label('stock.move', 'lot'))
                         if show_expiration:
-                            th(HTMLReportMixin.label('stock.lot',
+                            th(cls.label('stock.lot',
                                 'expiration_date'))
                         else:
                             th('', cls='hide')
                     else:
                         th('', cls='hide')
-                    th(HTMLReportMixin.label('stock.move', 'quantity'),
+                    th(cls.label('stock.move', 'quantity'),
                         cls='text-right', nowrap=True)
-                    th(HTMLReportMixin.label('stock.move', 'unit'),
+                    th(cls.label('stock.move', 'unit'),
                         nowrap=True)
                     if valued:
-                        th(HTMLReportMixin.label('stock.move', 'base_price'),
+                        th(cls.label('stock.move', 'base_price'),
                             cls='text-right')
                         th('', cls='text-right')
-                        th(HTMLReportMixin.label('stock.move', 'amount'),
+                        th(cls.label('stock.move', 'amount'),
                             cls='text-right')
                     else:
                         th('', cls='hide')
@@ -547,28 +547,28 @@ class StockReportMixin(DominateReportMixin):
         with moves_table:
             with thead():
                 with tr():
-                    th(HTMLReportMixin.label('product.product', 'code'),
+                    th(cls.label('product.product', 'code'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('product.template', 'name'),
+                    th(cls.label('product.template', 'name'),
                         nowrap=True)
                     if show_lots:
-                        th(HTMLReportMixin.label('stock.move', 'lot'))
+                        th(cls.label('stock.move', 'lot'))
                         if show_expiration:
-                            th(HTMLReportMixin.label('stock.lot',
+                            th(cls.label('stock.lot',
                                 'expiration_date'))
                         else:
                             th('', cls='hide')
                     else:
                         th('', cls='hide')
-                    th(HTMLReportMixin.label('stock.move', 'quantity'),
+                    th(cls.label('stock.move', 'quantity'),
                         cls='text-right', nowrap=True)
-                    th(HTMLReportMixin.label('stock.move', 'unit'),
+                    th(cls.label('stock.move', 'unit'),
                         nowrap=True)
                     if valued:
-                        th(HTMLReportMixin.label('stock.move', 'base_price'),
+                        th(cls.label('stock.move', 'base_price'),
                             cls='text-right')
                         th('', cls='text-right')
-                        th(HTMLReportMixin.label('stock.move', 'amount'),
+                        th(cls.label('stock.move', 'amount'),
                             cls='text-right')
                     else:
                         th('', cls='hide')
@@ -612,7 +612,7 @@ class StockReportMixin(DominateReportMixin):
 
     @classmethod
     def _show_restocking_list_info(cls, record):
-        title = HTMLReportMixin.label(record.raw.__name__)
+        title = cls.label(record.raw.__name__)
         container = div()
         with container:
             p(record.company.render.rec_name)
@@ -620,17 +620,17 @@ class StockReportMixin(DominateReportMixin):
             h1('%s: %s' % (title,
                 record.render.number if record.raw.number else ''), cls='document')
             h2('%s: %s' % (
-                HTMLReportMixin.label('stock.shipment.in', 'reference'),
+                cls.label('stock.shipment.in', 'reference'),
                 record.render.origins if record.raw.origins
                 else record.render.reference or ''), cls='document')
             h2('%s: %s' % (
-                HTMLReportMixin.label('stock.shipment.in', 'supplier'),
+                cls.label('stock.shipment.in', 'supplier'),
                 record.supplier.render.rec_name or ''), cls='document')
             h2('%s: %s' % (
-                HTMLReportMixin.message('stock.msg_shipment_planned_date'),
+                cls.message('stock.msg_shipment_planned_date'),
                 record.render.planned_date or ''), cls='document')
             h2('%s: %s' % (
-                HTMLReportMixin.label('stock.shipment.in', 'warehouse'),
+                cls.label('stock.shipment.in', 'warehouse'),
                 record.warehouse.render.rec_name), cls='document')
         return container
 
@@ -643,16 +643,16 @@ class StockReportMixin(DominateReportMixin):
         with moves_table:
             with thead():
                 with tr():
-                    th(HTMLReportMixin.label('stock.move', 'from_location'),
+                    th(cls.label('stock.move', 'from_location'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('stock.move', 'to_location'),
+                    th(cls.label('stock.move', 'to_location'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('stock.move', 'product'),
+                    th(cls.label('stock.move', 'product'),
                         nowrap=True)
                     if shipment.raw.show_lots:
-                        th(HTMLReportMixin.label('stock.move', 'lot'),
+                        th(cls.label('stock.move', 'lot'),
                             nowrap=True)
-                    th(HTMLReportMixin.label('stock.move', 'quantity'),
+                    th(cls.label('stock.move', 'quantity'),
                         nowrap=True)
             with tbody(cls='border'):
                 for move in moves:
@@ -678,11 +678,11 @@ class StockReportMixin(DominateReportMixin):
         lines_table = table(style='width:100%;')
         with lines_table:
             with thead():
-                th(HTMLReportMixin.label('stock.inventory.line', 'product'),
+                th(cls.label('stock.inventory.line', 'product'),
                     nowrap=True)
-                th(HTMLReportMixin.label('stock.inventory.line',
+                th(cls.label('stock.inventory.line',
                     'expected_quantity'), cls='text-right')
-                th(HTMLReportMixin.label('stock.inventory.line', 'quantity'),
+                th(cls.label('stock.inventory.line', 'quantity'),
                     cls='text-right')
             with tbody(cls='border'):
                 for line in inventory.lines:
@@ -710,16 +710,16 @@ class StockInventoryReport(StockReportMixin, metaclass=PoolMeta):
                 with table():
                     with tr():
                         with td():
-                            strong('%s:' % HTMLReportMixin.label(
+                            strong('%s:' % cls.label(
                                 'stock.inventory', 'number'))
                             raw(' %s' % record.render.number)
                         with td():
-                            strong('%s:' % HTMLReportMixin.label(
+                            strong('%s:' % cls.label(
                                 'stock.inventory', 'date'))
                             raw(' %s' % record.render.date)
                     with tr():
                         with td():
-                            strong('%s:' % HTMLReportMixin.label(
+                            strong('%s:' % cls.label(
                                 'stock.inventory', 'location'))
                             raw(' %s' % record.location.render.name)
                         td('')
@@ -730,7 +730,7 @@ class StockInventoryReport(StockReportMixin, metaclass=PoolMeta):
         if record is None and records:
             record = records[0]
         body_nodes = [cls._show_inventory_lines(record)]
-        title = HTMLReportMixin.label('stock.inventory')
+        title = cls.label('stock.inventory')
         return dh.build_document(action, title, body_nodes)
 
 
@@ -739,7 +739,7 @@ class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
 
     @classmethod
     def _document_info(cls, record):
-        title = HTMLReportMixin.label(record.raw.__name__)
+        title = cls.label(record.raw.__name__)
         document_date = (record.render.effective_date
             if getattr(record.raw, 'effective_date', None) else '')
         container = div()
@@ -750,12 +750,12 @@ class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
                 record.render.number if record.raw.number else ''),
                 cls='document')
             h2('%s: %s' % (
-                HTMLReportMixin.message('stock.msg_shipment_effective_date'),
+                cls.message('stock.msg_shipment_effective_date'),
                 document_date), cls='document')
             sale_references = getattr(record.raw, 'sale_references', None)
             if sale_references:
                 h2('%s: %s' % (
-                    HTMLReportMixin.label(record.raw.__name__,
+                    cls.label(record.raw.__name__,
                         'sale_references'),
                     record.render.sale_references), cls='document')
         return container
@@ -780,10 +780,10 @@ class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
         if getattr(record.raw, 'carrier', None):
             body_nodes.append(cls.show_carrier(record.carrier))
         if getattr(record.raw, 'comment', None):
-            body_nodes.append(h4(HTMLReportMixin.label(
+            body_nodes.append(h4(cls.label(
                 record.raw.__name__, 'comment')))
             body_nodes.append(p(raw(record.render.comment)))
-        title = HTMLReportMixin.label('stock.shipment.out')
+        title = cls.label('stock.shipment.out')
         return dh.build_document(action, title, body_nodes)
 
 
@@ -818,10 +818,10 @@ class ValuedDeliveryNoteReport(DeliveryNoteReport, metaclass=PoolMeta):
         if getattr(record.raw, 'carrier', None):
             body_nodes.append(p(cls.show_carrier(record.carrier)))
         if getattr(record.raw, 'comment', None):
-            body_nodes.append(h4(HTMLReportMixin.label(
+            body_nodes.append(h4(cls.label(
                 record.raw.__name__, 'comment')))
             body_nodes.append(p(raw(record.render.comment)))
-        title = HTMLReportMixin.label('stock.shipment.out')
+        title = cls.label('stock.shipment.out')
         return dh.build_document(action, title, body_nodes)
 
 
@@ -830,12 +830,12 @@ class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
 
     @classmethod
     def _document_info(cls, record):
-        title = HTMLReportMixin.label(record.raw.__name__)
+        title = cls.label(record.raw.__name__)
         document_date = (record.render.effective_date
             if getattr(record.raw, 'effective_date', None) else '')
         label_package = None
         if getattr(record.raw, 'number_packages', None):
-            label_package = HTMLReportMixin.label(
+            label_package = cls.label(
                 record.raw.__name__, 'number_packages')
         container = div()
         with container:
@@ -845,7 +845,7 @@ class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
                 record.render.number if record.raw.number else ''),
                 cls='document')
             h2('%s: %s' % (
-                HTMLReportMixin.message('stock.msg_shipment_effective_date'),
+                cls.message('stock.msg_shipment_effective_date'),
                 document_date), cls='document')
             if label_package:
                 h3('%s: %s' % (
@@ -871,7 +871,7 @@ class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
             record = records[0]
         moves = record.inventory_moves or record.outgoing_moves
         body_nodes = [cls._show_picking_moves(moves, record.raw.show_lots)]
-        title = HTMLReportMixin.label('stock.shipment.out')
+        title = cls.label('stock.shipment.out')
         return dh.build_document(action, title, body_nodes)
 
 
@@ -880,12 +880,12 @@ class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
 
     @classmethod
     def _document_info(cls, record):
-        title = HTMLReportMixin.label(record.raw.__name__)
+        title = cls.label(record.raw.__name__)
         document_date = (record.render.effective_date
             if getattr(record.raw, 'effective_date', None) else '')
         label_package = None
         if getattr(record.raw, 'number_packages', None):
-            label_package = HTMLReportMixin.label(
+            label_package = cls.label(
                 record.raw.__name__, 'number_packages')
         container = div()
         with container:
@@ -895,18 +895,18 @@ class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
                 record.render.number if record.raw.number else ''),
                 cls='document')
             h2('%s: %s' % (
-                HTMLReportMixin.message('stock.msg_shipment_effective_date'),
+                cls.message('stock.msg_shipment_effective_date'),
                 document_date), cls='document')
             if label_package:
                 h3('%s: %s' % (
                     label_package, record.render.number_packages),
                     cls='document')
             h3('%s: %s' % (
-                HTMLReportMixin.label('stock.shipment.internal',
+                cls.label('stock.shipment.internal',
                     'from_location'),
                 record.from_location.render.name), cls='document')
             h3('%s: %s' % (
-                HTMLReportMixin.label('stock.shipment.internal',
+                cls.label('stock.shipment.internal',
                     'to_location'),
                 record.to_location.render.name), cls='document')
         return container
@@ -929,7 +929,7 @@ class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
             record = records[0]
         body_nodes = [cls._show_internal_picking_moves(
             record, record.raw.show_lots)]
-        title = HTMLReportMixin.label('stock.shipment.out')
+        title = cls.label('stock.shipment.out')
         return dh.build_document(action, title, body_nodes)
 
 
@@ -938,7 +938,7 @@ class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
 
     @classmethod
     def _document_info(cls, record):
-        title = HTMLReportMixin.label(record.raw.__name__)
+        title = cls.label(record.raw.__name__)
         document_date = (record.render.effective_date
             if getattr(record.raw, 'effective_date', None) else '')
         container = div()
@@ -947,7 +947,7 @@ class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
                 record.render.number if record.raw.number else ''),
                 cls='document')
             h2('%s: %s' % (
-                HTMLReportMixin.message('stock.msg_shipment_effective_date'),
+                cls.message('stock.msg_shipment_effective_date'),
                 document_date), cls='document')
         return container
 
@@ -974,11 +974,11 @@ class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
         if getattr(record.raw, 'comment', None):
             body_nodes.append(br())
             body_nodes.append(br())
-            body_nodes.append(strong(HTMLReportMixin.label(
+            body_nodes.append(strong(cls.label(
                 record.raw.__name__, 'comment')))
             body_nodes.append(br())
             body_nodes.append(raw(record.render.comment))
-        title = HTMLReportMixin.label('stock.shipment.in.return')
+        title = cls.label('stock.shipment.in.return')
         return dh.build_document(action, title, body_nodes)
 
 
@@ -995,11 +995,11 @@ class RefundNoteReport(CustomerRefundNoteReport, metaclass=PoolMeta):
         if getattr(record.raw, 'comment', None):
             body_nodes.append(br())
             body_nodes.append(br())
-            body_nodes.append(strong(HTMLReportMixin.label(
+            body_nodes.append(strong(cls.label(
                 record.raw.__name__, 'comment')))
             body_nodes.append(br())
             body_nodes.append(raw(record.render.comment))
-        title = HTMLReportMixin.label('stock.shipment.in.return')
+        title = cls.label('stock.shipment.in.return')
         return dh.build_document(action, title, body_nodes)
 
 
@@ -1018,5 +1018,5 @@ class SupplierRestockingListReport(StockReportMixin, metaclass=PoolMeta):
             cls._show_restocking_list_info(record),
             cls._show_restocking_list_moves(record),
         ]
-        title = HTMLReportMixin.label('stock.shipment.in')
+        title = cls.label('stock.shipment.in')
         return dh.build_document(action, title, body_nodes)

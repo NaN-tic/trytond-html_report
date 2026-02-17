@@ -7,7 +7,6 @@ from trytond.pool import PoolMeta
 from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.dominate_report import DominateReportMixin
-from trytond.modules.html_report.engine import HTMLReportMixin
 from trytond.modules.html_report import dominate_helpers as dh
 
 
@@ -50,10 +49,10 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
 
     @classmethod
     def _document_info(cls, record):
-        title = HTMLReportMixin.label(record.raw.__name__)
+        title = cls.label(record.raw.__name__)
         document_date = (record.render.effective_date
             if getattr(record.raw, 'effective_date', None) else '')
-        label_reference = HTMLReportMixin.label(record.raw.__name__, 'reference')
+        label_reference = cls.label(record.raw.__name__, 'reference')
         container = div()
         with container:
             h1('%s: %s' % (title,
@@ -62,7 +61,7 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
             h2('%s: %s' % (label_reference,
                 record.raw.reference or ''), cls='document')
             h2('%s: %s' % (
-                HTMLReportMixin.message('stock.msg_shipment_effective_date'),
+                cls.message('stock.msg_shipment_effective_date'),
                 document_date or ''), cls='document')
         return container
 
@@ -77,26 +76,26 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
         with moves_table:
             with thead():
                 with tr():
-                    th(HTMLReportMixin.label('stock.move', 'from_location'),
+                    th(cls.label('stock.move', 'from_location'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('stock.move', 'to_location'),
+                    th(cls.label('stock.move', 'to_location'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('product.product', 'code'),
+                    th(cls.label('product.product', 'code'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('product.template', 'name'),
+                    th(cls.label('product.template', 'name'),
                         nowrap=True)
                     if show_lots:
-                        th(HTMLReportMixin.label('stock.move', 'lot'))
+                        th(cls.label('stock.move', 'lot'))
                         if show_expiration:
-                            th(HTMLReportMixin.label('stock.lot',
+                            th(cls.label('stock.lot',
                                 'expiration_date'))
                         else:
                             th('', cls='hide')
                     else:
                         th('', cls='hide')
-                    th(HTMLReportMixin.label('stock.move', 'quantity'),
+                    th(cls.label('stock.move', 'quantity'),
                         cls='text-right', nowrap=True)
-                    th(HTMLReportMixin.label('stock.move', 'unit'),
+                    th(cls.label('stock.move', 'unit'),
                         nowrap=True)
             with tbody(cls='border'):
                 for move in production.outputs:
@@ -133,26 +132,26 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
         with moves_table:
             with thead():
                 with tr():
-                    th(HTMLReportMixin.label('stock.move', 'from_location'),
+                    th(cls.label('stock.move', 'from_location'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('stock.move', 'to_location'),
+                    th(cls.label('stock.move', 'to_location'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('product.product', 'code'),
+                    th(cls.label('product.product', 'code'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('product.template', 'name'),
+                    th(cls.label('product.template', 'name'),
                         nowrap=True)
                     if show_lots:
-                        th(HTMLReportMixin.label('stock.move', 'lot'))
+                        th(cls.label('stock.move', 'lot'))
                         if show_expiration:
-                            th(HTMLReportMixin.label('stock.lot',
+                            th(cls.label('stock.lot',
                                 'expiration_date'))
                         else:
                             th('', cls='hide')
                     else:
                         th('', cls='hide')
-                    th(HTMLReportMixin.label('stock.move', 'quantity'),
+                    th(cls.label('stock.move', 'quantity'),
                         cls='text-right', nowrap=True)
-                    th(HTMLReportMixin.label('stock.move', 'unit'),
+                    th(cls.label('stock.move', 'unit'),
                         nowrap=True)
             with tbody(cls='border'):
                 for move in production.inputs:
@@ -184,15 +183,15 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
         with ops_table:
             with thead():
                 with tr():
-                    th(HTMLReportMixin.label('production.operation',
+                    th(cls.label('production.operation',
                         'operation_type'), nowrap=True)
-                    th(HTMLReportMixin.label('production.operation',
+                    th(cls.label('production.operation',
                         'work_center'), nowrap=True)
-                    th(HTMLReportMixin.label('production.operation',
+                    th(cls.label('production.operation',
                         'work_center_category'), nowrap=True)
-                    th(HTMLReportMixin.label('production.route.operation',
+                    th(cls.label('production.route.operation',
                         'time'), nowrap=True)
-                    th(HTMLReportMixin.label('production', 'quantity'),
+                    th(cls.label('production', 'quantity'),
                         nowrap=True)
             with tbody(cls='border'):
                 for operation in operations:
@@ -249,22 +248,22 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
             container = div(cls='center')
             with container:
                 h1('%s : %s' % (
-                    HTMLReportMixin.label('production', 'product'),
+                    cls.label('production', 'product'),
                     record.product.render.rec_name))
                 h2('%s : %s %s' % (
-                    HTMLReportMixin.label('production', 'quantity'),
+                    cls.label('production', 'quantity'),
                     record.render.quantity,
                     record.unit.render.name))
                 if getattr(record.raw, 'route', None):
                     h2('%s : %s' % (
-                        HTMLReportMixin.label('production', 'route'),
+                        cls.label('production', 'route'),
                         record.route.render.name))
             body_nodes.append(container)
-        body_nodes.append(h2(HTMLReportMixin.label('production', 'outputs')))
+        body_nodes.append(h2(cls.label('production', 'outputs')))
         body_nodes.append(cls._show_output_moves(record))
-        body_nodes.append(h2(HTMLReportMixin.label('production', 'inputs')))
+        body_nodes.append(h2(cls.label('production', 'inputs')))
         body_nodes.append(cls._show_input_moves(record))
         if getattr(record.raw, 'route', None):
             body_nodes.append(cls._show_operations(record.operations))
-        title = HTMLReportMixin.label('production')
+        title = cls.label('production')
         return dh.build_document(action, title, body_nodes)

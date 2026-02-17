@@ -2,7 +2,6 @@ from trytond.pool import PoolMeta
 from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
-from trytond.modules.html_report.engine import HTMLReportMixin
 from trytond.modules.html_report.dominate_report import DominateReportMixin
 from trytond.modules.html_report import dominate_helpers as dh
 from dominate.util import raw
@@ -64,17 +63,17 @@ class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
         with lines_table:
             with thead():
                 with tr():
-                    th(HTMLReportMixin.label('product.product', 'code'),
+                    th(cls.label('product.product', 'code'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('product.template', 'name'),
+                    th(cls.label('product.template', 'name'),
                         nowrap=True)
-                    th(HTMLReportMixin.label('purchase.line', 'quantity'),
+                    th(cls.label('purchase.line', 'quantity'),
                         cls='text-right', nowrap=True)
                     if not simplified:
-                        th(HTMLReportMixin.label('purchase.line', 'unit_price'),
+                        th(cls.label('purchase.line', 'unit_price'),
                             cls='text-right', nowrap=True)
                         th('')
-                        th(HTMLReportMixin.label('purchase.line', 'amount'),
+                        th(cls.label('purchase.line', 'amount'),
                             cls='text-right', nowrap=True)
             with tbody(cls='border'):
                 for line in document.lines:
@@ -140,10 +139,10 @@ class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
         if record.raw.state in ('quotation', 'draft'):
             title = record.render.state
         else:
-            title = HTMLReportMixin.label(record.raw.__name__)
+            title = cls.label(record.raw.__name__)
 
         document_date = record.raw.purchase_date and record.render.purchase_date or ''
-        label_date = HTMLReportMixin.label(record.raw.__name__, 'purchase_date')
+        label_date = cls.label(record.raw.__name__, 'purchase_date')
 
         container = div()
         with container:
@@ -153,7 +152,7 @@ class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
                 h2('%s: %s' % (label_date, document_date), cls='document')
             if record.raw.reference:
                 h2('%s: %s' % (
-                    HTMLReportMixin.label(record.raw.__name__, 'reference'),
+                    cls.label(record.raw.__name__, 'reference'),
                     record.render.reference), cls='document')
         return container
 
@@ -231,11 +230,11 @@ class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
         body_nodes.append(cls._show_purchase_lines(record,
             simplified=simplified))
         if record.raw.comment:
-            body_nodes.append(h4(HTMLReportMixin.label(
+            body_nodes.append(h4(cls.label(
                 'purchase.purchase', 'comment')))
             body_nodes.append(p(raw(record.render.comment)))
 
-        title = HTMLReportMixin.label('purchase.purchase')
+        title = cls.label('purchase.purchase')
         return dh.build_document(action, title, body_nodes)
 
 
