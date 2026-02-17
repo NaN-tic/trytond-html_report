@@ -204,6 +204,39 @@ class StockInventory(HTMLReportMixin, metaclass=PoolMeta):
 
 class StockReportMixin(DominateReportMixin):
     @classmethod
+    def show_carrier(cls, carrier):
+        container = div()
+        with container:
+            raw(carrier.party.render.name)
+            br()
+            if carrier.party.raw.tax_identifier:
+                raw(carrier.party.tax_identifier.render.code)
+        return container
+
+    @classmethod
+    def show_company_info(cls, company, show_party=True,
+            show_contact_mechanism=True):
+        return company.raw.__class__.show_company_info(
+            company, show_party=show_party,
+            show_contact_mechanism=show_contact_mechanism)
+
+    @classmethod
+    def show_party_info(cls, party, tax_identifier, address,
+            second_address_label, second_address):
+        return party.raw.show_party_info(
+            tax_identifier, address, second_address_label, second_address)
+
+    @classmethod
+    def show_footer(cls, company=None):
+        if company is None:
+            return raw('')
+        return company.raw.__class__.show_footer(company)
+
+    @classmethod
+    def show_totals(cls, record):
+        return record.company.raw.__class__.show_totals(record)
+
+    @classmethod
     def _get_language(cls, record):
         if record:
             if getattr(record.raw, 'customer', None):
@@ -232,24 +265,25 @@ class StockReportMixin(DominateReportMixin):
                             document_info_node
                     with tr():
                         with td(cls='party_info'):
-                            dh.show_company_info(company)
+                            cls.show_company_info(company)
                         with td(cls='party_info'):
                             party = record.html_party
                             tax_identifier = record.html_tax_identifier
                             address = record.html_address
                             second_address_label = record.html_address
                             second_address = record.html_address
-                            dh.show_party_info(party, tax_identifier, address,
+                            cls.show_party_info(party, tax_identifier, address,
                                 second_address_label, second_address)
         return header
 
     @classmethod
-    def _footer(cls):
+    def _footer(cls, record):
+        company = record.company
         footer = div()
         with footer:
             link(rel='stylesheet', href=dh._base_css_href())
             with footer_tag(id='footer', align='center'):
-                dh.show_footer()
+                cls.show_footer(company)
         return footer
 
     @classmethod
@@ -734,7 +768,9 @@ class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
 
     @classmethod
     def footer(cls, action, record=None, records=None, data=None):
-        return cls._footer()
+        if record is None and records:
+            record = records[0]
+        return cls._footer(record)
 
     @classmethod
     def main(cls, action, record=None, records=None, data=None):
@@ -742,7 +778,7 @@ class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
             record = records[0]
         body_nodes = [cls._show_stock_moves(record, valued=False)]
         if getattr(record.raw, 'carrier', None):
-            body_nodes.append(dh.show_carrier(record.carrier))
+            body_nodes.append(cls.show_carrier(record.carrier))
         if getattr(record.raw, 'comment', None):
             body_nodes.append(h4(HTMLReportMixin.label(
                 record.raw.__name__, 'comment')))
@@ -771,7 +807,7 @@ class ValuedDeliveryNoteReport(DeliveryNoteReport, metaclass=PoolMeta):
                     with tr():
                         td('')
                         with td():
-                            dh.show_totals(record)
+                            cls.show_totals(record)
         return last_footer
 
     @classmethod
@@ -780,7 +816,7 @@ class ValuedDeliveryNoteReport(DeliveryNoteReport, metaclass=PoolMeta):
             record = records[0]
         body_nodes = [cls._show_stock_moves(record, valued=True)]
         if getattr(record.raw, 'carrier', None):
-            body_nodes.append(p(dh.show_carrier(record.carrier)))
+            body_nodes.append(p(cls.show_carrier(record.carrier)))
         if getattr(record.raw, 'comment', None):
             body_nodes.append(h4(HTMLReportMixin.label(
                 record.raw.__name__, 'comment')))
@@ -825,7 +861,9 @@ class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
 
     @classmethod
     def footer(cls, action, record=None, records=None, data=None):
-        return cls._footer()
+        if record is None and records:
+            record = records[0]
+        return cls._footer(record)
 
     @classmethod
     def main(cls, action, record=None, records=None, data=None):
@@ -881,7 +919,9 @@ class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
 
     @classmethod
     def footer(cls, action, record=None, records=None, data=None):
-        return cls._footer()
+        if record is None and records:
+            record = records[0]
+        return cls._footer(record)
 
     @classmethod
     def main(cls, action, record=None, records=None, data=None):
@@ -919,7 +959,9 @@ class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
 
     @classmethod
     def footer(cls, action, record=None, records=None, data=None):
-        return cls._footer()
+        if record is None and records:
+            record = records[0]
+        return cls._footer(record)
 
     @classmethod
     def main(cls, action, record=None, records=None, data=None):
@@ -928,7 +970,7 @@ class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
         body_nodes = [cls._show_customer_return_stock_moves(
             record, valued=False)]
         if getattr(record.raw, 'carrier', None):
-            body_nodes.append(dh.show_carrier(record.carrier))
+            body_nodes.append(cls.show_carrier(record.carrier))
         if getattr(record.raw, 'comment', None):
             body_nodes.append(br())
             body_nodes.append(br())
@@ -949,7 +991,7 @@ class RefundNoteReport(CustomerRefundNoteReport, metaclass=PoolMeta):
             record = records[0]
         body_nodes = [cls._show_return_stock_moves(record, valued=False)]
         if getattr(record.raw, 'carrier', None):
-            body_nodes.append(dh.show_carrier(record.carrier))
+            body_nodes.append(cls.show_carrier(record.carrier))
         if getattr(record.raw, 'comment', None):
             body_nodes.append(br())
             body_nodes.append(br())

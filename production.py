@@ -1,3 +1,4 @@
+from dominate.util import raw
 from dominate.tags import (div, footer as footer_tag, h1, h2, header as header_tag,
     img, link, table, tbody, td, th, thead, tr)
 
@@ -33,6 +34,19 @@ class Production(HTMLPartyInfoMixin, metaclass=PoolMeta):
 
 class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
     __name__ = 'production.production'
+
+    @classmethod
+    def show_company_info(cls, company, show_party=True,
+            show_contact_mechanism=True):
+        return company.raw.__class__.show_company_info(
+            company, show_party=show_party,
+            show_contact_mechanism=show_contact_mechanism)
+
+    @classmethod
+    def show_footer(cls, company=None):
+        if company is None:
+            return raw('')
+        return company.raw.__class__.show_footer(company)
 
     @classmethod
     def _document_info(cls, record):
@@ -209,24 +223,21 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
                             cls._document_info(record)
                     with tr():
                         with td(cls='party_info'):
-                            dh.show_company_info(company)
+                            cls.show_company_info(company)
                         with td(cls='party_info'):
-                            party = record.html_party
-                            tax_identifier = record.html_tax_identifier
-                            address = record.html_address
-                            second_address_label = record.html_address
-                            second_address = record.html_address
-                            dh.show_party_info(party, tax_identifier, address,
-                                second_address_label, second_address)
+                            pass
         return header
 
     @classmethod
     def footer(cls, action, record=None, records=None, data=None):
+        if record is None and records:
+            record = records[0]
+        company = record.company
         footer = div()
         with footer:
             link(rel='stylesheet', href=dh._base_css_href())
             with footer_tag(id='footer', align='center'):
-                dh.show_footer()
+                cls.show_footer(company)
         return footer
 
     @classmethod
