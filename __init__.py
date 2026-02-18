@@ -7,12 +7,11 @@ from . import action
 from . import translation
 from . import template
 from . import engine
-from . import product
 from . import invoice
 from . import production
 from . import purchase
 from . import sale
-from . import sale_product_customer
+from . import product
 from . import stock
 from . import account_configuration
 from . import company
@@ -114,5 +113,9 @@ def register():
         stock.RefundNoteReport,
         stock.SupplierRestockingListReport,
         module=module, type_='report', depends=['stock'])
-    product.register(module)
-    sale_product_customer.register(module)
+    Pool.register(
+        product.Product,
+        module=module, type_='model', depends=['product'])
+    Pool.register(
+        product.ProductCustomer,
+        module=module, type_='model', depends=['sale_product_customer'])
