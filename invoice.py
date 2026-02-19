@@ -527,11 +527,6 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
                             cls._show_due_dates(record, company)
         return last_footer
 
-    @classmethod
-    def title(cls, action, record=None, records=None, data=None):
-        return cls.label('account.invoice')
-
-    @classmethod
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]

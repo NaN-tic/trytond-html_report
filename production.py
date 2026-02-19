@@ -238,11 +238,6 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
                 cls.show_footer(company)
         return footer
 
-    @classmethod
-    def title(cls, action, record=None, records=None, data=None):
-        return cls.label('production')
-
-    @classmethod
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
