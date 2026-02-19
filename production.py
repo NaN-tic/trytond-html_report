@@ -246,26 +246,28 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        body_nodes = []
-        if record.raw.product:
-            container = div(cls='center')
-            with container:
-                h1('%s : %s' % (
-                    cls.label('production', 'product'),
-                    record.product.render.rec_name))
-                h2('%s : %s %s' % (
-                    cls.label('production', 'quantity'),
-                    record.render.quantity,
-                    record.unit.render.name))
-                if getattr(record.raw, 'route', None):
-                    h2('%s : %s' % (
-                        cls.label('production', 'route'),
-                        record.route.render.name))
-            body_nodes.append(container)
-        body_nodes.append(h2(cls.label('production', 'outputs')))
-        body_nodes.append(cls._show_output_moves(record))
-        body_nodes.append(h2(cls.label('production', 'inputs')))
-        body_nodes.append(cls._show_input_moves(record))
-        if getattr(record.raw, 'route', None):
-            body_nodes.append(cls._show_operations(record.operations))
-        return body_nodes
+        container = div()
+        with container:
+            if record.raw.product:
+                product_container = div(cls='center')
+                with product_container:
+                    h1('%s : %s' % (
+                        cls.label('production', 'product'),
+                        record.product.render.rec_name))
+                    h2('%s : %s %s' % (
+                        cls.label('production', 'quantity'),
+                        record.render.quantity,
+                        record.unit.render.name))
+                    if getattr(record.raw, 'route', None):
+                        h2('%s : %s' % (
+                            cls.label('production', 'route'),
+                            record.route.render.name))
+                container.add(product_container)
+            h2(cls.label('production', 'outputs'))
+            container.add(cls._show_output_moves(record))
+            h2(cls.label('production', 'inputs'))
+            container.add(cls._show_input_moves(record))
+            if getattr(record.raw, 'route', None):
+                container.add(cls._show_operations(record.operations))
+
+        return container

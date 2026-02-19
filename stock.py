@@ -732,8 +732,10 @@ class StockInventoryReport(StockReportMixin, metaclass=PoolMeta):
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        body_nodes = [cls._show_inventory_lines(record)]
-        return body_nodes
+        container = div()
+        with container:
+            container.add(cls._show_inventory_lines(record))
+        return container
 
 
 class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
@@ -782,14 +784,15 @@ class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        body_nodes = [cls._show_stock_moves(record, valued=False)]
-        if getattr(record.raw, 'carrier', None):
-            body_nodes.append(cls.show_carrier(record.carrier))
-        if getattr(record.raw, 'comment', None):
-            body_nodes.append(h4(cls.label(
-                record.raw.__name__, 'comment')))
-            body_nodes.append(p(raw(record.render.comment)))
-        return body_nodes
+        container = div()
+        with container:
+            container.add(cls._show_stock_moves(record, valued=False))
+            if getattr(record.raw, 'carrier', None):
+                container.add(cls.show_carrier(record.carrier))
+            if getattr(record.raw, 'comment', None):
+                h4(cls.label(record.raw.__name__, 'comment'))
+                p(raw(record.render.comment))
+        return container
 
 
 class ValuedDeliveryNoteReport(DeliveryNoteReport, metaclass=PoolMeta):
@@ -819,14 +822,15 @@ class ValuedDeliveryNoteReport(DeliveryNoteReport, metaclass=PoolMeta):
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        body_nodes = [cls._show_stock_moves(record, valued=True)]
-        if getattr(record.raw, 'carrier', None):
-            body_nodes.append(p(cls.show_carrier(record.carrier)))
-        if getattr(record.raw, 'comment', None):
-            body_nodes.append(h4(cls.label(
-                record.raw.__name__, 'comment')))
-            body_nodes.append(p(raw(record.render.comment)))
-        return body_nodes
+        container = div()
+        with container:
+            container.add(cls._show_stock_moves(record, valued=True))
+            if getattr(record.raw, 'carrier', None):
+                p(cls.show_carrier(record.carrier))
+            if getattr(record.raw, 'comment', None):
+                h4(cls.label(record.raw.__name__, 'comment'))
+                p(raw(record.render.comment))
+        return container
 
 
 class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
@@ -878,8 +882,10 @@ class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
         if record is None and records:
             record = records[0]
         moves = record.inventory_moves or record.outgoing_moves
-        body_nodes = [cls._show_picking_moves(moves, record.raw.show_lots)]
-        return body_nodes
+        container = div()
+        with container:
+            container.add(cls._show_picking_moves(moves, record.raw.show_lots))
+        return container
 
 
 class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
@@ -938,9 +944,11 @@ class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        body_nodes = [cls._show_internal_picking_moves(
-            record, record.raw.show_lots)]
-        return body_nodes
+        container = div()
+        with container:
+            container.add(cls._show_internal_picking_moves(
+                record, record.raw.show_lots))
+        return container
 
 
 class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
@@ -981,18 +989,19 @@ class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        body_nodes = [cls._show_customer_return_stock_moves(
-            record, valued=False)]
-        if getattr(record.raw, 'carrier', None):
-            body_nodes.append(cls.show_carrier(record.carrier))
-        if getattr(record.raw, 'comment', None):
-            body_nodes.append(br())
-            body_nodes.append(br())
-            body_nodes.append(strong(cls.label(
-                record.raw.__name__, 'comment')))
-            body_nodes.append(br())
-            body_nodes.append(raw(record.render.comment))
-        return body_nodes
+        container = div()
+        with container:
+            container.add(cls._show_customer_return_stock_moves(
+                record, valued=False))
+            if getattr(record.raw, 'carrier', None):
+                container.add(cls.show_carrier(record.carrier))
+            if getattr(record.raw, 'comment', None):
+                br()
+                br()
+                strong(cls.label(record.raw.__name__, 'comment'))
+                br()
+                raw(record.render.comment)
+        return container
 
 
 class RefundNoteReport(CustomerRefundNoteReport, metaclass=PoolMeta):
@@ -1002,17 +1011,18 @@ class RefundNoteReport(CustomerRefundNoteReport, metaclass=PoolMeta):
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        body_nodes = [cls._show_return_stock_moves(record, valued=False)]
-        if getattr(record.raw, 'carrier', None):
-            body_nodes.append(cls.show_carrier(record.carrier))
-        if getattr(record.raw, 'comment', None):
-            body_nodes.append(br())
-            body_nodes.append(br())
-            body_nodes.append(strong(cls.label(
-                record.raw.__name__, 'comment')))
-            body_nodes.append(br())
-            body_nodes.append(raw(record.render.comment))
-        return body_nodes
+        container = div()
+        with container:
+            container.add(cls._show_return_stock_moves(record, valued=False))
+            if getattr(record.raw, 'carrier', None):
+                container.add(cls.show_carrier(record.carrier))
+            if getattr(record.raw, 'comment', None):
+                br()
+                br()
+                strong(cls.label(record.raw.__name__, 'comment'))
+                br()
+                raw(record.render.comment)
+        return container
 
 
 class SupplierRestockingListReport(StockReportMixin, metaclass=PoolMeta):
@@ -1030,8 +1040,8 @@ class SupplierRestockingListReport(StockReportMixin, metaclass=PoolMeta):
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        body_nodes = [
-            cls._show_restocking_list_info(record),
-            cls._show_restocking_list_moves(record),
-        ]
-        return body_nodes
+        container = div()
+        with container:
+            container.add(cls._show_restocking_list_info(record))
+            container.add(cls._show_restocking_list_moves(record))
+        return container

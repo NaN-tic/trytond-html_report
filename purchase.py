@@ -229,15 +229,15 @@ class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
         if record is None and records:
             record = records[0]
         simplified = action and 'simplified' in action.report_name
-        body_nodes = []
-        body_nodes.append(cls._show_purchase_lines(record,
-            simplified=simplified))
-        if record.raw.comment:
-            body_nodes.append(h4(cls.label(
-                'purchase.purchase', 'comment')))
-            body_nodes.append(p(raw(record.render.comment)))
+        container = div()
+        with container:
+            container.add(cls._show_purchase_lines(
+                record, simplified=simplified))
+            if record.raw.comment:
+                h4(cls.label('purchase.purchase', 'comment'))
+                p(raw(record.render.comment))
 
-        return body_nodes
+        return container
 
 
 class PurchaseSimplifiedReport(DominateReportMixin, metaclass=PoolMeta):

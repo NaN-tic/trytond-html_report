@@ -535,11 +535,11 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        body_nodes = []
-        body_nodes.append(cls._show_invoice_lines(record))
-        if record.raw.comment:
-            body_nodes.append(h4(cls.label(
-                'account.invoice', 'comment')))
-            body_nodes.append(p(raw(record.render.comment)))
+        container = div()
+        with container:
+            container.add(cls._show_invoice_lines(record))
+            if record.raw.comment:
+                h4(cls.label('account.invoice', 'comment'))
+                p(raw(record.render.comment))
 
-        return body_nodes
+        return container
