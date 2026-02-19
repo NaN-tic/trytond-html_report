@@ -808,6 +808,11 @@ class HTMLReportMixin:
             }
 
     @classmethod
+    def render(cls, value, digits=2, lang=None, filename=None):
+        render = cls.get_jinja_filters()['render']
+        return render(value, digits=digits, lang=lang, filename=filename)
+
+    @classmethod
     def get_environment(cls):
         """
         Create and return a jinja environment to render templates
