@@ -8,7 +8,6 @@ from trytond.transaction import Transaction
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import DualRecord
 from trytond.modules.html_report.dominate_report import DominateReportMixin
-from trytond.modules.html_report import dominate_helpers as dh
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 from dominate.util import raw
 from dominate.tags import (div, footer as footer_tag, h1, h2, h4,
@@ -459,7 +458,7 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
         company = record.company
         header = div()
         with header:
-            link(rel='stylesheet', href=dh._base_css_href())
+            link(rel='stylesheet', href=cls._base_css_href())
             if getattr(record.raw, 'aeat_qr_url', None):
                 style(raw('.company_logo {\n    width: 15%;\n  }'))
             with header_tag(id='header'):
@@ -495,7 +494,7 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
         company = record.company
         footer = div()
         with footer:
-            link(rel='stylesheet', href=dh._base_css_href())
+            link(rel='stylesheet', href=cls._base_css_href())
             with footer_tag(id='footer', align='center'):
                 cls.show_footer(company)
         return footer
@@ -508,7 +507,7 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
         company = record.company
         last_footer = div()
         with last_footer:
-            link(rel='stylesheet', href=dh._base_css_href())
+            link(rel='stylesheet', href=cls._base_css_href())
             with div(
                     id='last-footer',
                     align='center',
@@ -529,7 +528,11 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
         return last_footer
 
     @classmethod
-    def main(cls, action, record=None, records=None, data=None):
+    def title(cls, action, record=None, records=None, data=None):
+        return cls.label('account.invoice')
+
+    @classmethod
+    def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
         body_nodes = []
@@ -539,5 +542,4 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
                 'account.invoice', 'comment')))
             body_nodes.append(p(raw(record.render.comment)))
 
-        title = cls.label('account.invoice')
-        return dh.build_document(action, title, body_nodes)
+        return body_nodes

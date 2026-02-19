@@ -4,7 +4,6 @@ from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import HTMLReportMixin
 from trytond.modules.html_report.dominate_report import DominateReportMixin
-from trytond.modules.html_report import dominate_helpers as dh
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 from dominate.util import raw
 from dominate.tags import (div, footer as footer_tag, h1, h2, h3, h4,
@@ -175,7 +174,7 @@ class SaleReport(DominateReportMixin, metaclass=PoolMeta):
 
         header = div()
         with header:
-            link(rel='stylesheet', href=dh._base_css_href())
+            link(rel='stylesheet', href=cls._base_css_href())
             with header_tag(id='header'):
                 with table():
                     with tr():
@@ -204,7 +203,7 @@ class SaleReport(DominateReportMixin, metaclass=PoolMeta):
         company = record.company
         footer = div()
         with footer:
-            link(rel='stylesheet', href=dh._base_css_href())
+            link(rel='stylesheet', href=cls._base_css_href())
             with footer_tag(id='footer', align='center'):
                 cls.show_footer(company)
         return footer
@@ -216,7 +215,7 @@ class SaleReport(DominateReportMixin, metaclass=PoolMeta):
             record = records[0]
         last_footer = div()
         with last_footer:
-            link(rel='stylesheet', href=dh._base_css_href())
+            link(rel='stylesheet', href=cls._base_css_href())
             with div(
                     id='last-footer',
                     align='center',
@@ -232,7 +231,11 @@ class SaleReport(DominateReportMixin, metaclass=PoolMeta):
         return last_footer
 
     @classmethod
-    def main(cls, action, record=None, records=None, data=None):
+    def title(cls, action, record=None, records=None, data=None):
+        return cls.label('sale.sale')
+
+    @classmethod
+    def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
         body_nodes = []
@@ -242,5 +245,4 @@ class SaleReport(DominateReportMixin, metaclass=PoolMeta):
                 'sale.sale', 'comment')))
             body_nodes.append(p(raw(record.render.comment)))
 
-        title = cls.label('sale.sale')
-        return dh.build_document(action, title, body_nodes)
+        return body_nodes

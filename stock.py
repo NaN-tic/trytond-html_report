@@ -9,7 +9,6 @@ from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import DualRecord, HTMLReportMixin
 from trytond.modules.html_report.dominate_report import DominateReportMixin
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
-from trytond.modules.html_report import dominate_helpers as dh
 
 
 class ShipmentOutReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
@@ -254,7 +253,7 @@ class StockReportMixin(DominateReportMixin):
         company = record.company
         header = div()
         with header:
-            link(rel='stylesheet', href=dh._base_css_href())
+            link(rel='stylesheet', href=cls._base_css_href())
             with header_tag(id='header'):
                 with table():
                     with tr():
@@ -281,7 +280,7 @@ class StockReportMixin(DominateReportMixin):
         company = record.company
         footer = div()
         with footer:
-            link(rel='stylesheet', href=dh._base_css_href())
+            link(rel='stylesheet', href=cls._base_css_href())
             with footer_tag(id='footer', align='center'):
                 cls.show_footer(company)
         return footer
@@ -705,7 +704,7 @@ class StockInventoryReport(StockReportMixin, metaclass=PoolMeta):
             record = records[0]
         header = div()
         with header:
-            link(rel='stylesheet', href=dh._base_css_href())
+            link(rel='stylesheet', href=cls._base_css_href())
             with header_tag(id='header'):
                 with table():
                     with tr():
@@ -726,12 +725,15 @@ class StockInventoryReport(StockReportMixin, metaclass=PoolMeta):
         return header
 
     @classmethod
-    def main(cls, action, record=None, records=None, data=None):
+    def title(cls, action, record=None, records=None, data=None):
+        return cls.label('stock.inventory')
+
+    @classmethod
+    def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
         body_nodes = [cls._show_inventory_lines(record)]
-        title = cls.label('stock.inventory')
-        return dh.build_document(action, title, body_nodes)
+        return body_nodes
 
 
 class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
@@ -773,7 +775,11 @@ class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
         return cls._footer(record)
 
     @classmethod
-    def main(cls, action, record=None, records=None, data=None):
+    def title(cls, action, record=None, records=None, data=None):
+        return cls.label('stock.shipment.out')
+
+    @classmethod
+    def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
         body_nodes = [cls._show_stock_moves(record, valued=False)]
@@ -783,8 +789,7 @@ class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
             body_nodes.append(h4(cls.label(
                 record.raw.__name__, 'comment')))
             body_nodes.append(p(raw(record.render.comment)))
-        title = cls.label('stock.shipment.out')
-        return dh.build_document(action, title, body_nodes)
+        return body_nodes
 
 
 class ValuedDeliveryNoteReport(DeliveryNoteReport, metaclass=PoolMeta):
@@ -796,7 +801,7 @@ class ValuedDeliveryNoteReport(DeliveryNoteReport, metaclass=PoolMeta):
             record = records[0]
         last_footer = div()
         with last_footer:
-            link(rel='stylesheet', href=dh._base_css_href())
+            link(rel='stylesheet', href=cls._base_css_href())
             with div(
                     id='last-footer',
                     align='center',
@@ -811,7 +816,7 @@ class ValuedDeliveryNoteReport(DeliveryNoteReport, metaclass=PoolMeta):
         return last_footer
 
     @classmethod
-    def main(cls, action, record=None, records=None, data=None):
+    def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
         body_nodes = [cls._show_stock_moves(record, valued=True)]
@@ -821,8 +826,7 @@ class ValuedDeliveryNoteReport(DeliveryNoteReport, metaclass=PoolMeta):
             body_nodes.append(h4(cls.label(
                 record.raw.__name__, 'comment')))
             body_nodes.append(p(raw(record.render.comment)))
-        title = cls.label('stock.shipment.out')
-        return dh.build_document(action, title, body_nodes)
+        return body_nodes
 
 
 class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
@@ -866,13 +870,16 @@ class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
         return cls._footer(record)
 
     @classmethod
-    def main(cls, action, record=None, records=None, data=None):
+    def title(cls, action, record=None, records=None, data=None):
+        return cls.label('stock.shipment.out')
+
+    @classmethod
+    def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
         moves = record.inventory_moves or record.outgoing_moves
         body_nodes = [cls._show_picking_moves(moves, record.raw.show_lots)]
-        title = cls.label('stock.shipment.out')
-        return dh.build_document(action, title, body_nodes)
+        return body_nodes
 
 
 class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
@@ -924,13 +931,16 @@ class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
         return cls._footer(record)
 
     @classmethod
-    def main(cls, action, record=None, records=None, data=None):
+    def title(cls, action, record=None, records=None, data=None):
+        return cls.label('stock.shipment.out')
+
+    @classmethod
+    def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
         body_nodes = [cls._show_internal_picking_moves(
             record, record.raw.show_lots)]
-        title = cls.label('stock.shipment.out')
-        return dh.build_document(action, title, body_nodes)
+        return body_nodes
 
 
 class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
@@ -964,7 +974,11 @@ class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
         return cls._footer(record)
 
     @classmethod
-    def main(cls, action, record=None, records=None, data=None):
+    def title(cls, action, record=None, records=None, data=None):
+        return cls.label('stock.shipment.in.return')
+
+    @classmethod
+    def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
         body_nodes = [cls._show_customer_return_stock_moves(
@@ -978,15 +992,14 @@ class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
                 record.raw.__name__, 'comment')))
             body_nodes.append(br())
             body_nodes.append(raw(record.render.comment))
-        title = cls.label('stock.shipment.in.return')
-        return dh.build_document(action, title, body_nodes)
+        return body_nodes
 
 
 class RefundNoteReport(CustomerRefundNoteReport, metaclass=PoolMeta):
     __name__ = 'stock.shipment.in.refund_note'
 
     @classmethod
-    def main(cls, action, record=None, records=None, data=None):
+    def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
         body_nodes = [cls._show_return_stock_moves(record, valued=False)]
@@ -999,8 +1012,7 @@ class RefundNoteReport(CustomerRefundNoteReport, metaclass=PoolMeta):
                 record.raw.__name__, 'comment')))
             body_nodes.append(br())
             body_nodes.append(raw(record.render.comment))
-        title = cls.label('stock.shipment.in.return')
-        return dh.build_document(action, title, body_nodes)
+        return body_nodes
 
 
 class SupplierRestockingListReport(StockReportMixin, metaclass=PoolMeta):
@@ -1011,12 +1023,15 @@ class SupplierRestockingListReport(StockReportMixin, metaclass=PoolMeta):
         return DominateReportMixin._get_language(record)
 
     @classmethod
-    def main(cls, action, record=None, records=None, data=None):
+    def title(cls, action, record=None, records=None, data=None):
+        return cls.label('stock.shipment.in')
+
+    @classmethod
+    def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
         body_nodes = [
             cls._show_restocking_list_info(record),
             cls._show_restocking_list_moves(record),
         ]
-        title = cls.label('stock.shipment.in')
-        return dh.build_document(action, title, body_nodes)
+        return body_nodes

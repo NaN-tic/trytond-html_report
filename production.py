@@ -7,7 +7,6 @@ from trytond.pool import PoolMeta
 from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.dominate_report import DominateReportMixin
-from trytond.modules.html_report import dominate_helpers as dh
 
 
 class Production(HTMLPartyInfoMixin, metaclass=PoolMeta):
@@ -211,7 +210,7 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
         company = record.company
         header = div()
         with header:
-            link(rel='stylesheet', href=dh._base_css_href())
+            link(rel='stylesheet', href=cls._base_css_href())
             with header_tag(id='header'):
                 with table():
                     with tr():
@@ -234,13 +233,17 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
         company = record.company
         footer = div()
         with footer:
-            link(rel='stylesheet', href=dh._base_css_href())
+            link(rel='stylesheet', href=cls._base_css_href())
             with footer_tag(id='footer', align='center'):
                 cls.show_footer(company)
         return footer
 
     @classmethod
-    def main(cls, action, record=None, records=None, data=None):
+    def title(cls, action, record=None, records=None, data=None):
+        return cls.label('production')
+
+    @classmethod
+    def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
         body_nodes = []
@@ -265,5 +268,4 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
         body_nodes.append(cls._show_input_moves(record))
         if getattr(record.raw, 'route', None):
             body_nodes.append(cls._show_operations(record.operations))
-        title = cls.label('production')
-        return dh.build_document(action, title, body_nodes)
+        return body_nodes
