@@ -197,11 +197,9 @@ class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
         return footer
 
     @classmethod
-    def last_footer(cls, action, record=None, records=None,
-            data=None):
+    def last_footer(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        simplified = action and 'simplified' in action.report_name
         last_footer = div()
         with last_footer:
             link(rel='stylesheet', href=cls._base_css_href())
@@ -216,18 +214,16 @@ class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
                         with td():
                             cls.show_payment_info(record)
                         with td():
-                            if not simplified:
-                                cls.show_totals(record)
+                            cls.show_totals(record)
         return last_footer
 
+    @classmethod
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        simplified = action and 'simplified' in action.report_name
         container = div()
         with container:
-            container.add(cls._show_purchase_lines(
-                record, simplified=simplified))
+            container.add(cls._show_purchase_lines(record))
             if record.raw.comment:
                 h4(cls.label('purchase.purchase', 'comment'))
                 p(raw(record.render.comment))
@@ -239,19 +235,30 @@ class PurchaseSimplifiedReport(DominateReportMixin, metaclass=PoolMeta):
     __name__ = 'purchase.purchase.simplified'
 
     @classmethod
+    def _show_purchase_lines(cls, document, simplified=False):
+        # Force simplified to True as the report is for simplified version of
+        # the document
+        return PurchaseReport._show_purchase_lines(document, simplified=True)
+
+    @classmethod
     def body(cls, action, record=None, records=None, data=None):
-        return PurchaseReport.body(action, record=record,
-            records=records, data=data)
+        return PurchaseReport.body(action, record=record, records=records,
+            data=data)
 
     @classmethod
     def header(cls, action, record=None, records=None, data=None):
-        return PurchaseReport.header(action, record=record,
-            records=records, data=data)
+        return PurchaseReport.header(action, record=record, records=records,
+            data=data)
 
     @classmethod
-    def footer(cls, action, record=None, records=None, data=None):
-        return PurchaseReport.footer(action, record=record,
-            records=records, data=data)
+    def footer(cls, action, record=None, records=None, data=None, simplified=False):
+        return PurchaseReport.footer(action, record=record, records=records,
+            data=data)
+
+    @classmethod
+    def show_totals(cls, record):
+        # Hide totals in simplified report
+        return
 
     @classmethod
     def last_footer(cls, action, record=None, records=None, data=None):
