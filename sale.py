@@ -230,6 +230,7 @@ class SaleReport(DominateReportMixin, metaclass=PoolMeta):
                             cls.show_totals(record)
         return last_footer
 
+    @classmethod
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]

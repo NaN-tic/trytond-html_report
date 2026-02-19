@@ -724,6 +724,7 @@ class StockInventoryReport(StockReportMixin, metaclass=PoolMeta):
                         td('')
         return header
 
+    @classmethod
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
@@ -771,6 +772,7 @@ class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
             record = records[0]
         return cls._footer(record)
 
+    @classmethod
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
@@ -863,6 +865,7 @@ class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
             record = records[0]
         return cls._footer(record)
 
+    @classmethod
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
@@ -921,6 +924,7 @@ class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
             record = records[0]
         return cls._footer(record)
 
+    @classmethod
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
@@ -961,6 +965,7 @@ class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
             record = records[0]
         return cls._footer(record)
 
+    @classmethod
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
@@ -1007,6 +1012,7 @@ class SupplierRestockingListReport(StockReportMixin, metaclass=PoolMeta):
     def _get_language(cls, record):
         return DominateReportMixin._get_language(record)
 
+    @classmethod
     def body(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
