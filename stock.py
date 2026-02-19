@@ -286,7 +286,7 @@ class StockReportMixin(DominateReportMixin):
         return footer
 
     @classmethod
-    def _show_stock_moves(cls, document, valued=False):
+    def show_stock_moves(cls, document, valued=False):
         moves_table = table(style='width:100%;')
         with moves_table:
             with thead():
@@ -387,7 +387,7 @@ class StockReportMixin(DominateReportMixin):
         return moves_table
 
     @classmethod
-    def _show_picking_moves(cls, moves, show_lots):
+    def show_picking_moves(cls, moves, show_lots):
         moves_table = table(style='width:100%;')
         with moves_table:
             with thead():
@@ -423,7 +423,7 @@ class StockReportMixin(DominateReportMixin):
         return moves_table
 
     @classmethod
-    def _show_internal_picking_moves(cls, record, show_lots):
+    def show_internal_picking_moves(cls, record, show_lots):
         moves = record.incoming_moves or record.moves
         moves_table = table(style='width:100%;')
         with moves_table:
@@ -459,7 +459,7 @@ class StockReportMixin(DominateReportMixin):
         return moves_table
 
     @classmethod
-    def _show_customer_return_stock_moves(cls, document, valued=False):
+    def show_customer_return_stock_moves(cls, document, valued=False):
         show_lots = document.raw.show_lots
         show_expiration = False
         if show_lots and document.incoming_moves:
@@ -536,7 +536,7 @@ class StockReportMixin(DominateReportMixin):
         return moves_table
 
     @classmethod
-    def _show_return_stock_moves(cls, document, valued=False):
+    def show_return_stock_moves(cls, document, valued=False):
         show_lots = document.raw.show_lots
         show_expiration = False
         if show_lots and document.moves:
@@ -610,7 +610,7 @@ class StockReportMixin(DominateReportMixin):
         return moves_table
 
     @classmethod
-    def _show_restocking_list_info(cls, record):
+    def show_restocking_list_info(cls, record):
         title = cls.label(record.raw.__name__)
         container = div()
         with container:
@@ -634,7 +634,7 @@ class StockReportMixin(DominateReportMixin):
         return container
 
     @classmethod
-    def _show_restocking_list_moves(cls, shipment):
+    def show_restocking_list_moves(cls, shipment):
         moves = (shipment.incoming_moves if
             shipment.warehouse_input == shipment.warehouse_storage
             else shipment.inventory_moves)
@@ -673,7 +673,7 @@ class StockReportMixin(DominateReportMixin):
         return moves_table
 
     @classmethod
-    def _show_inventory_lines(cls, inventory):
+    def show_inventory_lines(cls, inventory):
         lines_table = table(style='width:100%;')
         with lines_table:
             with thead():
@@ -730,7 +730,7 @@ class StockInventoryReport(StockReportMixin, metaclass=PoolMeta):
             record = records[0]
         container = div()
         with container:
-            container.add(cls._show_inventory_lines(record))
+            container.add(cls.show_inventory_lines(record))
         return container
 
 
@@ -738,7 +738,7 @@ class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.out.delivery_note'
 
     @classmethod
-    def _document_info(cls, record):
+    def show_document_info(cls, record):
         title = cls.label(record.raw.__name__)
         document_date = (record.render.effective_date
             if getattr(record.raw, 'effective_date', None) else '')
@@ -764,7 +764,7 @@ class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
     def header(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        return cls._header_with_document_info(record, cls._document_info(record))
+        return cls._header_with_document_info(record, cls.show_document_info(record))
 
     @classmethod
     def footer(cls, action, record=None, records=None, data=None):
@@ -778,7 +778,7 @@ class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
             record = records[0]
         container = div()
         with container:
-            container.add(cls._show_stock_moves(record, valued=False))
+            container.add(cls.show_stock_moves(record, valued=False))
             if getattr(record.raw, 'carrier', None):
                 container.add(cls.show_carrier(record.carrier))
             if getattr(record.raw, 'comment', None):
@@ -816,7 +816,7 @@ class ValuedDeliveryNoteReport(DeliveryNoteReport, metaclass=PoolMeta):
             record = records[0]
         container = div()
         with container:
-            container.add(cls._show_stock_moves(record, valued=True))
+            container.add(cls.show_stock_moves(record, valued=True))
             if getattr(record.raw, 'carrier', None):
                 p(cls.show_carrier(record.carrier))
             if getattr(record.raw, 'comment', None):
@@ -829,7 +829,7 @@ class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.out.picking_note'
 
     @classmethod
-    def _document_info(cls, record):
+    def show_document_info(cls, record):
         title = cls.label(record.raw.__name__)
         document_date = (record.render.effective_date
             if getattr(record.raw, 'effective_date', None) else '')
@@ -857,7 +857,7 @@ class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
     def header(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        return cls._header_with_document_info(record, cls._document_info(record))
+        return cls._header_with_document_info(record, cls.show_document_info(record))
 
     @classmethod
     def footer(cls, action, record=None, records=None, data=None):
@@ -872,7 +872,7 @@ class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
         moves = record.inventory_moves or record.outgoing_moves
         container = div()
         with container:
-            container.add(cls._show_picking_moves(moves, record.raw.show_lots))
+            container.add(cls.show_picking_moves(moves, record.raw.show_lots))
         return container
 
 
@@ -880,7 +880,7 @@ class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.internal_picking_note'
 
     @classmethod
-    def _document_info(cls, record):
+    def show_document_info(cls, record):
         title = cls.label(record.raw.__name__)
         document_date = (record.render.effective_date
             if getattr(record.raw, 'effective_date', None) else '')
@@ -916,7 +916,7 @@ class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
     def header(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        return cls._header_with_document_info(record, cls._document_info(record))
+        return cls._header_with_document_info(record, cls.show_document_info(record))
 
     @classmethod
     def footer(cls, action, record=None, records=None, data=None):
@@ -930,7 +930,7 @@ class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
             record = records[0]
         container = div()
         with container:
-            container.add(cls._show_internal_picking_moves(
+            container.add(cls.show_internal_picking_moves(
                 record, record.raw.show_lots))
         return container
 
@@ -939,7 +939,7 @@ class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.out.refund_note'
 
     @classmethod
-    def _document_info(cls, record):
+    def show_document_info(cls, record):
         title = cls.label(record.raw.__name__)
         document_date = (record.render.effective_date
             if getattr(record.raw, 'effective_date', None) else '')
@@ -957,7 +957,7 @@ class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
     def header(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        return cls._header_with_document_info(record, cls._document_info(record))
+        return cls._header_with_document_info(record, cls.show_document_info(record))
 
     @classmethod
     def footer(cls, action, record=None, records=None, data=None):
@@ -971,7 +971,7 @@ class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
             record = records[0]
         container = div()
         with container:
-            container.add(cls._show_customer_return_stock_moves(
+            container.add(cls.show_customer_return_stock_moves(
                 record, valued=False))
             if getattr(record.raw, 'carrier', None):
                 container.add(cls.show_carrier(record.carrier))
@@ -993,7 +993,7 @@ class RefundNoteReport(CustomerRefundNoteReport, metaclass=PoolMeta):
             record = records[0]
         container = div()
         with container:
-            container.add(cls._show_return_stock_moves(record, valued=False))
+            container.add(cls.show_return_stock_moves(record, valued=False))
             if getattr(record.raw, 'carrier', None):
                 container.add(cls.show_carrier(record.carrier))
             if getattr(record.raw, 'comment', None):
@@ -1018,6 +1018,6 @@ class SupplierRestockingListReport(StockReportMixin, metaclass=PoolMeta):
             record = records[0]
         container = div()
         with container:
-            container.add(cls._show_restocking_list_info(record))
-            container.add(cls._show_restocking_list_moves(record))
+            container.add(cls.show_restocking_list_info(record))
+            container.add(cls.show_restocking_list_moves(record))
         return container

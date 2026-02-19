@@ -179,7 +179,7 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
         return groups
 
     @classmethod
-    def _show_invoice_lines(cls, document):
+    def show_invoice_lines(cls, document):
         lines_table = table(style='width:100%;')
         with lines_table:
             with thead():
@@ -293,7 +293,7 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
         return lines_table
 
     @classmethod
-    def _show_invoice_lines_simplified(cls, document):
+    def show_invoice_lines_simplified(cls, document):
         lines_table = table(cls='table borderless', width='100%')
         with lines_table:
             with thead():
@@ -326,7 +326,7 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
         return lines_table
 
     @classmethod
-    def _show_due_dates(cls, invoice, company):
+    def show_due_dates(cls, invoice, company):
         if not invoice.move or not invoice.move.lines:
             return raw('')
         lang = (invoice.party.lang and invoice.party.raw.lang
@@ -356,7 +356,7 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
         return due_table
 
     @classmethod
-    def _show_taxes(cls, invoice):
+    def show_taxes(cls, invoice):
         if not invoice.taxes:
             return raw('')
         container = div()
@@ -391,7 +391,7 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
         return container
 
     @classmethod
-    def _document_info(cls, record):
+    def show_document_info(cls, record):
         title = cls.label(record.raw.__name__)
         document_date = (record.raw.invoice_date
             and record.render.invoice_date)
@@ -471,7 +471,7 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
                             with td(style='width: 1%'):
                                 cls._tax_code(record)
                         with td():
-                            cls._document_info(record)
+                            cls.show_document_info(record)
                     with tr():
                         with td(cls='party_info'):
                             cls.show_company_info(company)
@@ -517,14 +517,14 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
                 with table(id='totals', cls='condensed'):
                     with tr():
                         with td():
-                            cls._show_taxes(record)
+                            cls.show_taxes(record)
                         with td(cls='right'):
                             cls.show_totals(record)
                     with tr():
                         with td():
                             cls.show_payment_info(record)
                         with td():
-                            cls._show_due_dates(record, company)
+                            cls.show_due_dates(record, company)
         return last_footer
 
     @classmethod
@@ -533,7 +533,7 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
             record = records[0]
         container = div()
         with container:
-            container.add(cls._show_invoice_lines(record))
+            container.add(cls.show_invoice_lines(record))
             if record.raw.comment:
                 h4(cls.label('account.invoice', 'comment'))
                 p(raw(record.render.comment))

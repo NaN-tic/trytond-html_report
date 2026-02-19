@@ -57,7 +57,7 @@ class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
         return record.company.raw.__class__.show_totals(record)
 
     @classmethod
-    def _show_purchase_lines(cls, document, simplified=False):
+    def show_purchase_lines(cls, document, simplified=False):
         lines_table = table(style='width:100%;')
         with lines_table:
             with thead():
@@ -134,7 +134,7 @@ class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
         return lines_table
 
     @classmethod
-    def _document_info(cls, record):
+    def show_document_info(cls, record):
         if record.raw.state in ('quotation', 'draft'):
             title = record.render.state
         else:
@@ -170,7 +170,7 @@ class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
                             if company.render.logo:
                                 img(cls='logo', src=company.render.logo)
                         with td():
-                            cls._document_info(record)
+                            cls.show_document_info(record)
                     with tr():
                         with td(cls='party_info'):
                             cls.show_company_info(company)
@@ -223,7 +223,7 @@ class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
             record = records[0]
         container = div()
         with container:
-            container.add(cls._show_purchase_lines(record))
+            container.add(cls.show_purchase_lines(record))
             if record.raw.comment:
                 h4(cls.label('purchase.purchase', 'comment'))
                 p(raw(record.render.comment))
@@ -235,10 +235,10 @@ class PurchaseSimplifiedReport(DominateReportMixin, metaclass=PoolMeta):
     __name__ = 'purchase.purchase.simplified'
 
     @classmethod
-    def _show_purchase_lines(cls, document, simplified=False):
+    def show_purchase_lines(cls, document, simplified=False):
         # Force simplified to True as the report is for simplified version of
         # the document
-        return PurchaseReport._show_purchase_lines(document, simplified=True)
+        return PurchaseReport.show_purchase_lines(document, simplified=True)
 
     @classmethod
     def body(cls, action, record=None, records=None, data=None):

@@ -68,7 +68,7 @@ class SaleReport(DominateReportMixin, metaclass=PoolMeta):
         return record.company.raw.__class__.show_totals(record)
 
     @classmethod
-    def _show_sale_lines(cls, document):
+    def show_sale_lines(cls, document):
         lines_table = table(style='width:100%;')
         with lines_table:
             with thead():
@@ -137,7 +137,7 @@ class SaleReport(DominateReportMixin, metaclass=PoolMeta):
         return lines_table
 
     @classmethod
-    def _document_info(cls, record, is_proforma=False):
+    def show_document_info(cls, record, is_proforma=False):
         if is_proforma:
             title = gettext('Proforma')
         else:
@@ -182,7 +182,7 @@ class SaleReport(DominateReportMixin, metaclass=PoolMeta):
                             if company.render.logo:
                                 img(cls='logo', src=company.render.logo)
                         with td():
-                            cls._document_info(record, is_proforma=is_proforma)
+                            cls.show_document_info(record, is_proforma=is_proforma)
                     with tr():
                         with td(cls='party_info'):
                             cls.show_company_info(company)
@@ -236,7 +236,7 @@ class SaleReport(DominateReportMixin, metaclass=PoolMeta):
             record = records[0]
         container = div()
         with container:
-            container.add(cls._show_sale_lines(record))
+            container.add(cls.show_sale_lines(record))
             if record.raw.comment:
                 h4(cls.label('sale.sale', 'comment'))
                 p(raw(record.render.comment))

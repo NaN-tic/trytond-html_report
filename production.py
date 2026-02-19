@@ -47,7 +47,7 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
         return company.raw.__class__.show_footer(company)
 
     @classmethod
-    def _document_info(cls, record):
+    def show_document_info(cls, record):
         title = cls.label(record.raw.__name__)
         document_date = (record.render.effective_date
             if getattr(record.raw, 'effective_date', None) else '')
@@ -65,7 +65,7 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
         return container
 
     @classmethod
-    def _show_output_moves(cls, production):
+    def show_output_moves(cls, production):
         moves_table = table(style='width:100%;')
         show_lots = production.raw.show_lots
         show_expiration = False
@@ -121,7 +121,7 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
         return moves_table
 
     @classmethod
-    def _show_input_moves(cls, production):
+    def show_input_moves(cls, production):
         moves_table = table(style='width:100%;')
         show_lots = production.raw.show_lots
         show_expiration = False
@@ -177,7 +177,7 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
         return moves_table
 
     @classmethod
-    def _show_operations(cls, operations):
+    def show_operations(cls, operations):
         ops_table = table(style='width:100%;')
         with ops_table:
             with thead():
@@ -218,7 +218,7 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
                             if company.render.logo:
                                 img(cls='logo', src=company.render.logo)
                         with td():
-                            cls._document_info(record)
+                            cls.show_document_info(record)
                     with tr():
                         with td(cls='party_info'):
                             cls.show_company_info(company)
@@ -260,10 +260,10 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
                             record.route.render.name))
                 container.add(product_container)
             h2(cls.label('production', 'outputs'))
-            container.add(cls._show_output_moves(record))
+            container.add(cls.show_output_moves(record))
             h2(cls.label('production', 'inputs'))
-            container.add(cls._show_input_moves(record))
+            container.add(cls.show_input_moves(record))
             if getattr(record.raw, 'route', None):
-                container.add(cls._show_operations(record.operations))
+                container.add(cls.show_operations(record.operations))
 
         return container
