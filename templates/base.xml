@@ -75,7 +75,7 @@
                 <field name="name">CSS</field>
                 <field name="type">macro</field>
                 <field name="sequence" eval="99"/>
-                <field name="filename">html_report/templates/base.css</field>
+                <field name="filename">html_report/base.css</field>
                 <field name="implements" ref="css_macro_signature"/>
         </record>
 

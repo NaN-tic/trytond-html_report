@@ -5,7 +5,8 @@ from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 from trytond.modules.html_report.dominate_report import DominateReportMixin
 from dominate.util import raw
 from dominate.tags import (div, footer as footer_tag, h1, h2, h4,
-    header as header_tag, img, link, p, strong, table, tbody, td, th, thead, tr)
+    header as header_tag, img, p, strong, style, table, tbody, td, th, thead,
+    tr)
 
 
 class Purchase(HTMLPartyInfoMixin, metaclass=PoolMeta):
@@ -162,7 +163,7 @@ class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
         company = record.company
         header = div()
         with header:
-            link(rel='stylesheet', href=cls._base_css_href())
+            style(raw(cls.css(action, record=record, records=records, data=data)))
             with header_tag(id='header'):
                 with table():
                     with tr():
@@ -191,7 +192,7 @@ class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
         company = record.company
         footer = div()
         with footer:
-            link(rel='stylesheet', href=cls._base_css_href())
+            style(raw(cls.css(action, record=record, records=records, data=data)))
             with footer_tag(id='footer', align='center'):
                 cls.show_footer(company)
         return footer
@@ -202,7 +203,7 @@ class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
             record = records[0]
         last_footer = div()
         with last_footer:
-            link(rel='stylesheet', href=cls._base_css_href())
+            style(raw(cls.css(action, record=record, records=records, data=data)))
             with div(
                     id='last-footer',
                     align='center',

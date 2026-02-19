@@ -7,6 +7,7 @@ from . import action
 from . import translation
 from . import template
 from . import engine
+from . import i18n
 from . import invoice
 from . import production
 from . import purchase
@@ -26,6 +27,7 @@ def register():
         template.Template,
         template.TemplateUsage,
         template.ReportTemplate,
+        i18n.Translation,
         module=module, type_='model')
     Pool.register(
         account_configuration.Configuration,
@@ -39,6 +41,9 @@ def register():
         module=module, type_='model', depends=['party'])
     Pool.register(
         translation.ReportTranslationSet,
+        i18n.TranslationSet,
+        i18n.TranslationClean,
+        i18n.TranslationUpdate,
         module=module, type_='wizard')
     Pool.register_mixin(engine.HTMLReportMixin, Report,
         module=module)

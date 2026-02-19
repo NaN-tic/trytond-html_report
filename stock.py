@@ -1,6 +1,7 @@
 from dominate.util import raw
 from dominate.tags import (br, div, footer as footer_tag, h1, h2, h3, h4,
-    header as header_tag, img, link, p, strong, table, tbody, td, th, thead, tr)
+    header as header_tag, img, p, strong, style, table, tbody, td, th, thead,
+    tr)
 
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
@@ -9,6 +10,7 @@ from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import DualRecord, HTMLReportMixin
 from trytond.modules.html_report.dominate_report import DominateReportMixin
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
+from .i18n import _
 
 
 class ShipmentOutReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
@@ -249,11 +251,12 @@ class StockReportMixin(DominateReportMixin):
         return super()._get_language(record)
 
     @classmethod
-    def _header_with_document_info(cls, record, document_info_node):
+    def _header_with_document_info(cls, action, record, document_info_node,
+            records=None, data=None):
         company = record.company
         header = div()
         with header:
-            link(rel='stylesheet', href=cls._base_css_href())
+            style(raw(cls.css(action, record=record, records=records, data=data)))
             with header_tag(id='header'):
                 with table():
                     with tr():
@@ -276,11 +279,11 @@ class StockReportMixin(DominateReportMixin):
         return header
 
     @classmethod
-    def _footer(cls, record):
+    def _footer(cls, action, record, records=None, data=None):
         company = record.company
         footer = div()
         with footer:
-            link(rel='stylesheet', href=cls._base_css_href())
+            style(raw(cls.css(action, record=record, records=records, data=data)))
             with footer_tag(id='footer', align='center'):
                 cls.show_footer(company)
         return footer
@@ -615,7 +618,7 @@ class StockReportMixin(DominateReportMixin):
         container = div()
         with container:
             p(record.company.render.rec_name)
-            h1('Restocking List', cls='title')
+            h1(_('Restocking List'), cls='title')
             h1('%s: %s' % (title,
                 record.render.number if record.raw.number else ''), cls='document')
             h2('%s: %s' % (
@@ -704,7 +707,7 @@ class StockInventoryReport(StockReportMixin, metaclass=PoolMeta):
             record = records[0]
         header = div()
         with header:
-            link(rel='stylesheet', href=cls._base_css_href())
+            style(raw(cls.css(action, record=record, records=records, data=data)))
             with header_tag(id='header'):
                 with table():
                     with tr():
@@ -745,7 +748,7 @@ class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
         container = div()
         with container:
             if record.raw.state not in ['assigned', 'picked', 'packed', 'done']:
-                h1('Draft', cls='document')
+                h1(_('Draft'), cls='document')
             h1('%s: %s' % (title,
                 record.render.number if record.raw.number else ''),
                 cls='document')
@@ -764,13 +767,15 @@ class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
     def header(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        return cls._header_with_document_info(record, cls.show_document_info(record))
+        return cls._header_with_document_info(
+            action, record, cls.show_document_info(record),
+            records=records, data=data)
 
     @classmethod
     def footer(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        return cls._footer(record)
+        return cls._footer(action, record, records=records, data=data)
 
     @classmethod
     def body(cls, action, record=None, records=None, data=None):
@@ -796,7 +801,7 @@ class ValuedDeliveryNoteReport(DeliveryNoteReport, metaclass=PoolMeta):
             record = records[0]
         last_footer = div()
         with last_footer:
-            link(rel='stylesheet', href=cls._base_css_href())
+            style(raw(cls.css(action, record=record, records=records, data=data)))
             with div(
                     id='last-footer',
                     align='center',
@@ -840,7 +845,7 @@ class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
         container = div()
         with container:
             if record.raw.state not in ['assigned', 'picked', 'packed', 'done']:
-                h1('Draft', cls='document')
+                h1(_('Draft'), cls='document')
             h1('%s: %s' % (title,
                 record.render.number if record.raw.number else ''),
                 cls='document')
@@ -857,13 +862,15 @@ class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
     def header(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        return cls._header_with_document_info(record, cls.show_document_info(record))
+        return cls._header_with_document_info(
+            action, record, cls.show_document_info(record),
+            records=records, data=data)
 
     @classmethod
     def footer(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        return cls._footer(record)
+        return cls._footer(action, record, records=records, data=data)
 
     @classmethod
     def body(cls, action, record=None, records=None, data=None):
@@ -891,7 +898,7 @@ class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
         container = div()
         with container:
             if record.raw.state not in ['assigned', 'picked', 'packed', 'done']:
-                h1('Draft', cls='document')
+                h1(_('Draft'), cls='document')
             h1('%s: %s' % (title,
                 record.render.number if record.raw.number else ''),
                 cls='document')
@@ -916,13 +923,15 @@ class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
     def header(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        return cls._header_with_document_info(record, cls.show_document_info(record))
+        return cls._header_with_document_info(
+            action, record, cls.show_document_info(record),
+            records=records, data=data)
 
     @classmethod
     def footer(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        return cls._footer(record)
+        return cls._footer(action, record, records=records, data=data)
 
     @classmethod
     def body(cls, action, record=None, records=None, data=None):
@@ -957,13 +966,15 @@ class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
     def header(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        return cls._header_with_document_info(record, cls.show_document_info(record))
+        return cls._header_with_document_info(
+            action, record, cls.show_document_info(record),
+            records=records, data=data)
 
     @classmethod
     def footer(cls, action, record=None, records=None, data=None):
         if record is None and records:
             record = records[0]
-        return cls._footer(record)
+        return cls._footer(action, record, records=records, data=data)
 
     @classmethod
     def body(cls, action, record=None, records=None, data=None):

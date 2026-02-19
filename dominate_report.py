@@ -1,10 +1,9 @@
 from io import BytesIO
-import os
 import zipfile
 
 from dominate import document
 from dominate.util import raw
-from dominate.tags import body as body_tag, link, meta, style
+from dominate.tags import body as body_tag, meta, style
 
 from trytond.pool import Pool
 from trytond.tools import file_open, slugify
@@ -40,7 +39,8 @@ class DominateReportMixin(HTMLReportMixin):
             body_nodes = []
         if not isinstance(body_nodes, (list, tuple)):
             body_nodes = [body_nodes]
-        return cls.build_document(action, title, body_nodes)
+        return cls.build_document(action, title, body_nodes,
+            record=record, records=records, data=data)
 
     @classmethod
     def header(cls, action, record=None, records=None, data=None):
@@ -61,75 +61,22 @@ class DominateReportMixin(HTMLReportMixin):
         return node.render() if hasattr(node, 'render') else str(node)
 
     @classmethod
-    def _module_path(cls, name):
-        module, path = name.split('/', 1)
-        with file_open(os.path.join(module, path)) as f:
-            return 'file://' + f.name
+    def css(cls, action, record=None, records=None, data=None):
+        with file_open('html_report/base.css') as f:
+            return f.read()
 
     @classmethod
-    def _base_css_href(cls):
-        return cls._module_path('html_report/templates/base.css')
-
-    @classmethod
-    def _css_extension(cls, action):
-        if not action:
-            return None
-        Signature = Pool().get('html.template.signature')
-        Template = Pool().get('html.template')
-
-        signatures = Signature.search([('name', '=', 'show_css_extension()')],
-            limit=1)
-        if not signatures:
-            return None
-        signature = signatures[0]
-
-        if action:
-            for report_template in action.html_templates:
-                if report_template.signature == signature:
-                    if report_template.template_used:
-                        return report_template.template_used.content or ''
-
-        templates = Template.search([('implements', '=', signature)], limit=1)
-        return templates[0].content if templates else None
-
-    @classmethod
-    def _css_override(cls, action):
-        if not action:
-            return None
-        Signature = Pool().get('html.template.signature')
-        Template = Pool().get('html.template')
-
-        signatures = Signature.search([('name', '=', 'show_css()')], limit=1)
-        if not signatures:
-            return None
-        signature = signatures[0]
-
-        if action:
-            for report_template in action.html_templates:
-                if report_template.signature == signature:
-                    if report_template.template_used:
-                        return report_template.template_used.content or ''
-
-        templates = Template.search([('implements', '=', signature)], limit=1)
-        return templates[0].content if templates else None
-
-    @classmethod
-    def build_document(cls, action, title, body_nodes):
+    def build_document(cls, action, title, body_nodes, record=None,
+            records=None, data=None):
         doc = document(title=title)
         doc['lang'] = 'en'
         with doc.head:
             meta(charset='utf-8')
             meta(name='description', content='')
             meta(name='author', content='Nantic')
-            css_override = cls._css_override(action)
-            if css_override:
-                style(raw(css_override))
-            else:
-                link(rel='stylesheet', href=cls._base_css_href(),
-                    type='text/css')
-            css_ext = cls._css_extension(action)
-            if css_ext:
-                style(raw(css_ext))
+            css = cls.css(action, record=record, records=records, data=data)
+            if css:
+                style(raw(css))
         with doc:
             with body_tag(id='base', cls='main-report') as body_node:
                 for node in body_nodes:
