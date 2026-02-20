@@ -232,11 +232,14 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
                                     key2_record.render.number)))
                                 if key2_record.render.reference:
                                     header_cell.add(raw(' / %s' % key2_record.render.reference))
-                                if key2_record.render.sale_date:
-                                    header_cell.add(raw(' %s: %s' % (
-                                        cls.label(
-                                            key2_record.raw.__name__, 'sale_date'),
-                                        key2_record.render.sale_date)))
+                                if hasattr(key2_record.render, 'sale_date'):
+                                    sale_date = key2_record.render.sale_date
+                                    if sale_date:
+                                        header_cell.add(raw(' %s: %s' % (
+                                            cls.label(
+                                                key2_record.raw.__name__,
+                                                'sale_date'),
+                                            sale_date)))
                         for line in origin_lines:
                             line = DualRecord(line)
                             if line.raw.type == 'line':
