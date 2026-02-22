@@ -1,9 +1,9 @@
-from trytond.pool import Pool, PoolMeta
+from trytond.pool import PoolMeta
 from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
-from trytond.modules.html_report.engine import HTMLReportMixin
 from trytond.modules.html_report.dominate_report import DominateReportMixin
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
+from trytond.modules.html_report.tools import label
 from .i18n import _
 from dominate.util import raw
 from dominate.tags import (div, footer as footer_tag, h1, h2, h3, h4,
@@ -11,7 +11,7 @@ from dominate.tags import (div, footer as footer_tag, h1, h2, h3, h4,
     tr)
 
 
-class Sale(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
+class Sale(HTMLPartyInfoMixin, metaclass=PoolMeta):
     __name__ = 'sale.sale'
 
     @classmethod
@@ -29,9 +29,7 @@ class Sale(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
             or super().get_html_second_address(name))
 
     def get_html_second_address_label(self, name):
-        pool = Pool()
-        Report = pool.get('sale.sale')
-        return Report.label(self.__name__, 'shipment_address')
+        return label(self.__name__, 'shipment_address')
 
 
 class SaleLineDiscount(HTMLDiscountReportMixin, metaclass=PoolMeta):

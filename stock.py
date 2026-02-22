@@ -7,13 +7,14 @@ from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
-from trytond.modules.html_report.engine import DualRecord, HTMLReportMixin
+from trytond.modules.html_report.engine import DualRecord
+from trytond.modules.html_report.tools import label
 from trytond.modules.html_report.dominate_report import DominateReportMixin
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 from .i18n import _
 
 
-class ShipmentOutReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
+class ShipmentOutReturn(HTMLPartyInfoMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.out.return'
     show_lots = fields.Function(fields.Boolean('Show Lots'),
         'get_show_lots')
@@ -37,12 +38,10 @@ class ShipmentOutReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta)
         return self.contact_address and self.contact_address.id
 
     def get_html_second_address_label(self, name):
-        pool = Pool()
-        Report = pool.get('stock.shipment.out.return')
-        return Report.label(self.__name__, "contact_address")
+        return label(self.__name__, "contact_address")
 
 
-class ShipmentIn(HTMLReportMixin, metaclass=PoolMeta):
+class ShipmentIn(metaclass=PoolMeta):
     __name__ = 'stock.shipment.in'
     show_lots = fields.Function(fields.Boolean('Show Lots'),
         'get_show_lots')
@@ -54,7 +53,7 @@ class ShipmentIn(HTMLReportMixin, metaclass=PoolMeta):
         return False
 
 
-class ShipmentInReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
+class ShipmentInReturn(HTMLPartyInfoMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.in.return'
     show_lots = fields.Function(fields.Boolean('Show Lots'),
         'get_show_lots')
@@ -78,12 +77,10 @@ class ShipmentInReturn(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
         return self.delivery_address and self.delivery_address.id
 
     def get_html_second_address_label(self, name):
-        pool = Pool()
-        Report = pool.get('stock.shipment.in.return')
-        return Report.label(self.__name__, "delivery_address")
+        return label(self.__name__, "delivery_address")
 
 
-class ShipmentOut(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
+class ShipmentOut(HTMLPartyInfoMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.out'
     sorted_lines = fields.Function(fields.Many2Many('stock.move', None, None,
         'Sorted Lines'), 'get_sorted_lines')
@@ -106,9 +103,7 @@ class ShipmentOut(HTMLPartyInfoMixin, HTMLReportMixin, metaclass=PoolMeta):
         return self.delivery_address and self.delivery_address.id
 
     def get_html_second_address_label(self, name):
-        pool = Pool()
-        Report = pool.get('stock.shipment.out')
-        return Report.label(self.__name__, "delivery_address")
+        return label(self.__name__, "delivery_address")
 
     def get_sorted_lines(self, name):
         lines = [x for x in self.outgoing_moves]
@@ -199,7 +194,7 @@ class ShipmentInternal(HTMLPartyInfoMixin, metaclass=PoolMeta):
         return False
 
 
-class StockInventory(HTMLReportMixin, metaclass=PoolMeta):
+class StockInventory(metaclass=PoolMeta):
     __name__ = 'stock.inventory'
 
 
@@ -341,8 +336,7 @@ class StockReportMixin(DominateReportMixin):
                                     item.render.number
                                     if getattr(item.raw, 'number', None) else '')
                                 if item_date:
-                                    text += ' %s : %s' % (
-                                        label_date, item_date)
+                                    text += f' {label_date}: {item_date}'
                                 lines.append(text)
                             cell.add(raw('<br/>'.join(lines)))
                     for move in document.sorted_lines:
@@ -548,7 +542,7 @@ class StockReportMixin(DominateReportMixin):
         if show_lots and document.moves:
             show_expiration = bool(getattr(
                 document.moves[0].raw, 'expiration_date', None))
-        moves_table = table(style='width:100%;')
+        moves_table = table(style='width: 100%;')
         with moves_table:
             with thead():
                 with tr():
