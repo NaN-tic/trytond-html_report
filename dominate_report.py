@@ -18,40 +18,38 @@ class DominateReportMixin(HTMLReportMixin):
     _single = False
 
     @classmethod
-    def body(cls, action, record=None, records=None, data=None):
+    def body(cls, action, data, records):
         raise NotImplementedError
 
     @classmethod
-    def title(cls, action, record=None, records=None, data=None):
+    def title(cls, action, data, records):
+        record = records[0] if records else None
         if record:
             return cls.label(record.raw.__name__)
-        if records:
-            return cls.label(records[0].raw.__name__)
         if action and action.model:
             return cls.label(action.model)
         return action.name if action else ''
 
     @classmethod
-    def main(cls, action, record=None, records=None, data=None):
-        body_nodes = cls.body(action, record=record, records=records, data=data)
-        title = cls.title(action, record=record, records=records, data=data)
+    def main(cls, action, data, records):
+        body_nodes = cls.body(action, data, records)
+        title = cls.title(action, data, records)
         if body_nodes is None:
             body_nodes = []
         if not isinstance(body_nodes, (list, tuple)):
             body_nodes = [body_nodes]
-        return cls.build_document(action, title, body_nodes,
-            record=record, records=records, data=data)
+        return cls.build_document(action, data, records, title, body_nodes)
 
     @classmethod
-    def header(cls, action, record=None, records=None, data=None):
+    def header(cls, action, data, records):
         return None
 
     @classmethod
-    def footer(cls, action, record=None, records=None, data=None):
+    def footer(cls, action, data, records):
         return None
 
     @classmethod
-    def last_footer(cls, action, record=None, records=None, data=None):
+    def last_footer(cls, action, data, records):
         return None
 
     @classmethod
@@ -61,20 +59,19 @@ class DominateReportMixin(HTMLReportMixin):
         return node.render() if hasattr(node, 'render') else str(node)
 
     @classmethod
-    def css(cls, action, record=None, records=None, data=None):
+    def css(cls, action, data, records):
         with file_open('html_report/base.css') as f:
             return f.read()
 
     @classmethod
-    def build_document(cls, action, title, body_nodes, record=None,
-            records=None, data=None):
+    def build_document(cls, action, data, records, title, body_nodes):
         doc = document(title=title)
         doc['lang'] = 'en'
         with doc.head:
             meta(charset='utf-8')
             meta(name='description', content='')
             meta(name='author', content='Nantic')
-            css = cls.css(action, record=record, records=records, data=data)
+            css = cls.css(action, data, records)
             if css:
                 style(raw(css))
         with doc:
@@ -89,7 +86,8 @@ class DominateReportMixin(HTMLReportMixin):
         return doc
 
     @classmethod
-    def _get_language(cls, record):
+    def _get_language(cls, records):
+        record = records[0] if records else None
         if record:
             if getattr(record.raw, 'party', None):
                 party = record.party
@@ -103,12 +101,9 @@ class DominateReportMixin(HTMLReportMixin):
 
     @classmethod
     def _refresh_records(cls, records):
-        if isinstance(records, DualRecord):
-            records.refresh()
-        elif isinstance(records, (tuple, list)):
-            for record in records:
-                if isinstance(record, DualRecord):
-                    record.refresh()
+        for record in records:
+            if isinstance(record, DualRecord):
+                record.refresh()
 
     @classmethod
     def _execute_dominate_report(cls, records, data, action, side_margin=2,
@@ -118,17 +113,17 @@ class DominateReportMixin(HTMLReportMixin):
         if render_single:
             documents = []
             for record in records:
-                language = cls._get_language(record)
+                language = cls._get_language([record])
                 with Transaction().set_context(language=language):
                     cls._refresh_records([record])
                     content = cls._render_node(cls.main(
-                        action, record=record, records=[record], data=data))
+                        action, data, [record]))
                     header = cls._render_node(cls.header(
-                        action, record=record, records=[record], data=data))
+                        action, data, [record]))
                     footer = cls._render_node(cls.footer(
-                        action, record=record, records=[record], data=data))
+                        action, data, [record]))
                     last_footer = cls._render_node(cls.last_footer(
-                        action, record=record, records=[record], data=data))
+                        action, data, [record]))
 
                 if extension == 'pdf':
                     documents.append(PdfGenerator(
@@ -148,17 +143,17 @@ class DominateReportMixin(HTMLReportMixin):
             else:
                 document = ''.join(documents)
         else:
-            language = cls._get_language(records[0] if records else None)
+            language = cls._get_language(records)
             with Transaction().set_context(language=language):
                 cls._refresh_records(records)
                 content = cls._render_node(cls.main(
-                    action, records=records, data=data))
+                    action, data, records))
                 header = cls._render_node(cls.header(
-                    action, records=records, data=data))
+                    action, data, records))
                 footer = cls._render_node(cls.footer(
-                    action, records=records, data=data))
+                    action, data, records))
                 last_footer = cls._render_node(cls.last_footer(
-                    action, records=records, data=data))
+                    action, data, records))
             if extension == 'pdf':
                 document = PdfGenerator(
                     content,

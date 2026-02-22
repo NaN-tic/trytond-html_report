@@ -157,13 +157,12 @@ class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
         return container
 
     @classmethod
-    def header(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def header(cls, action, data, records):
+        record, = records
         company = record.company
         header = div()
         with header:
-            style(raw(cls.css(action, record=record, records=records, data=data)))
+            style(raw(cls.css(action, data, records)))
             with header_tag(id='header'):
                 with table():
                     with tr():
@@ -186,24 +185,22 @@ class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
         return header
 
     @classmethod
-    def footer(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def footer(cls, action, data, records):
+        record, = records
         company = record.company
         footer = div()
         with footer:
-            style(raw(cls.css(action, record=record, records=records, data=data)))
+            style(raw(cls.css(action, data, records)))
             with footer_tag(id='footer', align='center'):
                 cls.show_footer(company)
         return footer
 
     @classmethod
-    def last_footer(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def last_footer(cls, action, data, records):
+        record, = records
         last_footer = div()
         with last_footer:
-            style(raw(cls.css(action, record=record, records=records, data=data)))
+            style(raw(cls.css(action, data, records)))
             with div(
                     id='last-footer',
                     align='center',
@@ -219,9 +216,8 @@ class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
         return last_footer
 
     @classmethod
-    def body(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def body(cls, action, data, records):
+        record, = records
         container = div()
         with container:
             container.add(cls.show_purchase_lines(record))
@@ -242,19 +238,16 @@ class PurchaseSimplifiedReport(DominateReportMixin, metaclass=PoolMeta):
         return PurchaseReport.show_purchase_lines(document, simplified=True)
 
     @classmethod
-    def body(cls, action, record=None, records=None, data=None):
-        return PurchaseReport.body(action, record=record, records=records,
-            data=data)
+    def body(cls, action, data, records):
+        return PurchaseReport.body(action, data, records)
 
     @classmethod
-    def header(cls, action, record=None, records=None, data=None):
-        return PurchaseReport.header(action, record=record, records=records,
-            data=data)
+    def header(cls, action, data, records):
+        return PurchaseReport.header(action, data, records)
 
     @classmethod
-    def footer(cls, action, record=None, records=None, data=None, simplified=False):
-        return PurchaseReport.footer(action, record=record, records=records,
-            data=data)
+    def footer(cls, action, data, records):
+        return PurchaseReport.footer(action, data, records)
 
     @classmethod
     def show_totals(cls, record):
@@ -262,6 +255,5 @@ class PurchaseSimplifiedReport(DominateReportMixin, metaclass=PoolMeta):
         return
 
     @classmethod
-    def last_footer(cls, action, record=None, records=None, data=None):
-        return PurchaseReport.last_footer(action, record=record,
-            records=records, data=data)
+    def last_footer(cls, action, data, records):
+        return PurchaseReport.last_footer(action, data, records)

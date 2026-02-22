@@ -455,13 +455,12 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
         return record.company.raw.__class__.show_totals(record)
 
     @classmethod
-    def header(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def header(cls, action, data, records):
+        record, = records
         company = record.company
         header = div()
         with header:
-            style(raw(cls.css(action, record=record, records=records, data=data)))
+            style(raw(cls.css(action, data, records)))
             if getattr(record.raw, 'aeat_qr_url', None):
                 style(raw('.company_logo {\n    width: 15%;\n  }'))
             with header_tag(id='header'):
@@ -491,26 +490,23 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
         return header
 
     @classmethod
-    def footer(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def footer(cls, action, data, records):
+        record, = records
         company = record.company
         footer = div()
         with footer:
-            style(raw(cls.css(action, record=record, records=records, data=data)))
+            style(raw(cls.css(action, data, records)))
             with footer_tag(id='footer', align='center'):
                 cls.show_footer(company)
         return footer
 
     @classmethod
-    def last_footer(cls, action, record=None, records=None,
-            data=None):
-        if record is None and records:
-            record = records[0]
+    def last_footer(cls, action, data, records):
+        record, = records
         company = record.company
         last_footer = div()
         with last_footer:
-            style(raw(cls.css(action, record=record, records=records, data=data)))
+            style(raw(cls.css(action, data, records)))
             with div(
                     id='last-footer',
                     align='center',
@@ -531,9 +527,8 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
         return last_footer
 
     @classmethod
-    def body(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def body(cls, action, data, records):
+        record, = records
         container = div()
         with container:
             container.add(cls.show_invoice_lines(record))

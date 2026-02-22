@@ -238,7 +238,8 @@ class StockReportMixin(DominateReportMixin):
         return record.company.raw.__class__.show_totals(record)
 
     @classmethod
-    def _get_language(cls, record):
+    def _get_language(cls, records):
+        record = records[0] if records else None
         if record:
             if getattr(record.raw, 'customer', None):
                 party = record.customer
@@ -248,15 +249,16 @@ class StockReportMixin(DominateReportMixin):
                 party = record.supplier
                 if party and party.raw.lang:
                     return party.raw.lang.code
-        return super()._get_language(record)
+        return super()._get_language(records)
 
     @classmethod
-    def _header_with_document_info(cls, action, record, document_info_node,
-            records=None, data=None):
+    def _header_with_document_info(cls, action, data, records,
+            document_info_node):
+        record, = records
         company = record.company
         header = div()
         with header:
-            style(raw(cls.css(action, record=record, records=records, data=data)))
+            style(raw(cls.css(action, data, records)))
             with header_tag(id='header'):
                 with table():
                     with tr():
@@ -279,11 +281,12 @@ class StockReportMixin(DominateReportMixin):
         return header
 
     @classmethod
-    def _footer(cls, action, record, records=None, data=None):
+    def _footer(cls, action, data, records):
+        record, = records
         company = record.company
         footer = div()
         with footer:
-            style(raw(cls.css(action, record=record, records=records, data=data)))
+            style(raw(cls.css(action, data, records)))
             with footer_tag(id='footer', align='center'):
                 cls.show_footer(company)
         return footer
@@ -702,12 +705,11 @@ class StockInventoryReport(StockReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.inventory'
 
     @classmethod
-    def header(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def header(cls, action, data, records):
+        record, = records
         header = div()
         with header:
-            style(raw(cls.css(action, record=record, records=records, data=data)))
+            style(raw(cls.css(action, data, records)))
             with header_tag(id='header'):
                 with table():
                     with tr():
@@ -728,9 +730,8 @@ class StockInventoryReport(StockReportMixin, metaclass=PoolMeta):
         return header
 
     @classmethod
-    def body(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def body(cls, action, data, records):
+        record, = records
         container = div()
         with container:
             container.add(cls.show_inventory_lines(record))
@@ -764,23 +765,19 @@ class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
         return container
 
     @classmethod
-    def header(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def header(cls, action, data, records):
+        record, = records
         return cls._header_with_document_info(
-            action, record, cls.show_document_info(record),
-            records=records, data=data)
+            action, data, records, cls.show_document_info(record))
 
     @classmethod
-    def footer(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
-        return cls._footer(action, record, records=records, data=data)
+    def footer(cls, action, data, records):
+        record, = records
+        return cls._footer(action, data, records)
 
     @classmethod
-    def body(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def body(cls, action, data, records):
+        record, = records
         container = div()
         with container:
             container.add(cls.show_stock_moves(record, valued=False))
@@ -796,12 +793,11 @@ class ValuedDeliveryNoteReport(DeliveryNoteReport, metaclass=PoolMeta):
     __name__ = 'stock.shipment.out.valued_delivery_note'
 
     @classmethod
-    def last_footer(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def last_footer(cls, action, data, records):
+        record, = records
         last_footer = div()
         with last_footer:
-            style(raw(cls.css(action, record=record, records=records, data=data)))
+            style(raw(cls.css(action, data, records)))
             with div(
                     id='last-footer',
                     align='center',
@@ -816,9 +812,8 @@ class ValuedDeliveryNoteReport(DeliveryNoteReport, metaclass=PoolMeta):
         return last_footer
 
     @classmethod
-    def body(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def body(cls, action, data, records):
+        record, = records
         container = div()
         with container:
             container.add(cls.show_stock_moves(record, valued=True))
@@ -859,23 +854,19 @@ class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
         return container
 
     @classmethod
-    def header(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def header(cls, action, data, records):
+        record, = records
         return cls._header_with_document_info(
-            action, record, cls.show_document_info(record),
-            records=records, data=data)
+            action, data, records, cls.show_document_info(record))
 
     @classmethod
-    def footer(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
-        return cls._footer(action, record, records=records, data=data)
+    def footer(cls, action, data, records):
+        record, = records
+        return cls._footer(action, data, records)
 
     @classmethod
-    def body(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def body(cls, action, data, records):
+        record, = records
         moves = record.inventory_moves or record.outgoing_moves
         container = div()
         with container:
@@ -920,23 +911,19 @@ class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
         return container
 
     @classmethod
-    def header(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def header(cls, action, data, records):
+        record, = records
         return cls._header_with_document_info(
-            action, record, cls.show_document_info(record),
-            records=records, data=data)
+            action, data, records, cls.show_document_info(record))
 
     @classmethod
-    def footer(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
-        return cls._footer(action, record, records=records, data=data)
+    def footer(cls, action, data, records):
+        record, = records
+        return cls._footer(action, data, records)
 
     @classmethod
-    def body(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def body(cls, action, data, records):
+        record, = records
         container = div()
         with container:
             container.add(cls.show_internal_picking_moves(
@@ -963,23 +950,19 @@ class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
         return container
 
     @classmethod
-    def header(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def header(cls, action, data, records):
+        record, = records
         return cls._header_with_document_info(
-            action, record, cls.show_document_info(record),
-            records=records, data=data)
+            action, data, records, cls.show_document_info(record))
 
     @classmethod
-    def footer(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
-        return cls._footer(action, record, records=records, data=data)
+    def footer(cls, action, data, records):
+        record, = records
+        return cls._footer(action, data, records)
 
     @classmethod
-    def body(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def body(cls, action, data, records):
+        record, = records
         container = div()
         with container:
             container.add(cls.show_customer_return_stock_moves(
@@ -999,9 +982,8 @@ class RefundNoteReport(CustomerRefundNoteReport, metaclass=PoolMeta):
     __name__ = 'stock.shipment.in.refund_note'
 
     @classmethod
-    def body(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def body(cls, action, data, records):
+        record, = records
         container = div()
         with container:
             container.add(cls.show_return_stock_moves(record, valued=False))
@@ -1020,13 +1002,12 @@ class SupplierRestockingListReport(StockReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.in.restocking_list'
 
     @classmethod
-    def _get_language(cls, record):
-        return DominateReportMixin._get_language(record)
+    def _get_language(cls, records):
+        return DominateReportMixin._get_language(records)
 
     @classmethod
-    def body(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def body(cls, action, data, records):
+        record, = records
         container = div()
         with container:
             container.add(cls.show_restocking_list_info(record))

@@ -204,13 +204,12 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
         return ops_table
 
     @classmethod
-    def header(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def header(cls, action, data, records):
+        record, = records
         company = record.company
         header = div()
         with header:
-            style(raw(cls.css(action, record=record, records=records, data=data)))
+            style(raw(cls.css(action, data, records)))
             with header_tag(id='header'):
                 with table():
                     with tr():
@@ -227,21 +226,19 @@ class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
         return header
 
     @classmethod
-    def footer(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def footer(cls, action, data, records):
+        record, = records
         company = record.company
         footer = div()
         with footer:
-            style(raw(cls.css(action, record=record, records=records, data=data)))
+            style(raw(cls.css(action, data, records)))
             with footer_tag(id='footer', align='center'):
                 cls.show_footer(company)
         return footer
 
     @classmethod
-    def body(cls, action, record=None, records=None, data=None):
-        if record is None and records:
-            record = records[0]
+    def body(cls, action, data, records):
+        record, = records
         container = div()
         with container:
             if record.raw.product:
