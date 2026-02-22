@@ -339,10 +339,6 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
         with due_table:
             with thead():
                 with tr():
-                    th(div(cls.label(
-                        'account.move.line', 'maturity_date'),
-                        align='center'), colspan='2')
-                with tr():
                     th(cls.label('account.move.line',
                         'maturity_date'))
                     th(cls.label('account.move.line', 'amount'),
