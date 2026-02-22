@@ -331,7 +331,7 @@ class StockReportMixin(DominateReportMixin):
                                     item_date = (item.render.effective_date
                                         if getattr(item.raw, 'effective_date',
                                             None) else None)
-                                text = '%s : %s' % (
+                                text = '%s: %s' % (
                                     cls.label(item.raw.__name__),
                                     item.render.number
                                     if getattr(item.raw, 'number', None) else '')
