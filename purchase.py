@@ -240,6 +240,13 @@ class PurchaseSimplifiedReport(DominateReportMixin, metaclass=PoolMeta):
     __name__ = 'purchase.purchase.simplified'
 
     @classmethod
+    def language(cls, records):
+        record = records[0] if records else None
+        if record and record.party and record.party.raw.lang:
+            return record.party.raw.lang.code
+        return Transaction().language or 'en'
+
+    @classmethod
     def show_purchase_lines(cls, document, simplified=False):
         # Force simplified to True as the report is for simplified version of
         # the document

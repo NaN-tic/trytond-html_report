@@ -87,16 +87,6 @@ class DominateReportMixin(HTMLReportMixin):
 
     @classmethod
     def language(cls, records):
-        record = records[0] if records else None
-        if record:
-            if getattr(record.raw, 'party', None):
-                party = record.party
-                if party and party.raw.lang:
-                    return party.raw.lang.code
-            if getattr(record.raw, 'company', None):
-                company = record.company
-                if company and company.party and company.party.raw.lang:
-                    return company.party.raw.lang.code
         return Transaction().language or 'en'
 
     @classmethod
