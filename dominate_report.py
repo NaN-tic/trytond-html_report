@@ -3,7 +3,7 @@ import zipfile
 
 from dominate import document
 from dominate.util import raw
-from dominate.tags import body as body_tag, meta, style
+from dominate.tags import meta, style
 
 from trytond.pool import Pool
 from trytond.tools import file_open, slugify
@@ -75,14 +75,15 @@ class DominateReportMixin(HTMLReportMixin):
             if css:
                 style(raw(css))
         with doc:
-            with body_tag(id='base', cls='main-report') as body_node:
-                for node in body_nodes:
-                    if node is None:
-                        continue
-                    if isinstance(node, str):
-                        body_node.add(raw(node))
-                    else:
-                        body_node.add(node)
+            doc.body['id'] = 'base'
+            doc.body['class'] = 'main-report'
+            for node in body_nodes:
+                if node is None:
+                    continue
+                if isinstance(node, str):
+                    doc.body.add(raw(node))
+                else:
+                    doc.body.add(node)
         return doc
 
     @classmethod
