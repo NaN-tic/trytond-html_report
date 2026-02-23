@@ -3,7 +3,7 @@ from trytond.transaction import Transaction
 from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
-from trytond.modules.html_report.dominate_report import DominateReportMixin
+from trytond.modules.html_report.dominate_report import DominateReport
 from dominate.util import raw
 from dominate.tags import (div, footer as footer_tag, h1, h2, h4,
     header as header_tag, img, p, strong, style, table, tbody, td, th, thead,
@@ -28,7 +28,7 @@ class PurchaseLineDiscount(HTMLDiscountReportMixin, metaclass=PoolMeta):
     __name__ = 'purchase.line'
 
 
-class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
+class PurchaseReport(DominateReport):
     __name__ = 'purchase.purchase'
 
     @classmethod
@@ -236,7 +236,7 @@ class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
         return container
 
 
-class PurchaseSimplifiedReport(DominateReportMixin, metaclass=PoolMeta):
+class PurchaseSimplifiedReport(DominateReport):
     __name__ = 'purchase.purchase.simplified'
 
     @classmethod

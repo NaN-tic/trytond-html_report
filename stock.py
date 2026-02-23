@@ -10,7 +10,7 @@ from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import DualRecord
 from trytond.modules.html_report.tools import label
-from trytond.modules.html_report.dominate_report import DominateReportMixin
+from trytond.modules.html_report.dominate_report import DominateReport
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 from .i18n import _
 
@@ -199,7 +199,7 @@ class StockInventory(metaclass=PoolMeta):
     __name__ = 'stock.inventory'
 
 
-class StockReportMixin(DominateReportMixin):
+class StockReportMixin(DominateReport):
     @classmethod
     def show_carrier(cls, carrier):
         container = div()

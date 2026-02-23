@@ -1,7 +1,7 @@
 from trytond.pool import PoolMeta
 from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
-from trytond.modules.html_report.dominate_report import DominateReportMixin
+from trytond.modules.html_report.dominate_report import DominateReport
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 from trytond.modules.html_report.tools import label
 from trytond.transaction import Transaction
@@ -37,7 +37,7 @@ class SaleLineDiscount(HTMLDiscountReportMixin, metaclass=PoolMeta):
     __name__ = 'sale.line'
 
 
-class SaleReport(DominateReportMixin, metaclass=PoolMeta):
+class SaleReport(DominateReport):
     __name__ = 'sale.sale'
 
     @classmethod

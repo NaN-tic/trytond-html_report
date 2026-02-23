@@ -7,7 +7,7 @@ from trytond.pyson import Eval
 from trytond.transaction import Transaction
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import DualRecord
-from trytond.modules.html_report.dominate_report import DominateReportMixin
+from trytond.modules.html_report.dominate_report import DominateReport
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 from dominate.util import raw
 from dominate.tags import (div, footer as footer_tag, h1, h2, h4,
@@ -105,7 +105,7 @@ class InvoiceLineDiscount(HTMLDiscountReportMixin, metaclass=PoolMeta):
     __name__ = 'account.invoice.line'
 
 
-class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
+class InvoiceReport(DominateReport):
     __name__ = 'account.invoice'
 
     @classmethod

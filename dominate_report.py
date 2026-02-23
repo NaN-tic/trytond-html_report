@@ -5,7 +5,7 @@ from dominate import document
 from dominate.util import raw
 from dominate.tags import meta, style
 
-from trytond.pool import Pool
+from trytond.pool import Pool, PoolMeta
 from trytond.tools import file_open, slugify
 from trytond.transaction import Transaction
 
@@ -14,7 +14,7 @@ from .generator import PdfGenerator
 from .engine import DualRecord
 
 
-class DominateReportMixin(HTMLReportMixin):
+class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
     _single = False
 
     @classmethod

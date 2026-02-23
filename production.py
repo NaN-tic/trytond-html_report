@@ -6,7 +6,7 @@ from trytond.model import fields
 from trytond.pool import PoolMeta
 from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
-from trytond.modules.html_report.dominate_report import DominateReportMixin
+from trytond.modules.html_report.dominate_report import DominateReport
 
 
 class Production(HTMLPartyInfoMixin, metaclass=PoolMeta):
@@ -30,7 +30,7 @@ class Production(HTMLPartyInfoMixin, metaclass=PoolMeta):
         return
 
 
-class ProductionReport(DominateReportMixin, metaclass=PoolMeta):
+class ProductionReport(DominateReport):
     __name__ = 'production.production'
 
     @classmethod
