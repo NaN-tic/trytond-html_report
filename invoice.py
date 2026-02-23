@@ -109,6 +109,13 @@ class InvoiceReport(DominateReportMixin, metaclass=PoolMeta):
     __name__ = 'account.invoice'
 
     @classmethod
+    def language(cls, records):
+        record = records[0] if records else None
+        if record and record.party and record.party.raw.lang:
+            return record.party.raw.lang.code
+        return Transaction().language or 'en'
+
+    @classmethod
     def _execute_dominate_report(cls, records, data, action, side_margin=2,
             extra_vertical_margin=30):
         pool = Pool()

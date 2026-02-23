@@ -1,4 +1,5 @@
 from trytond.pool import PoolMeta
+from trytond.transaction import Transaction
 from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
@@ -29,6 +30,13 @@ class PurchaseLineDiscount(HTMLDiscountReportMixin, metaclass=PoolMeta):
 
 class PurchaseReport(DominateReportMixin, metaclass=PoolMeta):
     __name__ = 'purchase.purchase'
+
+    @classmethod
+    def language(cls, records):
+        record = records[0] if records else None
+        if record and record.party and record.party.raw.lang:
+            return record.party.raw.lang.code
+        return Transaction().language or 'en'
 
     @classmethod
     def show_company_info(cls, company, show_party=True,

@@ -86,7 +86,7 @@ class DominateReportMixin(HTMLReportMixin):
         return doc
 
     @classmethod
-    def _get_language(cls, records):
+    def language(cls, records):
         record = records[0] if records else None
         if record:
             if getattr(record.raw, 'party', None):
@@ -113,7 +113,7 @@ class DominateReportMixin(HTMLReportMixin):
         if render_single:
             documents = []
             for record in records:
-                language = cls._get_language([record])
+                language = cls.language([record])
                 with Transaction().set_context(language=language):
                     cls._refresh_records([record])
                     content = cls._render_node(cls.main(
@@ -143,7 +143,7 @@ class DominateReportMixin(HTMLReportMixin):
             else:
                 document = ''.join(documents)
         else:
-            language = cls._get_language(records)
+            language = cls.language(records)
             with Transaction().set_context(language=language):
                 cls._refresh_records(records)
                 content = cls._render_node(cls.main(

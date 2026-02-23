@@ -4,6 +4,7 @@ from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.dominate_report import DominateReportMixin
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 from trytond.modules.html_report.tools import label
+from trytond.transaction import Transaction
 from .i18n import _
 from dominate.util import raw
 from dominate.tags import (div, footer as footer_tag, h1, h2, h3, h4,
@@ -38,6 +39,13 @@ class SaleLineDiscount(HTMLDiscountReportMixin, metaclass=PoolMeta):
 
 class SaleReport(DominateReportMixin, metaclass=PoolMeta):
     __name__ = 'sale.sale'
+
+    @classmethod
+    def language(cls, records):
+        record = records[0] if records else None
+        if record and record.party and record.party.raw.lang:
+            return record.party.raw.lang.code
+        return Transaction().language or 'en'
 
     @classmethod
     def show_company_info(cls, company, show_party=True,

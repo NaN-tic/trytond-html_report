@@ -5,6 +5,7 @@ from dominate.tags import (br, div, footer as footer_tag, h1, h2, h3, h4,
 
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
+from trytond.transaction import Transaction
 from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import DualRecord
@@ -233,7 +234,7 @@ class StockReportMixin(DominateReportMixin):
         return record.company.raw.__class__.show_totals(record)
 
     @classmethod
-    def _get_language(cls, records):
+    def language(cls, records):
         record = records[0] if records else None
         if record:
             if getattr(record.raw, 'customer', None):
@@ -244,7 +245,7 @@ class StockReportMixin(DominateReportMixin):
                 party = record.supplier
                 if party and party.raw.lang:
                     return party.raw.lang.code
-        return super()._get_language(records)
+        return Transaction().language or 'en'
 
     @classmethod
     def _header_with_document_info(cls, action, data, records,
@@ -823,6 +824,10 @@ class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.out.picking_note'
 
     @classmethod
+    def language(cls, records):
+        return Transaction().language or 'en'
+
+    @classmethod
     def show_document_info(cls, record):
         title = cls.label(record.raw.__name__)
         document_date = (record.render.effective_date
@@ -870,6 +875,10 @@ class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
 
 class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.internal_picking_note'
+
+    @classmethod
+    def language(cls, records):
+        return Transaction().language or 'en'
 
     @classmethod
     def show_document_info(cls, record):
@@ -994,10 +1003,6 @@ class RefundNoteReport(CustomerRefundNoteReport, metaclass=PoolMeta):
 
 class SupplierRestockingListReport(StockReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.in.restocking_list'
-
-    @classmethod
-    def _get_language(cls, records):
-        return DominateReportMixin._get_language(records)
 
     @classmethod
     def body(cls, action, data, records):
