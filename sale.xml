@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <tryton>
-    <data depends="sale,stock,account_invoice,account_payment_type,account_bank">
+    <data depends="sale">
         <record model="ir.action.report" id="sale.report_sale">
             <field name="active" eval="False"/>
         </record>
