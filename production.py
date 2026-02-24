@@ -36,15 +36,13 @@ class ProductionReport(DominateReport):
     @classmethod
     def show_company_info(cls, company, show_party=True,
             show_contact_mechanism=True):
-        return company.raw.__class__.show_company_info(
+        return cls.common().show_company_info(
             company, show_party=show_party,
             show_contact_mechanism=show_contact_mechanism)
 
     @classmethod
     def show_footer(cls, company=None):
-        if company is None:
-            return raw('')
-        return company.raw.__class__.show_footer(company)
+        return cls.common().show_footer(company)
 
     @classmethod
     def show_document_info(cls, record):

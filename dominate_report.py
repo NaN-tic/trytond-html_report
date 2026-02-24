@@ -3,15 +3,177 @@ import zipfile
 
 from dominate import document
 from dominate.util import raw
-from dominate.tags import meta, style
+from dominate.tags import b, br, div, meta, span, strong, style, table, td, th, tr
 
 from trytond.pool import Pool, PoolMeta
-from trytond.tools import file_open, slugify
+from trytond.model import ModelView
+from trytond.tools import slugify
 from trytond.transaction import Transaction
 
-from .engine import HTMLReportMixin
+from .engine import HTMLReportMixin, DualRecord
 from .generator import PdfGenerator
-from .engine import DualRecord
+from trytond.tools import file_open
+from .tools import label
+
+
+class DominateCommon(ModelView):
+    __name__ = 'html_report.dominate.common'
+
+    @classmethod
+    def css(cls, action, data, records):
+        with file_open('html_report/base.css') as f:
+            return f.read()
+
+
+class DominateCommonCompany(metaclass=PoolMeta):
+    __name__ = 'html_report.dominate.common'
+
+    @classmethod
+    def show_company_info(cls, company, show_party=True,
+            show_contact_mechanism=True):
+        if not company or not getattr(company, 'raw', None):
+            return raw('')
+        party = company.party
+        address = party.addresses and party.addresses[0] or None
+        tax_identifier = party.tax_identifier
+
+        container = div(id='company-info', cls='header-details')
+        if show_party:
+            with container:
+                span(company.party.render.name, cls='company-info-name')
+                br()
+        if tax_identifier:
+            with container:
+                raw(tax_identifier.render.code)
+                br()
+        if address:
+            with container:
+                with div(cls='company-info-address'):
+                    raw(address.render.full_address.replace('\n', '<br/>'))
+        if show_contact_mechanism:
+            with container:
+                with div(cls='company-info-contact-mechanims'):
+                    if party.raw.phone:
+                        raw('%s: %s' % (
+                            label('party.party', 'phone'),
+                            party.render.phone))
+                        br()
+                    if party.raw.email:
+                        raw(party.render.email)
+                        br()
+                    if party.raw.website:
+                        raw(party.render.website)
+        return container
+
+    @classmethod
+    def show_footer(cls, company=None):
+        return raw('<p align="center"> </p>')
+
+    @classmethod
+    def show_totals(cls, record):
+        if not record:
+            return raw('')
+        totals_table = table(id='totals')
+        with totals_table:
+            with tr():
+                th('%s:' % label(record.raw.__name__,
+                    'untaxed_amount'), scope='row',
+                    cls='text-right total-label total-luntaxed')
+                td('%s %s' % (record.render.untaxed_amount,
+                    record.currency.render.symbol),
+                    cls='text-right total-value total-vuntaxed')
+            with tr():
+                th('%s:' % label(record.raw.__name__,
+                    'tax_amount'), scope='row',
+                    cls='text-right total-label total-ltax')
+                td('%s %s' % (record.render.tax_amount,
+                    record.currency.render.symbol),
+                    cls='text-right total-value total-vtax')
+            with tr():
+                th('%s:' % label(record.raw.__name__,
+                    'total_amount'), scope='row',
+                    cls='text-right total-label total-lamount')
+                td('%s %s' % (record.render.total_amount,
+                    record.currency.render.symbol),
+                    cls='text-right total-value total-vamount')
+        return totals_table
+
+    @classmethod
+    def show_payment_info(cls, document):
+        if not document:
+            return raw('')
+        container = div()
+        with container:
+            if getattr(document.raw, 'payment_term', None):
+                strong('%s: ' % label(
+                    document.raw.__name__, 'payment_term'))
+                raw(document.payment_term.render.name)
+                br()
+            if getattr(document.raw, 'payment_type', None):
+                strong('%s: ' % label(
+                    document.raw.__name__, 'payment_type'))
+                raw(document.payment_type.render.name)
+                br()
+            if getattr(document.raw, 'bank_account', None):
+                strong('%s: ' % label(
+                    document.raw.__name__, 'bank_account'))
+                raw(document.bank_account.render.rec_name)
+                if (document.bank_account.bank
+                        and document.bank_account.bank.raw.bic):
+                    raw(' (%s)' % document.bank_account.bank.render.bic)
+                br()
+            strong('%s:' % label(
+                document.raw.__name__, 'currency'))
+            raw(' %s' % document.currency.render.name)
+            if getattr(document.raw, 'different_currencies', None):
+                strong('%s:' % label(
+                    document.raw.__name__, 'currency'))
+                raw(' %s' % document.company.currency.render.name)
+                strong('%s:' % label(
+                    document.raw.__name__, 'company_untaxed_amount'))
+                raw(' %s' % document.render.company_untaxed_amount)
+                strong('%s:' % label(
+                    document.raw.__name__, 'company_tax_amount'))
+                raw(' %s' % document.render.company_tax_amount)
+                strong('%s:' % label(
+                    document.raw.__name__, 'company_total_amount'))
+                raw(' %s' % document.render.company_total_amount)
+        return container
+
+
+class DominateCommonParty(metaclass=PoolMeta):
+    __name__ = 'html_report.dominate.common'
+
+    @classmethod
+    def show_party_info(cls, party, tax_identifier, address,
+            second_address_label, second_address):
+        if not party or not getattr(party, 'raw', None):
+            return raw('')
+        record = DualRecord(party.raw)
+        container = div()
+        with container:
+            b(record.render.name)
+            br()
+            if tax_identifier:
+                raw(tax_identifier.render.code)
+                br()
+            if address:
+                raw(address.render.full_address.replace('\n', '<br/>'))
+            br()
+            if record.raw.phone:
+                raw('%s: %s' % (
+                    HTMLReportMixin.label('party.party', 'phone'),
+                    record.render.phone))
+                br()
+            if record.raw.email:
+                raw(record.render.email)
+                br()
+            if second_address and address and second_address.raw.id != address.raw.id:
+                if second_address_label:
+                    strong(' %s' % second_address_label)
+                    br()
+                raw(second_address.render.full_address.replace('\n', '<br/>'))
+        return container
 
 
 class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
@@ -59,9 +221,12 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
         return node.render() if hasattr(node, 'render') else str(node)
 
     @classmethod
+    def common(cls):
+        return Pool().get('html_report.dominate.common')
+
+    @classmethod
     def css(cls, action, data, records):
-        with file_open('html_report/base.css') as f:
-            return f.read()
+        return cls.common().css(action, data, records)
 
     @classmethod
     def build_document(cls, action, data, records, title, body_nodes):
@@ -166,8 +331,8 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
             ws = wb.active
 
             soup = BeautifulSoup(document, 'html.parser')
-            for table in soup.find_all('table'):
-                for row in table.find_all('tr'):
+            for table_node in soup.find_all('table'):
+                for row in table_node.find_all('tr'):
                     row_data = []
                     for cell in row.find_all(['td', 'th']):
                         row_data.append(_convert_str_to_float(cell.text))

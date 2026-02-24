@@ -50,29 +50,28 @@ class SaleReport(DominateReport):
     @classmethod
     def show_company_info(cls, company, show_party=True,
             show_contact_mechanism=True):
-        return company.raw.__class__.show_company_info(
+        return cls.common().show_company_info(
             company, show_party=show_party,
             show_contact_mechanism=show_contact_mechanism)
 
     @classmethod
     def show_party_info(cls, party, tax_identifier, address,
             second_address_label, second_address):
-        return party.raw.show_party_info(
-            tax_identifier, address, second_address_label, second_address)
+        return cls.common().show_party_info(
+            party, tax_identifier, address, second_address_label,
+            second_address)
 
     @classmethod
     def show_footer(cls, company=None):
-        if company is None:
-            return raw('')
-        return company.raw.__class__.show_footer(company)
+        return cls.common().show_footer(company)
 
     @classmethod
     def show_payment_info(cls, document):
-        return document.company.raw.__class__.show_payment_info(document)
+        return cls.common().show_payment_info(document)
 
     @classmethod
     def show_totals(cls, record):
-        return record.company.raw.__class__.show_totals(record)
+        return cls.common().show_totals(record)
 
     @classmethod
     def show_sale_lines(cls, document):

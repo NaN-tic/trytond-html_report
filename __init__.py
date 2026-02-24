@@ -9,18 +9,18 @@ from . import template
 from . import engine
 from . import i18n
 from . import invoice
+from . import dominate_report
 from . import production
 from . import purchase
 from . import sale
 from . import product
 from . import stock
 from . import account_configuration
-from . import company
-from . import party
 
 def register():
     module = 'html_report'
     Pool.register(
+        dominate_report.DominateCommon,
         action.ActionReport,
         action.HTMLTemplateTranslation,
         template.Signature,
@@ -30,15 +30,15 @@ def register():
         i18n.Translation,
         module=module, type_='model')
     Pool.register(
-        account_configuration.Configuration,
-        account_configuration.ConfigurationHTMLReport,
-        module=module, type_='model', depends=['account', 'company'])
-    Pool.register(
-        company.Company,
+        dominate_report.DominateCommonCompany,
         module=module, type_='model', depends=['company'])
     Pool.register(
-        party.Party,
+        dominate_report.DominateCommonParty,
         module=module, type_='model', depends=['party'])
+    Pool.register(
+        account_configuration.Configuration,
+        account_configuration.ConfigurationHTMLReport,
+        module=module, type_='model', depends=['account'])
     Pool.register(
         translation.ReportTranslationSet,
         i18n.TranslationSet,
