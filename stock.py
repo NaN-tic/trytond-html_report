@@ -1,7 +1,6 @@
 from dominate.util import raw
 from dominate.tags import (br, div, footer as footer_tag, h1, h2, h3, h4,
-    header as header_tag, img, p, strong, style, table, tbody, td, th, thead,
-    tr)
+    header as header_tag, img, p, strong, table, tbody, td, th, thead, tr)
 
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
@@ -253,7 +252,6 @@ class StockReportMixin(DominateReport):
         company = record.company
         header = div()
         with header:
-            style(raw(cls.css(action, data, records)))
             with header_tag(id='header'):
                 with table():
                     with tr():
@@ -281,7 +279,6 @@ class StockReportMixin(DominateReport):
         company = record.company
         footer = div()
         with footer:
-            style(raw(cls.css(action, data, records)))
             with footer_tag(id='footer', align='center'):
                 cls.show_footer(company)
         return footer
@@ -703,7 +700,6 @@ class StockInventoryReport(StockReportMixin, metaclass=PoolMeta):
         record, = records
         header = div()
         with header:
-            style(raw(cls.css(action, data, records)))
             with header_tag(id='header'):
                 with table():
                     with tr():
@@ -791,7 +787,6 @@ class ValuedDeliveryNoteReport(DeliveryNoteReport, metaclass=PoolMeta):
         record, = records
         last_footer = div()
         with last_footer:
-            style(raw(cls.css(action, data, records)))
             with div(
                     id='last-footer',
                     align='center',

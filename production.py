@@ -1,6 +1,5 @@
-from dominate.util import raw
-from dominate.tags import (div, footer as footer_tag, h1, h2, header as header_tag,
-    img, style, table, tbody, td, th, thead, tr)
+from dominate.tags import (div, footer as footer_tag, h1, h2,
+    header as header_tag, img, table, tbody, td, th, thead, tr)
 
 from trytond.model import fields
 from trytond.pool import PoolMeta
@@ -207,7 +206,6 @@ class ProductionReport(DominateReport):
         company = record.company
         header = div()
         with header:
-            style(raw(cls.css(action, data, records)))
             with header_tag(id='header'):
                 with table():
                     with tr():
@@ -229,7 +227,6 @@ class ProductionReport(DominateReport):
         company = record.company
         footer = div()
         with footer:
-            style(raw(cls.css(action, data, records)))
             with footer_tag(id='footer', align='center'):
                 cls.show_footer(company)
         return footer

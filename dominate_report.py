@@ -193,7 +193,7 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
         return action.name if action else ''
 
     @classmethod
-    def main(cls, action, data, records):
+    def body_wrapper(cls, action, data, records):
         body_nodes = cls.body(action, data, records)
         title = cls.title(action, data, records)
         if body_nodes is None:
@@ -201,6 +201,10 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
         if not isinstance(body_nodes, (list, tuple)):
             body_nodes = [body_nodes]
         return cls.build_document(action, data, records, title, body_nodes)
+
+    @classmethod
+    def main(cls, action, data, records):
+        return cls.body_wrapper(action, data, records)
 
     @classmethod
     def header(cls, action, data, records):
@@ -215,6 +219,21 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
         return None
 
     @classmethod
+    def header_wrapper(cls, action, data, records):
+        return cls._wrap_with_css(action, data, records,
+            cls.header(action, data, records))
+
+    @classmethod
+    def footer_wrapper(cls, action, data, records):
+        return cls._wrap_with_css(action, data, records,
+            cls.footer(action, data, records))
+
+    @classmethod
+    def last_footer_wrapper(cls, action, data, records):
+        return cls._wrap_with_css(action, data, records,
+            cls.last_footer(action, data, records))
+
+    @classmethod
     def _render_node(cls, node):
         if node is None:
             return None
@@ -227,6 +246,26 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
     @classmethod
     def css(cls, action, data, records):
         return cls.common().css(action, data, records)
+
+    @classmethod
+    def _wrap_with_css(cls, action, data, records, node):
+        if node is None:
+            return None
+        nodes = node if isinstance(node, (list, tuple)) else [node]
+        doc = document(title='')
+        with doc.head:
+            css = cls.css(action, data, records)
+            if css:
+                style(raw(css))
+        with doc:
+            for item in nodes:
+                if item is None:
+                    continue
+                if isinstance(item, str):
+                    doc.body.add(raw(item))
+                else:
+                    doc.body.add(item)
+        return doc
 
     @classmethod
     def build_document(cls, action, data, records, title, body_nodes):
@@ -272,13 +311,13 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
                 language = cls.language([record])
                 with Transaction().set_context(language=language):
                     cls._refresh_records([record])
-                    content = cls._render_node(cls.main(
+                    content = cls._render_node(cls.body_wrapper(
                         action, data, [record]))
-                    header = cls._render_node(cls.header(
+                    header = cls._render_node(cls.header_wrapper(
                         action, data, [record]))
-                    footer = cls._render_node(cls.footer(
+                    footer = cls._render_node(cls.footer_wrapper(
                         action, data, [record]))
-                    last_footer = cls._render_node(cls.last_footer(
+                    last_footer = cls._render_node(cls.last_footer_wrapper(
                         action, data, [record]))
 
                 if extension == 'pdf':
@@ -302,13 +341,13 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
             language = cls.language(records)
             with Transaction().set_context(language=language):
                 cls._refresh_records(records)
-                content = cls._render_node(cls.main(
+                content = cls._render_node(cls.body_wrapper(
                     action, data, records))
-                header = cls._render_node(cls.header(
+                header = cls._render_node(cls.header_wrapper(
                     action, data, records))
-                footer = cls._render_node(cls.footer(
+                footer = cls._render_node(cls.footer_wrapper(
                     action, data, records))
-                last_footer = cls._render_node(cls.last_footer(
+                last_footer = cls._render_node(cls.last_footer_wrapper(
                     action, data, records))
             if extension == 'pdf':
                 document = PdfGenerator(

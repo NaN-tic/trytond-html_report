@@ -462,7 +462,6 @@ class InvoiceReport(DominateReport):
         company = record.company
         header = div()
         with header:
-            style(raw(cls.css(action, data, records)))
             if getattr(record.raw, 'aeat_qr_url', None):
                 style(raw('.company_logo {\n    width: 15%;\n  }'))
             with header_tag(id='header'):
@@ -497,7 +496,6 @@ class InvoiceReport(DominateReport):
         company = record.company
         footer = div()
         with footer:
-            style(raw(cls.css(action, data, records)))
             with footer_tag(id='footer', align='center'):
                 cls.show_footer(company)
         return footer
@@ -508,7 +506,6 @@ class InvoiceReport(DominateReport):
         company = record.company
         last_footer = div()
         with last_footer:
-            style(raw(cls.css(action, data, records)))
             with div(
                     id='last-footer',
                     align='center',

@@ -8,8 +8,7 @@ from trytond.transaction import Transaction
 from .i18n import _
 from dominate.util import raw
 from dominate.tags import (div, footer as footer_tag, h1, h2, h3, h4,
-    header as header_tag, img, p, strong, style, table, tbody, td, th, thead,
-    tr)
+    header as header_tag, img, p, strong, table, tbody, td, th, thead, tr)
 
 
 class Sale(HTMLPartyInfoMixin, metaclass=PoolMeta):
@@ -180,7 +179,6 @@ class SaleReport(DominateReport):
 
         header = div()
         with header:
-            style(raw(cls.css(action, data, records)))
             with header_tag(id='header'):
                 with table():
                     with tr():
@@ -208,7 +206,6 @@ class SaleReport(DominateReport):
         company = record.company
         footer = div()
         with footer:
-            style(raw(cls.css(action, data, records)))
             with footer_tag(id='footer', align='center'):
                 cls.show_footer(company)
         return footer
@@ -218,7 +215,6 @@ class SaleReport(DominateReport):
         record, = records
         last_footer = div()
         with last_footer:
-            style(raw(cls.css(action, data, records)))
             with div(
                     id='last-footer',
                     align='center',
