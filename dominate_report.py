@@ -178,6 +178,9 @@ class DominateCommonParty(metaclass=PoolMeta):
 
 class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
     _single = False
+    _body_margin_template = (
+        'body { margin-left: %(side_margin)scm; '
+        'margin-right: %(side_margin)scm; }\n')
 
     @classmethod
     def body(cls, action, data, records):
@@ -203,10 +206,6 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
         return cls.build_document(action, data, records, title, body_nodes)
 
     @classmethod
-    def main(cls, action, data, records):
-        return cls.body_wrapper(action, data, records)
-
-    @classmethod
     def header(cls, action, data, records):
         return None
 
@@ -220,17 +219,20 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
 
     @classmethod
     def header_wrapper(cls, action, data, records):
-        return cls._wrap_with_css(action, data, records,
+        return cls._wrap_with_css(
+            cls.css_header(action, data, records),
             cls.header(action, data, records))
 
     @classmethod
     def footer_wrapper(cls, action, data, records):
-        return cls._wrap_with_css(action, data, records,
+        return cls._wrap_with_css(
+            cls.css_footer(action, data, records),
             cls.footer(action, data, records))
 
     @classmethod
     def last_footer_wrapper(cls, action, data, records):
-        return cls._wrap_with_css(action, data, records,
+        return cls._wrap_with_css(
+            cls.css_last_footer(action, data, records),
             cls.last_footer(action, data, records))
 
     @classmethod
@@ -248,13 +250,37 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
         return cls.common().css(action, data, records)
 
     @classmethod
-    def _wrap_with_css(cls, action, data, records, node):
+    def css_body(cls, action, data, records):
+        css = cls.css(action, data, records) or ''
+        side_margin = (action.html_side_margin
+            if action and action.html_side_margin is not None
+            else cls.side_margin)
+        return '%s\n%s' % (
+            css,
+            cls._body_margin_template % {'side_margin': side_margin})
+
+    @classmethod
+    def css_header(cls, action, data, records):
+        css = cls.css(action, data, records) or ''
+        return '%s\nbody { margin: 0; }\n' % css
+
+    @classmethod
+    def css_footer(cls, action, data, records):
+        css = cls.css(action, data, records) or ''
+        return '%s\nbody { margin: 0; }\n' % css
+
+    @classmethod
+    def css_last_footer(cls, action, data, records):
+        css = cls.css(action, data, records) or ''
+        return '%s\nbody { margin: 0; }\n' % css
+
+    @classmethod
+    def _wrap_with_css(cls, css, node):
         if node is None:
             return None
         nodes = node if isinstance(node, (list, tuple)) else [node]
         doc = document(title='')
         with doc.head:
-            css = cls.css(action, data, records)
             if css:
                 style(raw(css))
         with doc:
@@ -275,7 +301,7 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
             meta(charset='utf-8')
             meta(name='description', content='')
             meta(name='author', content='Nantic')
-            css = cls.css(action, data, records)
+            css = cls.css_body(action, data, records)
             if css:
                 style(raw(css))
         with doc:
