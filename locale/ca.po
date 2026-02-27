@@ -643,3 +643,15 @@ msgstr "Informe HTML"
 msgctxt "view:ir.action.report:"
 msgid "Jinja Template"
 msgstr "Plantilla Jinja"
+
+msgctxt "html_report:h:"
+msgid "Proforma"
+msgstr "Proforma"
+
+msgctxt "html_report:h:"
+msgid "Draft"
+msgstr "Esborrany"
+
+msgctxt "html_report:h:"
+msgid "Restocking List"
+msgstr "Llista de reaprovisionament"
