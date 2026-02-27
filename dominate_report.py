@@ -335,7 +335,12 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
             documents = []
             for record in records:
                 language = cls.language([record])
-                with Transaction().set_context(language=language):
+                Lang = Pool().get('ir.lang')
+                langs = Lang.search([('code', '=', language)], limit=1)
+                lang = langs[0] if langs else 'en'
+                with Transaction().set_context(
+                        language=language,
+                        html_report_language=lang):
                     cls._refresh_records([record])
                     content = cls._render_node(cls.body_wrapper(
                         action, data, [record]))
@@ -365,7 +370,12 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
                 document = ''.join(documents)
         else:
             language = cls.language(records)
-            with Transaction().set_context(language=language):
+            Lang = Pool().get('ir.lang')
+            langs = Lang.search([('code', '=', language)], limit=1)
+            lang = langs[0] if langs else 'en'
+            with Transaction().set_context(
+                    language=language,
+                    html_report_language=lang):
                 cls._refresh_records(records)
                 content = cls._render_node(cls.body_wrapper(
                     action, data, records))

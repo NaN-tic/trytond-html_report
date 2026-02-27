@@ -66,6 +66,50 @@ def strfdelta(tdelta, fmt):
         d["hours"] += d.get('days') * 24 # 24h/day
     return fmt.format(**d)
 
+def render(value, digits=2, lang=None, filename=None):
+    if value is None or value == '':
+        return ''
+    if isinstance(value, str):
+        return value.replace('\n', '<br/>')
+    if isinstance(value, timedelta):
+        return strfdelta(value, '{hours}:{minutes}')
+    if isinstance(value, bool):
+        return (gettext('html_report.msg_yes') if value else
+            gettext('html_report.msg_no'))
+    if isinstance(value, bytes):
+        value = binascii.b2a_base64(value)
+        value = value.decode('ascii')
+        mimetype = None
+        if filename:
+            mimetype = mimetypes.guess_type(filename)[0]
+        if not mimetype:
+            mimetype = DEFAULT_MIME_TYPE
+        return ('data:%s;base64,%s' % (mimetype, value)).strip()
+
+    if not lang:
+        context = Transaction().context
+        lang = context.get('html_report_language')
+        if not lang or isinstance(lang, str):
+            language = Transaction().language or 'en'
+            Lang = Pool().get('ir.lang')
+            langs = Lang.search([('code', '=', language)], limit=1)
+            lang = langs[0] if langs else 'en'
+
+    if isinstance(value, (float, Decimal)):
+        context = Transaction().context
+        grouping = not context.get('output_format') in ['xls', 'xlsx']
+        return lang.format('%.*f', (digits, value), grouping=grouping)
+    if isinstance(value, int):
+        return lang.format('%d', value, grouping=True)
+    if hasattr(value, 'rec_name'):
+        return value.rec_name
+    if isinstance(value, datetime):
+        return lang.strftime(value)
+    if isinstance(value, date):
+        return lang.strftime(value)
+    return value
+
+
 class DualRecordError(Exception):
     def __init__(self, message):
         self.message = message
@@ -708,42 +752,6 @@ class HTMLReportMixin:
                     mimetype = DEFAULT_MIME_TYPE
                 return ('data:%s;base64,%s' % (mimetype, value)).strip()
 
-        def render(value, digits=2, lang=None, filename=None):
-            context = Transaction().context
-            if not lang:
-                langs = Lang.search([('code', '=', 'en')], limit=1)
-                lang = langs[0] if langs else 'en'
-            if isinstance(value, (float, Decimal)):
-                grouping = not context.get('output_format') in ['xls', 'xlsx']
-                return lang.format('%.*f', (digits, value), grouping=grouping)
-            if value is None or value == '':
-                return ''
-            if isinstance(value, bool):
-                return (gettext('html_report.msg_yes') if value else
-                    gettext('html_report.msg_no'))
-            if isinstance(value, int):
-                return lang.format('%d', value, grouping=True)
-            if hasattr(value, 'rec_name'):
-                return value.rec_name
-            if isinstance(value, datetime):
-                return lang.strftime(value)
-            if isinstance(value, date):
-                return lang.strftime(value)
-            if isinstance(value, timedelta):
-                return strfdelta(value, '{hours}:{minutes}')
-            if isinstance(value, str):
-                return value.replace('\n', '<br/>')
-            if isinstance(value, bytes):
-                value = binascii.b2a_base64(value)
-                value = value.decode('ascii')
-                mimetype = None
-                if filename:
-                    mimetype = mimetypes.guess_type(filename)[0]
-                if not mimetype:
-                    mimetype = DEFAULT_MIME_TYPE
-                return ('data:%s;base64,%s' % (mimetype, value)).strip()
-            return value
-
         def nullslast(tuple_list):
             if not isinstance(tuple_list, list):
                 raise UserError(gettext(
@@ -809,7 +817,6 @@ class HTMLReportMixin:
 
     @classmethod
     def render(cls, value, digits=2, lang=None, filename=None):
-        render = cls.get_jinja_filters()['render']
         return render(value, digits=digits, lang=lang, filename=filename)
 
     @classmethod
