@@ -42,7 +42,7 @@ from trytond.modules.widgets import tools
 
 from . import words
 from .generator import PdfGenerator
-from .tools import save_virtual_workbook, _convert_str_to_float
+from .tools import save_virtual_workbook, _convert_str_to_float, label as tools_label
 
 MEDIA_TYPE = config.get('html_report', 'type', default='screen')
 RAISE_USER_ERRORS = config.getboolean('html_report', 'raise_user_errors',
@@ -65,6 +65,52 @@ def strfdelta(tdelta, fmt):
     if not 'days' in fmt and d.get('days') > 0:
         d["hours"] += d.get('days') * 24 # 24h/day
     return fmt.format(**d)
+
+def render(value, digits=2, lang=None, filename=None):
+    if value is None or value == '':
+        return ''
+    if isinstance(value, str):
+        return value.replace('\n', '<br/>')
+    if isinstance(value, timedelta):
+        return strfdelta(value, '{hours}:{minutes}')
+    if isinstance(value, bool):
+        return (gettext('html_report.msg_yes') if value else
+            gettext('html_report.msg_no'))
+    if isinstance(value, bytes):
+        value = binascii.b2a_base64(value)
+        value = value.decode('ascii')
+        mimetype = None
+        if filename:
+            mimetype = mimetypes.guess_type(filename)[0]
+        if not mimetype:
+            mimetype = DEFAULT_MIME_TYPE
+        return ('data:%s;base64,%s' % (mimetype, value)).strip()
+
+    if not lang:
+        context = Transaction().context
+        lang = context.get('html_report_language')
+        if not lang or isinstance(lang, str):
+            logger.warning('html_report_language not found in context or is a '
+                'string. Potential performance issue.')
+            language = Transaction().language or 'en'
+            Lang = Pool().get('ir.lang')
+            langs = Lang.search([('code', '=', language)], limit=1)
+            lang = langs[0] if langs else 'en'
+
+    if isinstance(value, (float, Decimal)):
+        context = Transaction().context
+        grouping = not context.get('output_format') in ['xls', 'xlsx']
+        return lang.format('%.*f', (digits, value), grouping=grouping)
+    if isinstance(value, int):
+        return lang.format('%d', value, grouping=True)
+    if hasattr(value, 'rec_name'):
+        return value.rec_name
+    if isinstance(value, datetime):
+        return lang.strftime(value)
+    if isinstance(value, date):
+        return lang.strftime(value)
+    return value
+
 
 class DualRecordError(Exception):
     def __init__(self, message):
@@ -374,6 +420,18 @@ class DualRecord:
         'the {% language %} tag.'
         self.raw = self.raw.__class__(self.raw.id)
         self.render = FormattedRecord(self.raw, self._formatter)
+
+    def __eq__(self, other):
+        if isinstance(other, DualRecord):
+            return (self.raw.__name__ == other.raw.__name__
+                and self.raw.id == other.raw.id)
+        raw = getattr(other, 'raw', other)
+        if hasattr(raw, '__name__') and hasattr(raw, 'id'):
+            return self.raw.__name__ == raw.__name__ and self.raw.id == raw.id
+        return False
+
+    def __hash__(self):
+        return hash((self.raw.__name__, self.raw.id))
 
 
 class HTMLReportMixin:
@@ -696,42 +754,6 @@ class HTMLReportMixin:
                     mimetype = DEFAULT_MIME_TYPE
                 return ('data:%s;base64,%s' % (mimetype, value)).strip()
 
-        def render(value, digits=2, lang=None, filename=None):
-            context = Transaction().context
-            if not lang:
-                langs = Lang.search([('code', '=', 'en')], limit=1)
-                lang = langs[0] if langs else 'en'
-            if isinstance(value, (float, Decimal)):
-                grouping = not context.get('output_format') in ['xls', 'xlsx']
-                return lang.format('%.*f', (digits, value), grouping=grouping)
-            if value is None or value == '':
-                return ''
-            if isinstance(value, bool):
-                return (gettext('html_report.msg_yes') if value else
-                    gettext('html_report.msg_no'))
-            if isinstance(value, int):
-                return lang.format('%d', value, grouping=True)
-            if hasattr(value, 'rec_name'):
-                return value.rec_name
-            if isinstance(value, datetime):
-                return lang.strftime(value)
-            if isinstance(value, date):
-                return lang.strftime(value)
-            if isinstance(value, timedelta):
-                return strfdelta(value, '{hours}:{minutes}')
-            if isinstance(value, str):
-                return value.replace('\n', '<br/>')
-            if isinstance(value, bytes):
-                value = binascii.b2a_base64(value)
-                value = value.decode('ascii')
-                mimetype = None
-                if filename:
-                    mimetype = mimetypes.guess_type(filename)[0]
-                if not mimetype:
-                    mimetype = DEFAULT_MIME_TYPE
-                return ('data:%s;base64,%s' % (mimetype, value)).strip()
-            return value
-
         def nullslast(tuple_list):
             if not isinstance(tuple_list, list):
                 raise UserError(gettext(
@@ -796,6 +818,10 @@ class HTMLReportMixin:
             }
 
     @classmethod
+    def render(cls, value, digits=2, lang=None, filename=None):
+        return render(value, digits=digits, lang=lang, filename=filename)
+
+    @classmethod
     def get_environment(cls):
         """
         Create and return a jinja environment to render templates
@@ -823,34 +849,7 @@ class HTMLReportMixin:
 
     @classmethod
     def label(cls, model, field=None, lang=None):
-        pool = Pool()
-        Translation = pool.get('ir.translation')
-        Model = pool.get('ir.model')
-
-        if not lang:
-            lang = Transaction().language
-
-        if not model:
-            return ''
-
-        if field == None:
-            model, = Model.search([('name', '=', model)])
-            return model.string
-        else:
-            args = ("%s,%s" % (model, field), 'field', lang, None)
-            translation = Translation.get_sources([args])
-
-            if translation[args]:
-                return translation[args]
-            else:
-                args = ("%s,%s" % (model, field), 'field', 'en', None)
-                translation = Translation.get_sources([args])
-
-                if translation[args]:
-                    return translation[args]
-
-            ModelObject = pool.get(model)
-            return getattr(ModelObject, field).string
+        return tools_label(model, field=field, lang=lang)
 
     @classmethod
     def message(cls, message_id, *args, **variables):

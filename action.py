@@ -125,12 +125,12 @@ class ActionReport(metaclass=PoolMeta):
                         'missing': '\n'.join(sorted([x.rec_name for x in
                                     missing]))
                         }))
-        if unused:
-            raise ValidationError(gettext('html_report.unused_signatures', {
-                        'template': self.rec_name,
-                        'unused': '\n'.join(sorted([x.rec_name for x in
-                                    unused]))
-                        }))
+        #if unused:
+            #raise ValidationError(gettext('html_report.unused_signatures', {
+                        #'template': self.rec_name,
+                        #'unused': '\n'.join(sorted([x.rec_name for x in
+                                    #unused]))
+                        #}))
 
     def get_missing_unused_signatures(self):
         existing = {x.signature for x in self.html_templates}

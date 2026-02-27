@@ -90,8 +90,12 @@ class PdfGenerator:
             element_page._page_box.all_children(), 'body')
         element_body = element_body.copy_with_children(
             element_body.all_children())
-        element_html = PdfGenerator.get_element(
-            element_page._page_box.all_children(), element.replace('_', '-'))
+        if element == 'last_footer':
+            element_html = PdfGenerator.get_element_by_id(
+                element_page._page_box.all_children(), 'last-footer')
+        else:
+            element_html = PdfGenerator.get_element(
+                element_page._page_box.all_children(), element.replace('_', '-'))
 
         if element == 'header':
             if element_html:
@@ -234,6 +238,19 @@ class PdfGenerator:
             if box.element_tag == element:
                 return box
             box_children = PdfGenerator.get_element(box.all_children(), element)
+            if box_children:
+                return box_children
+
+    @staticmethod
+    def get_element_by_id(boxes, element_id):
+        for box in boxes:
+            try:
+                if box.element and box.element.get('id') == element_id:
+                    return box
+            except Exception:
+                pass
+            box_children = PdfGenerator.get_element_by_id(
+                box.all_children(), element_id)
             if box_children:
                 return box_children
 
