@@ -3,6 +3,9 @@ from openpyxl.writer.excel import save_workbook
 from datetime import date, datetime, time as dt_time
 from decimal import Decimal
 
+from trytond.pool import Pool
+from trytond.transaction import Transaction
+
 def save_virtual_workbook(workbook):
     with tempfile.NamedTemporaryFile() as tmp:
         save_workbook(workbook, tmp.name)
@@ -29,3 +32,31 @@ def _convert_str_to_float(value):
         except ValueError:
             return value
     return value
+
+def label(model, field=None, lang=None):
+    pool = Pool()
+    Translation = pool.get('ir.translation')
+    Model = pool.get('ir.model')
+
+    if not lang:
+        lang = Transaction().language
+
+    if not model:
+        return ''
+
+    if field is None:
+        model, = Model.search([('name', '=', model)])
+        return model.string
+
+    args = ("%s,%s" % (model, field), 'field', lang, None)
+    translation = Translation.get_sources([args])
+    if translation[args]:
+        return translation[args]
+
+    args = ("%s,%s" % (model, field), 'field', 'en', None)
+    translation = Translation.get_sources([args])
+    if translation[args]:
+        return translation[args]
+
+    ModelObject = pool.get(model)
+    return getattr(ModelObject, field).string

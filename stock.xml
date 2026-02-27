@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<tryton>
+    <data depends="stock">
+        <record model="ir.action.report" id="stock.report_shipment_out_delivery_note">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record model="ir.action.report" id="html_report_delivery_note">
+            <field name="name">Delivery Note</field>
+            <field name="model">stock.shipment.out</field>
+            <field name="report_name">stock.shipment.out.delivery_note</field>
+            <field name="extension">pdf</field>
+            <field name="template_extension">html</field>
+            <field name="single" eval="True"/>
+        </record>
+
+        <record model="ir.action.keyword" id="report_delivery_note_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">stock.shipment.out,-1</field>
+            <field name="action" ref="html_report_delivery_note"/>
+        </record>
+
+        <record model="ir.action.report" id="stock.report_shipment_out_picking_list">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record model="ir.action.report" id="html_report_picking_note">
+            <field name="name">Picking Note</field>
+            <field name="model">stock.shipment.out</field>
+            <field name="report_name">stock.shipment.out.picking_note</field>
+            <field name="extension">pdf</field>
+            <field name="template_extension">html</field>
+            <field name="single" eval="True"/>
+        </record>
+
+        <record model="ir.action.keyword" id="report_picking_note_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">stock.shipment.out,-1</field>
+            <field name="action" ref="html_report_picking_note"/>
+        </record>
+
+        <record model="ir.action.report" id="stock.report_shipment_internal">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record model="ir.action.report" id="html_report_internal_picking_note">
+            <field name="name">Internal Picking Note</field>
+            <field name="model">stock.shipment.internal</field>
+            <field name="report_name">stock.shipment.internal_picking_note</field>
+            <field name="extension">pdf</field>
+            <field name="template_extension">html</field>
+            <field name="single" eval="True"/>
+        </record>
+
+        <record model="ir.action.keyword" id="report_internal_picking_note_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">stock.shipment.internal,-1</field>
+            <field name="action" ref="html_report_internal_picking_note"/>
+        </record>
+
+        <record model="ir.action.report" id="html_report_refund_note">
+            <field name="name">Refund Note</field>
+            <field name="model">stock.shipment.in.return</field>
+            <field name="report_name">stock.shipment.in.refund_note</field>
+            <field name="extension">pdf</field>
+            <field name="template_extension">html</field>
+            <field name="single" eval="True"/>
+        </record>
+
+        <record model="ir.action.keyword" id="report_refund_note_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">stock.shipment.in.return,-1</field>
+            <field name="action" ref="html_report_refund_note"/>
+        </record>
+
+        <record model="ir.action.report" id="stock.report_shipment_out_return_restocking_list">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record model="ir.action.report" id="html_report_customer_refund_note">
+            <field name="name">Customer Refund Note</field>
+            <field name="model">stock.shipment.out.return</field>
+            <field name="report_name">stock.shipment.out.refund_note</field>
+            <field name="extension">pdf</field>
+            <field name="template_extension">html</field>
+            <field name="single" eval="True"/>
+        </record>
+
+        <record model="ir.action.keyword" id="report_customer_refund_note_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">stock.shipment.out.return,-1</field>
+            <field name="action" ref="html_report_customer_refund_note"/>
+        </record>
+
+        <record model="ir.action.report" id="stock.report_shipment_in_restocking_list">
+            <field name="active" eval="False"/>
+        </record>
+
+        <record model="ir.action.report" id="html_report_shipment_in_restocking_list">
+            <field name="name">Restocking List</field>
+            <field name="model">stock.shipment.in</field>
+            <field name="report_name">stock.shipment.in.restocking_list</field>
+            <field name="extension">pdf</field>
+            <field name="template_extension">html</field>
+            <field name="single" eval="True"/>
+        </record>
+
+        <record model="ir.action.keyword" id="report_shipment_in_restocking_list_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">stock.shipment.in,-1</field>
+            <field name="action" ref="html_report_shipment_in_restocking_list"/>
+        </record>
+
+        <record model="ir.action.report" id="html_report_inventory">
+            <field name="name">Inventory</field>
+            <field name="model">stock.inventory</field>
+            <field name="report_name">stock.inventory</field>
+            <field name="extension">pdf</field>
+            <field name="template_extension">html</field>
+            <field name="single" eval="True"/>
+        </record>
+
+        <record model="ir.action.keyword" id="report_inventory_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">stock.inventory,-1</field>
+            <field name="action" ref="html_report_inventory"/>
+        </record>
+    </data>
+</tryton>
