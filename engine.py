@@ -90,6 +90,8 @@ def render(value, digits=2, lang=None, filename=None):
         context = Transaction().context
         lang = context.get('html_report_language')
         if not lang or isinstance(lang, str):
+            logger.warning('html_report_language not found in context or is a '
+                'string. Potential performance issue.')
             language = Transaction().language or 'en'
             Lang = Pool().get('ir.lang')
             langs = Lang.search([('code', '=', language)], limit=1)
