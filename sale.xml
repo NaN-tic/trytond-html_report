@@ -12,6 +12,7 @@
             <field name="extension">pdf</field>
             <field name="template_extension">html</field>
             <field name="single" eval="True"/>
+            <field name="html_side_margin" eval="1"/>
         </record>
 
         <record model="ir.action.keyword" id="report_sale_keyword">
@@ -27,6 +28,7 @@
             <field name="extension">pdf</field>
             <field name="template_extension">html</field>
             <field name="single" eval="True"/>
+            <field name="html_side_margin" eval="1"/>
         </record>
 
         <record model="ir.action.keyword" id="report_sale_proforma_keyword">
