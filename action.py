@@ -86,7 +86,7 @@ class ActionReport(metaclass=PoolMeta):
     def view_attributes(cls):
         return super(ActionReport, cls).view_attributes() + [
             ('//page[@id="html_report"]', 'states', {
-                    'invisible': Eval('template_extension') != 'jinja',
+                    'invisible': ~Eval('template_extension').in_(['jinja', 'html']),
                     })]
 
     def get_content(self, name):

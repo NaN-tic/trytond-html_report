@@ -8,6 +8,7 @@
             <field name="extension">pdf</field>
             <field name="template_extension">html</field>
             <field name="single" eval="True"/>
+            <field name="html_side_margin" eval="1"/>
         </record>
 
         <record model="ir.action.keyword" id="report_valued_delivery_note_keyword">
