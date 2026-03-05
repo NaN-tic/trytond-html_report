@@ -12,7 +12,7 @@
             <field name="extension">pdf</field>
             <field name="template_extension">html</field>
             <field name="single" eval="True"/>
-            <field name="html_side_margin" eval="1"/>
+            <field name="html_side_margin" eval="0.5"/>
         </record>
 
         <record model="ir.action.keyword" id="report_invoice_keyword">

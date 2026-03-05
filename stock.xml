@@ -12,7 +12,7 @@
             <field name="extension">pdf</field>
             <field name="template_extension">html</field>
             <field name="single" eval="True"/>
-            <field name="html_side_margin" eval="1"/>
+            <field name="html_side_margin" eval="0.5"/>
         </record>
 
         <record model="ir.action.keyword" id="report_delivery_note_keyword">
@@ -32,7 +32,7 @@
             <field name="extension">pdf</field>
             <field name="template_extension">html</field>
             <field name="single" eval="True"/>
-            <field name="html_side_margin" eval="1"/>
+            <field name="html_side_margin" eval="0.5"/>
         </record>
 
         <record model="ir.action.keyword" id="report_picking_note_keyword">
@@ -52,7 +52,7 @@
             <field name="extension">pdf</field>
             <field name="template_extension">html</field>
             <field name="single" eval="True"/>
-            <field name="html_side_margin" eval="1"/>
+            <field name="html_side_margin" eval="0.5"/>
         </record>
 
         <record model="ir.action.keyword" id="report_internal_picking_note_keyword">
@@ -68,7 +68,7 @@
             <field name="extension">pdf</field>
             <field name="template_extension">html</field>
             <field name="single" eval="True"/>
-            <field name="html_side_margin" eval="1"/>
+            <field name="html_side_margin" eval="0.5"/>
         </record>
 
         <record model="ir.action.keyword" id="report_refund_note_keyword">
@@ -88,7 +88,7 @@
             <field name="extension">pdf</field>
             <field name="template_extension">html</field>
             <field name="single" eval="True"/>
-            <field name="html_side_margin" eval="1"/>
+            <field name="html_side_margin" eval="0.5"/>
         </record>
 
         <record model="ir.action.keyword" id="report_customer_refund_note_keyword">
@@ -108,7 +108,7 @@
             <field name="extension">pdf</field>
             <field name="template_extension">html</field>
             <field name="single" eval="True"/>
-            <field name="html_side_margin" eval="1"/>
+            <field name="html_side_margin" eval="0.5"/>
         </record>
 
         <record model="ir.action.keyword" id="report_shipment_in_restocking_list_keyword">
@@ -124,7 +124,7 @@
             <field name="extension">pdf</field>
             <field name="template_extension">html</field>
             <field name="single" eval="True"/>
-            <field name="html_side_margin" eval="1"/>
+            <field name="html_side_margin" eval="0.5"/>
         </record>
 
         <record model="ir.action.keyword" id="report_inventory_keyword">
