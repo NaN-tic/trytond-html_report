@@ -19,6 +19,7 @@ with open(output_path, 'w', encoding='utf-8') as f:
         f.write('report_id: %s\n' % report.id)
         f.write('name: %s\n' % report.name)
         f.write('model: %s\n' % report.model)
+        f.write('report_name: %s\n' % report.report_name)
         f.write('template_extension: %s\n\n' % report.template_extension)
 
         def template_content(template):

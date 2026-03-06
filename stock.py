@@ -199,6 +199,7 @@ class StockInventory(metaclass=PoolMeta):
 
 
 class StockReportMixin(DominateReport):
+
     @classmethod
     def show_carrier(cls, carrier):
         container = div()
@@ -258,8 +259,9 @@ class StockReportMixin(DominateReport):
                         with td():
                             if company.render.logo:
                                 img(cls='logo', src=company.render.logo)
-                        with td():
-                            document_info_node
+                        with td() as cell:
+                            if document_info_node is not None:
+                                cell.add(document_info_node)
                     with tr():
                         with td(cls='party_info'):
                             cls.show_company_info(company)
