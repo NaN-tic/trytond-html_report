@@ -175,7 +175,6 @@ class SaleReport(DominateReport):
         record, = records
         company = record.company
         is_proforma = action and action.name == 'Proforma'
-        is_proforma = True
 
         header = div()
         with header:

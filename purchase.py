@@ -27,8 +27,7 @@ class PurchaseLineDiscount(HTMLDiscountReportMixin, metaclass=PoolMeta):
     __name__ = 'purchase.line'
 
 
-class PurchaseReport(DominateReport):
-    __name__ = 'purchase.purchase'
+class PurchaseReportMixin(DominateReport):
 
     @classmethod
     def language(cls, records):
@@ -231,39 +230,20 @@ class PurchaseReport(DominateReport):
         return container
 
 
-class PurchaseSimplifiedReport(DominateReport):
-    __name__ = 'purchase.purchase.simplified'
+class PurchaseReport(PurchaseReportMixin):
+    __name__ = 'purchase.purchase'
 
-    @classmethod
-    def language(cls, records):
-        record = records[0] if records else None
-        if record and record.party and record.party.raw.lang:
-            return record.party.raw.lang.code
-        return Transaction().language or 'en'
+
+class PurchaseSimplifiedReport(PurchaseReportMixin):
+    __name__ = 'purchase.purchase.simplified'
 
     @classmethod
     def show_purchase_lines(cls, document, simplified=False):
         # Force simplified to True as the report is for simplified version of
         # the document
-        return PurchaseReport.show_purchase_lines(document, simplified=True)
-
-    @classmethod
-    def body(cls, action, data, records):
-        return PurchaseReport.body(action, data, records)
-
-    @classmethod
-    def header(cls, action, data, records):
-        return PurchaseReport.header(action, data, records)
-
-    @classmethod
-    def footer(cls, action, data, records):
-        return PurchaseReport.footer(action, data, records)
+        return super().show_purchase_lines(document, simplified=True)
 
     @classmethod
     def show_totals(cls, record):
         # Hide totals in simplified report
         return
-
-    @classmethod
-    def last_footer(cls, action, data, records):
-        return PurchaseReport.last_footer(action, data, records)
