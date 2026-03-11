@@ -5,6 +5,11 @@
             <field name="inherit" ref="ir.action_report_view_form"/>
             <field name="name">action_report_form</field>
         </record>
+        <record model="ir.ui.view" id="action_report_view_tree">
+            <field name="model">ir.action.report</field>
+            <field name="inherit" ref="ir.action_report_view_tree"/>
+            <field name="name">action_report_tree</field>
+        </record>
 
         <record model="ir.action.act_window" id="act_report_html_translation_form2">
             <field name="name">HTML Translations</field>
