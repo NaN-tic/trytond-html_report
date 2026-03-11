@@ -490,7 +490,7 @@ msgstr "Nota d'enviament"
 
 msgctxt "model:ir.action,name:html_report_internal_picking_note"
 msgid "Internal Picking Note"
-msgstr "Nota picking intern"
+msgstr "Nota recollida intern"
 
 msgctxt "model:ir.action,name:html_report_inventory"
 msgid "Inventory"
