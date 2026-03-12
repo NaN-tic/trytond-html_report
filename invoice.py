@@ -6,7 +6,7 @@ from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
 from trytond.transaction import Transaction
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
-from trytond.modules.html_report.engine import DualRecord
+from trytond.modules.html_report.engine import DualRecord, render as html_render
 from trytond.modules.html_report.dominate_report import DominateReport
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 from dominate.util import raw
@@ -339,9 +339,6 @@ class InvoiceReport(DominateReport):
     def show_due_dates(cls, invoice, company):
         if not invoice.move or not invoice.move.lines:
             return raw('')
-        lang = (invoice.party.lang and invoice.party.raw.lang
-            or company.party.lang and company.party.raw.lang)
-        render = cls.get_jinja_filters().get('render')
         due_table = table(id='due-dates', width='200px')
         with due_table:
             with thead():
@@ -355,8 +352,8 @@ class InvoiceReport(DominateReport):
                     with tr():
                         td(line.render.maturity_date, cls='tex-right')
                         amount = line.raw.debit - line.raw.credit
-                        formatted = render(amount,
-                            digits=invoice.currency.raw.digits, lang=lang)
+                        formatted = html_render(
+                            amount, digits=invoice.currency.raw.digits)
                         td('%s %s' % (formatted,
                             invoice.currency.render.symbol), cls='text-right')
         return due_table
