@@ -31,6 +31,7 @@ class Production(HTMLPartyInfoMixin, metaclass=PoolMeta):
 
 class ProductionReport(DominateReport):
     __name__ = 'production.production'
+    _single = True
 
     @classmethod
     def show_company_info(cls, company, show_party=True,
