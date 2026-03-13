@@ -38,6 +38,7 @@ class SaleLineDiscount(HTMLDiscountReportMixin, metaclass=PoolMeta):
 
 class SaleReport(DominateReport):
     __name__ = 'sale.sale'
+    _single = True
 
     @classmethod
     def language(cls, records):
@@ -214,12 +215,7 @@ class SaleReport(DominateReport):
         record, = records
         last_footer = div()
         with last_footer:
-            with div(
-                    id='last-footer',
-                    align='center',
-                    style=('position: fixed; width: 16cm; bottom: 0;'
-                        ' padding: 0.1cm; margin-left: 2cm;'
-                        ' margin-right: 2cm; margin-bottom: 2cm;')):
+            with div(id='last-footer', align='center'):
                 with table(id='totals', cls='condensed'):
                     with tr():
                         with td():

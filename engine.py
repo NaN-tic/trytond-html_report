@@ -437,8 +437,14 @@ class DualRecord:
 class HTMLReportMixin:
     __slots__ = ()
     babel_domain = 'messages'
-    side_margin = 2
+    side_margin = 1
     extra_vertical_margin = 30
+
+    @classmethod
+    def get_side_margin(cls, action):
+        if action and action.html_side_margin is not None:
+            return action.html_side_margin
+        return cls.side_margin or 0
 
     @classmethod
     def _get_dual_records(cls, ids, model, data):
@@ -506,9 +512,7 @@ class HTMLReportMixin:
         if action.template_extension != 'jinja':
             return super().execute(ids, data)
         action_name = cls.get_name(action)
-        side_margin = action.html_side_margin
-        if side_margin is None:
-            side_margin = cls.side_margin
+        side_margin = cls.get_side_margin(action)
         extra_vertical_margin = action.html_extra_vertical_margin
         if extra_vertical_margin is None:
             extra_vertical_margin = cls.extra_vertical_margin

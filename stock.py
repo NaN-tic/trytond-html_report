@@ -696,6 +696,7 @@ class StockReportMixin(DominateReport):
 
 class StockInventoryReport(StockReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.inventory'
+    _single = True
 
     @classmethod
     def header(cls, action, data, records):
@@ -732,6 +733,7 @@ class StockInventoryReport(StockReportMixin, metaclass=PoolMeta):
 
 class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.out.delivery_note'
+    _single = True
 
     @classmethod
     def show_document_info(cls, record):
@@ -783,18 +785,14 @@ class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
 
 class ValuedDeliveryNoteReport(DeliveryNoteReport, metaclass=PoolMeta):
     __name__ = 'stock.shipment.out.valued_delivery_note'
+    _single = True
 
     @classmethod
     def last_footer(cls, action, data, records):
         record, = records
         last_footer = div()
         with last_footer:
-            with div(
-                    id='last-footer',
-                    align='center',
-                    style=('position: fixed; width: 16cm; bottom: 0;'
-                        ' padding: 0.1cm; margin-left: 2cm;'
-                        ' margin-right: 2cm; margin-bottom: 2cm;')):
+            with div(id='last-footer', align='center'):
                 with table(id='totals', cls='condensed'):
                     with tr():
                         td('')
@@ -818,6 +816,7 @@ class ValuedDeliveryNoteReport(DeliveryNoteReport, metaclass=PoolMeta):
 
 class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.out.picking_note'
+    _single = True
 
     @classmethod
     def language(cls, records):
@@ -871,6 +870,7 @@ class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
 
 class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.internal_picking_note'
+    _single = True
 
     @classmethod
     def language(cls, records):
@@ -932,6 +932,7 @@ class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
 
 class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.out.refund_note'
+    _single = True
 
     @classmethod
     def show_document_info(cls, record):
@@ -979,6 +980,7 @@ class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
 
 class RefundNoteReport(CustomerRefundNoteReport, metaclass=PoolMeta):
     __name__ = 'stock.shipment.in.refund_note'
+    _single = True
 
     @classmethod
     def body(cls, action, data, records):
@@ -999,6 +1001,7 @@ class RefundNoteReport(CustomerRefundNoteReport, metaclass=PoolMeta):
 
 class SupplierRestockingListReport(StockReportMixin, metaclass=PoolMeta):
     __name__ = 'stock.shipment.in.restocking_list'
+    _single = True
 
     @classmethod
     def body(cls, action, data, records):
