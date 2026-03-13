@@ -194,17 +194,13 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
         'width: auto; }\n')
     _footer_margin_template = (
         'footer#footer { '
-        'left: %(side_margin)scm; '
-        'right: %(side_margin)scm; '
-        'margin-left: 0cm; '
-        'margin-right: 0cm; '
+        'margin-left: %(side_margin)scm; '
+        'margin-right: %(side_margin)scm; '
         'width: auto; }\n')
     _last_footer_margin_template = (
         'body { '
-        'left: %(side_margin)scm; '
-        'right: %(side_margin)scm; '
-        'margin-left: 0cm; '
-        'margin-right: 0cm; '
+        'margin-left: %(side_margin)scm; '
+        'margin-right: %(side_margin)scm; '
         'width: auto; }\n')
 
     @classmethod
