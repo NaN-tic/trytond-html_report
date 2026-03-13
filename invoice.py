@@ -107,6 +107,7 @@ class InvoiceLineDiscount(HTMLDiscountReportMixin, metaclass=PoolMeta):
 
 class InvoiceReport(DominateReport):
     __name__ = 'account.invoice'
+    _single = True
 
     @classmethod
     def language(cls, records):
@@ -116,8 +117,8 @@ class InvoiceReport(DominateReport):
         return Transaction().language or 'en'
 
     @classmethod
-    def _execute_dominate_report(cls, records, data, action, side_margin=2,
-            extra_vertical_margin=30):
+    def _execute_dominate_report(cls, records, data, action, side_margin,
+            extra_vertical_margin):
         pool = Pool()
         Invoice = pool.get('account.invoice')
         Configuration = Pool().get('account.configuration')
@@ -396,6 +397,9 @@ class InvoiceReport(DominateReport):
     @classmethod
     def show_document_info(cls, record):
         title = cls.label(record.raw.__name__)
+        # FIX en lang label
+        if 'Account' in title:
+            title = title.replace('Account ', '')
         document_date = (record.raw.invoice_date
             and record.render.invoice_date)
         label_date = cls.label(record.raw.__name__, 'invoice_date')
@@ -503,12 +507,7 @@ class InvoiceReport(DominateReport):
         company = record.company
         last_footer = div()
         with last_footer:
-            with div(
-                    id='last-footer',
-                    align='center',
-                    style=('position: fixed; width: 16cm; bottom: 0;'
-                        ' padding: 0.1cm; margin-left: 2cm;'
-                        ' margin-right: 2cm; margin-bottom: 2cm;')):
+            with div(id='last-footer', align='center'):
                 with table(id='totals', cls='condensed'):
                     with tr():
                         with td():

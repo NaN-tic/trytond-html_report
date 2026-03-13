@@ -178,9 +178,34 @@ class DominateCommonParty(metaclass=PoolMeta):
 
 class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
     _single = False
+    _header_margin_template = (
+        'header#header { '
+        'left: %(side_margin)scm; '
+        'right: %(side_margin)scm; '
+        'margin-left: 0cm; '
+        'margin-right: 0cm; '
+        'width: auto; }\n')
     _body_margin_template = (
-        'body { margin-left: %(side_margin)scm; '
-        'margin-right: %(side_margin)scm; }\n')
+        'body { '
+        'left: %(side_margin)scm; '
+        'right: %(side_margin)scm; '
+        'margin-left: 0cm; '
+        'margin-right: 0cm; '
+        'width: auto; }\n')
+    _footer_margin_template = (
+        'footer#footer { '
+        'left: %(side_margin)scm; '
+        'right: %(side_margin)scm; '
+        'margin-left: 0cm; '
+        'margin-right: 0cm; '
+        'width: auto; }\n')
+    _last_footer_margin_template = (
+        'body { '
+        'left: %(side_margin)scm; '
+        'right: %(side_margin)scm; '
+        'margin-left: 0cm; '
+        'margin-right: 0cm; '
+        'width: auto; }\n')
 
     @classmethod
     def body(cls, action, data, records):
@@ -252,9 +277,7 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
     @classmethod
     def css_body(cls, action, data, records):
         css = cls.css(action, data, records) or ''
-        side_margin = (action.html_side_margin
-            if action and action.html_side_margin is not None
-            else cls.side_margin)
+        side_margin = cls.get_side_margin(action)
         return '%s\n%s' % (
             css,
             cls._body_margin_template % {'side_margin': side_margin})
@@ -262,17 +285,26 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
     @classmethod
     def css_header(cls, action, data, records):
         css = cls.css(action, data, records) or ''
-        return '%s\nbody { margin: 0; }\n' % css
+        side_margin = cls.get_side_margin(action)
+        return '%s\n%s' % (
+            css,
+            cls._header_margin_template % {'side_margin': side_margin})
 
     @classmethod
     def css_footer(cls, action, data, records):
         css = cls.css(action, data, records) or ''
-        return '%s\nbody { margin: 0; }\n' % css
+        side_margin = cls.get_side_margin(action)
+        return '%s\n%s' % (
+            css,
+            cls._footer_margin_template % {'side_margin': side_margin})
 
     @classmethod
     def css_last_footer(cls, action, data, records):
         css = cls.css(action, data, records) or ''
-        return '%s\nbody { margin: 0; }\n' % css
+        side_margin = cls.get_side_margin(action)
+        return '%s\n%s' % (
+            css,
+            cls._last_footer_margin_template % {'side_margin': side_margin})
 
     @classmethod
     def _wrap_with_css(cls, css, node):

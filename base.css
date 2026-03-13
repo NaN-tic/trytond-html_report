@@ -31,8 +31,6 @@ header {
     top: 0;
     left: 0;
     padding-top: 1cm;
-    padding-left: 1cm;
-    padding-right: 1cm;
     text-align: left;
     font-size: 9px;
     width: 100%;
@@ -47,8 +45,6 @@ header {
 body {
   font-family: 'Arial';
   font-size: 10px;
-  /* margin-right: 1.3cm;
-  padding-bottom: 2cm; */
 }
 
 h1 {
@@ -78,10 +74,6 @@ table.tr {
   margin-right: 0;
   padding: 0.75rem;
 }
-
-/* tbody tr border {
-  border-bottom: 1px solid #dee2e6;
-} */
 
 table td {
   padding: 0.25rem;
@@ -164,13 +156,23 @@ h3.document{
 
 footer {
   position: fixed;
-  width: 85%;
+  width: 90%;
   bottom: 0;
-  padding: 0.5cm;
+  /* padding: 0.5cm; */
   text-align: center;
   font-size: 8px;
   margin-right: 1cm;
   margin-left: 1cm;
+}
+
+#last-footer {
+  position: fixed;
+  width: 90%;
+  bottom: 0;
+  /* padding: 0.5cm; */
+  margin-left: 1cm;
+  margin-right: 1cm;
+  margin-bottom: 2cm;
 }
 
 .text-left {
