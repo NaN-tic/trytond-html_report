@@ -9,6 +9,7 @@ from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import DualRecord, render as html_render
 from trytond.modules.html_report.dominate_report import DominateReport
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
+from trytond.modules.html_report.i18n import _
 from dominate.util import raw
 from dominate.tags import (div, footer as footer_tag, h1, h2, h4,
     header as header_tag, img, p, strong, style, table, tbody, td, th, thead,
@@ -400,13 +401,17 @@ class InvoiceReport(DominateReport):
         # FIX en lang label
         if 'Account' in title:
             title = title.replace('Account ', '')
+        if record.raw.state == 'validated':
+            title = _('Proforma')
         document_date = (record.raw.invoice_date
             and record.render.invoice_date)
         label_date = cls.label(record.raw.__name__, 'invoice_date')
         container = div()
         with container:
-            h1('%s: %s' % (title, record.render.number
-                if record.raw.number else ''), cls='document')
+            heading = title
+            if record.raw.number:
+                heading = '%s: %s' % (title, record.render.number)
+            h1(heading, cls='document')
             if document_date:
                 h2('%s: %s' % (label_date, document_date), cls='document')
             if record.raw.reference:
