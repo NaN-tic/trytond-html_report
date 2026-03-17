@@ -243,3 +243,8 @@ class PurchaseSimplifiedReport(PurchaseReportMixin):
     def show_totals(cls, record):
         # Hide totals in simplified report
         return
+
+    @classmethod
+    def last_footer(cls, action, data, records):
+        # Hide totals in simplified report
+        return
