@@ -252,9 +252,9 @@ class ProductionReport(DominateReport):
                             cls.label('production', 'route'),
                             record.route.render.name))
                 container.add(product_container)
-            h2(cls.label('production', 'outputs'))
+            container.add(h2(cls.label('production', 'outputs')))
             container.add(cls.show_output_moves(record))
-            h2(cls.label('production', 'inputs'))
+            container.add(h2(cls.label('production', 'inputs')))
             container.add(cls.show_input_moves(record))
             if getattr(record.raw, 'route', None):
                 container.add(cls.show_operations(record.operations))
