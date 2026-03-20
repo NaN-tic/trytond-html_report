@@ -504,7 +504,8 @@ class HTMLReportMixin:
 
     @classmethod
     def markdown(cls, value):
-        return markdown.markdown(value, extensions=['fenced_code'])
+        return markdown.markdown(
+            value, extensions=['fenced_code', 'tables', 'sane_lists'])
 
     @classmethod
     def render_jinja(cls, template_string, **context):
