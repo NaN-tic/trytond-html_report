@@ -6,14 +6,6 @@
     </xpath>
     <xpath expr="/form/notebook/page[@id='general']" position="after">
         <page string="HTML Report" id="html_report">
-            <label name="html_template"/>
-            <field name="html_template"/>
-            <label name="html_header_template"/>
-            <field name="html_header_template"/>
-            <label name="html_footer_template"/>
-            <field name="html_footer_template"/>
-            <label name="html_last_footer_template"/>
-            <field name="html_last_footer_template"/>
             <label name="html_raise_user_error"/>
             <field name="html_raise_user_error"/>
             <label name="html_copies"/>
@@ -24,14 +16,6 @@
             <field name="html_extra_vertical_margin"/>
             <label name="html_file_name"/>
             <field name="html_file_name"/>
-            <separator name="html_templates" colspan="4"/>
-            <field name="html_templates" colspan="4"/>
-        </page>
-        <page string="Jinja Template" id="jinja_template">
-            <field name="jinja_template" colspan="4" widget="code" language="html" height="500"/>
-        </page>
-        <page name="html_content">
-            <field name="html_content" colspan="4" widget="code" language="html" height="500"/>
         </page>
     </xpath>
 </data>

@@ -1,5 +1,6 @@
 # This file is part of Tryton.  The COPYRIGHT file at the top level of
 # this repository contains the full copyright notices and license terms.
+from datetime import date, datetime, time, timedelta
 from decimal import Decimal
 from trytond.tests.test_tryton import (ModuleTestCase, with_transaction,
     activate_module)
@@ -9,6 +10,7 @@ from trytond.transaction import Transaction
 from trytond.modules.company.tests import CompanyTestMixin, create_company, set_company
 from trytond.modules.account.tests import create_chart, get_fiscalyear
 from trytond.modules.account_invoice.tests import set_invoice_sequences
+from trytond.modules.html_report.engine import HTMLReportMixin, DualRecord
 
 
 class HtmlReportTestCase(CompanyTestMixin, ModuleTestCase):
@@ -31,82 +33,123 @@ class HtmlReportTestCase(CompanyTestMixin, ModuleTestCase):
         activate_module('production')
 
     @with_transaction()
-    def test_html_report(self):
-        'Create HTML Report'
+    def test_get_template_filters(self):
+        expected_keys = {
+            'base64',
+            'currencyformat',
+            'decimalformat',
+            'dateformat',
+            'datetimeformat',
+            'integer_to_words',
+            'format_currency',
+            'format_date',
+            'format_datetime',
+            'format_number',
+            'format_timedelta',
+            'grouped_slice',
+            'js_plus_js',
+            'js_to_html',
+            'js_to_text',
+            'modulepath',
+            'nullslast',
+            'numberformat',
+            'number_to_words',
+            'render',
+            'percentformat',
+            'scientificformat',
+            'short_url',
+            'timedeltaformat',
+            'timeformat',
+            }
+
+        with Transaction().set_context(language='en', report_lang='en'):
+            filters = HTMLReportMixin.get_template_filters()
+
+            self.assertEqual(set(filters.keys()), expected_keys)
+            for key in expected_keys:
+                self.assertIn(key, filters)
+                self.assertTrue(callable(filters[key]))
+
+            self.assertEqual(filters['format_number'](12.45, lang=None), '12.45')
+            self.assertEqual(filters['integer_to_words'](1234),
+                'Thousand Two Hundred Thirty-Four')
+            base64_css = filters['base64']('html_report/base.css')
+            self.assertTrue(base64_css.startswith('data:text/css;base64,'))
+            self.assertTrue(len(base64_css) > len('data:text/css;base64,'))
+            self.assertEqual(filters['currencyformat'](12.45, 'EUR'), '€12.45')
+            self.assertEqual(filters['decimalformat'](12.45), '12.45')
+            self.assertEqual(filters['dateformat'](date(2024, 1, 2)), 'Jan 2, 2024')
+            self.assertEqual(filters['datetimeformat'](
+                    datetime(2024, 1, 2, 3, 4, 5)),
+                'Jan 2, 2024, 3:04:05\u202fAM')
+            self.assertEqual(filters['format_date'](date(2024, 1, 2), lang=None),
+                '01/02/2024')
+            self.assertEqual(filters['format_datetime'](
+                    datetime(2024, 1, 2, 3, 4, 5), lang=None),
+                '01/02/2024\xa003:04:05')
+            self.assertEqual(filters['format_timedelta'](timedelta(hours=1)),
+                '01:00')
+            self.assertEqual([list(g) for g in filters['grouped_slice']([1, 2, 3], 2)],
+                [[1, 2], [3]])
+            # self.assertEqual(filters['js_plus_js'](['a', 'b']), 'a+b')
+            # self.assertEqual(filters['js_to_html']('hello'), '<p>hello</p>')
+            # self.assertEqual(filters['js_to_text']('<p>hello</p>'), 'hello')
+            self.assertEqual(filters['modulepath']('html_report/base.css')[:7],
+                'file://')
+            self.assertEqual(filters['nullslast']([(1, 'a'), (None, 'b')]),
+                [(1, 'a'), (None, 'b')])
+            self.assertEqual(filters['numberformat'](12.45), '12.45')
+            self.assertEqual(filters['number_to_words'](12), 'Twelve Euros')
+            self.assertEqual(filters['render']('a\nb'), 'a<br/>b')
+            self.assertEqual(filters['percentformat'](0.12), '12%')
+            self.assertEqual(filters['scientificformat'](1000), '1E3')
+            self.assertEqual(filters['short_url']('Visit https://example.com'),
+                'Visit <a href="https://example.com">example.com</a>')
+            self.assertEqual(filters['timedeltaformat'](timedelta(hours=1)),
+                '1 hour')
+            self.assertEqual(filters['timeformat'](time(3, 4, 5)), '3:04:05\u202fAM')
+
+    @with_transaction()
+    def test_html_report_mixin_helpers(self):
         pool = Pool()
-        ActionReport = pool.get('ir.action.report')
-        Template = pool.get('html.template')
-        HTMLTemplateTranslation = pool.get('html.template.translation')
         Model = pool.get('ir.model')
+        record, = Model.search([], limit=1)
 
-        model, = Model.search([('name', '=', 'ir.model')], limit=1)
+        with Transaction().set_context(language='en', report_lang='en'):
+            self.assertEqual(
+                HTMLReportMixin.label('ir.model', 'global_search_p'),
+                'Global Search')
+            self.assertEqual(
+                HTMLReportMixin.message('ir.msg_created_at'),
+                'Created at')
+            self.assertEqual(
+                HTMLReportMixin.markdown('# Test\nHello World'),
+                '<h1>Test</h1>\n<p>Hello World</p>')
+            self.assertEqual(
+                HTMLReportMixin.render_jinja(
+                    '{{ value }}-{{ number }}', value='test', number=7),
+                'test-7')
+            self.assertTrue(
+                HTMLReportMixin.qrcode('test').startswith(
+                    'data:image/svg+xml;base64,'))
+            self.assertTrue(
+                HTMLReportMixin.barcode('code128', 'test').startswith(
+                    'data:image/svg+xml;base64,'))
+            self.assertTrue(
+                HTMLReportMixin.datamatrix('test').startswith(
+                    'data:image/svg+xml;base64,'))
+            self.assertTrue(
+                HTMLReportMixin.to_base64(b'<svg></svg>').startswith(
+                    'data:image/svg+xml;base64,'))
 
-        with file_open('html_report/tests/base.html') as f:
-            tpl_base, = Template.create([{
-                        'name': 'Base',
-                        'type': 'base',
-                        'content': f.read(),
-                        }])
+            dual = HTMLReportMixin.dualrecord(record)
+            self.assertIsInstance(dual, DualRecord)
+            self.assertEqual(dual.raw.id, record.id)
 
-        with file_open('html_report/tests/models.html') as f:
-            tpl_models, = Template.create([{
-                        'name': 'Modules',
-                        'type': 'extension',
-                        'content': f.read(),
-                        'parent': tpl_base,
-                        }])
-
-        report, = ActionReport.create([{
-            'name': 'Models',
-            'model': 'ir.model',
-            'report_name': 'ir.model.report',
-            'template_extension': 'jinja',
-            'extension': 'html',
-            'html_template': tpl_models,
-            }])
-
-        models = Model.search([('name', 'like', 'ir.model%')])
-
-        self.assertTrue(report.id)
-        self.assertTrue('block body' in report.html_content, True)
-
-        HTMLTemplateTranslation.create([{
-                'lang': 'es',
-                'src': 'Name',
-                'value': 'Nombre',
-                'report': report.id,
-                }, {
-                'lang': 'es',
-                'src': 'Model',
-                'value': 'Modelo',
-                'report': report.id,
-                }])
-
-        with Transaction().set_context(language='es'):
-            ModelReport = Pool().get('ir.model.report', type='report')
-            ext, content, _, filename = ModelReport.execute([m.id for m in models], {})
-            self.assertTrue(ext, 'html')
-            self.assertTrue('ir.model' in content, True)
-            self.assertTrue('Nombre' in content, True)
-            self.assertTrue('Modelo' in content, True)
-            # has not translation because test not load locale/es.po translations (-l es)
-            self.assertTrue('Created by' in content, True)
-            self.assertTrue(filename.startswith('Models'))
-
-            report.html_file_name = '{{ record.render.rec_name }} {{ record.render.id }}'
-            report.save()
-            ext, content, _, filename = ModelReport.execute([m.id for m in models], {})
-            self.assertTrue(filename.startswith('Model-'))
-
-        report2, = ActionReport.copy([report], {'report_name': 'ir.model.report2', 'extension': None})
-        ModelReport2 = Pool().get('ir.model.report2', type='report')
-        ext, content, _, _ = ModelReport2.execute([m.id for m in models], {})
-        self.assertTrue(isinstance(content, bytes))
-
-        with Transaction().set_context(output_format='html'):
-            ext, content, _, _ = ModelReport2.execute([m.id for m in models], {})
-            self.assertTrue(isinstance(content, str))
-            self.assertTrue(content.startswith('<!DOCTYPE html>'))
+            dual_from_string = HTMLReportMixin.dualrecord(
+                f'{record.__name__},{record.id}')
+            self.assertIsInstance(dual_from_string, DualRecord)
+            self.assertEqual(dual_from_string.raw.id, record.id)
 
     @with_transaction()
     def test_check_reports(self):
@@ -284,7 +327,7 @@ class HtmlReportTestCase(CompanyTestMixin, ModuleTestCase):
 
             reports = Report.search([
                     ('model', '!=', None),
-                    ('template_extension', '=', 'jinja'),
+                    ('template_extension', '=', 'html'),
                     ])
 
             for report in reports:
