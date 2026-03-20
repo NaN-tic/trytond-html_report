@@ -250,18 +250,6 @@ msgctxt "model:ir.action,name:act_report_html_translation_form2"
 msgid "HTML Translations"
 msgstr "HTML Übersetzungen"
 
-msgctxt "model:ir.action,name:act_report_template_form"
-msgid "Report - Templates"
-msgstr "Bericht - Vorlagen"
-
-msgctxt "model:ir.action,name:act_signature_form"
-msgid "Signatures"
-msgstr "Signaturen"
-
-msgctxt "model:ir.action,name:act_template_form"
-msgid "Templates"
-msgstr "Vorlagen"
-
 msgctxt "model:ir.action,name:act_template_translation_form"
 msgid "Template Translation"
 msgstr "Vorlagenübersetzung"
