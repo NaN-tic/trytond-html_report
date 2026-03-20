@@ -1,8 +1,0 @@
-<tree>
-    <field name="name" expand="2"/>
-    <field name="type"/>
-    <field name="implements"/>
-    <field name="sequence"/>
-    <field name="parent"/>
-    <field name="data" tree_invisible="1"/>
-</tree>

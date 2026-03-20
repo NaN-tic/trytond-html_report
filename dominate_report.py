@@ -478,11 +478,10 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
                 records = cls._get_dual_records(ids, model, data)
 
                 if action.html_file_name:
-                    import jinja2
-
-                    template = jinja2.Template(action.html_file_name)
-                    filename = slugify('-'.join(template.render(record=record)
-                        for record in records[:5]))
+                    filename = slugify('-'.join(
+                            cls.render_jinja(
+                                action.html_file_name, record=record)
+                            for record in records[:5]))
                 else:
                     suffix = '-'.join(r.render.rec_name for r in records[:5])
                     if len(records) > 5:

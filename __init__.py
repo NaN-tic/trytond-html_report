@@ -4,12 +4,11 @@
 from trytond.pool import Pool
 from trytond.report import Report
 from . import action
-from . import translation
-from . import template
 from . import engine
 from . import i18n
 from . import invoice
 from . import dominate_report
+from . import module as module_report
 from . import production
 from . import purchase
 from . import sale
@@ -23,10 +22,6 @@ def register():
         dominate_report.DominateCommon,
         action.ActionReport,
         action.HTMLTemplateTranslation,
-        template.Signature,
-        template.Template,
-        template.TemplateUsage,
-        template.ReportTemplate,
         i18n.Translation,
         module=module, type_='model')
     Pool.register(
@@ -40,14 +35,12 @@ def register():
         account_configuration.ConfigurationHTMLReport,
         module=module, type_='model', depends=['account'])
     Pool.register(
-        translation.ReportTranslationSet,
         i18n.TranslationSet,
         i18n.TranslationClean,
         i18n.TranslationUpdate,
         module=module, type_='wizard')
     Pool.register_mixin(engine.HTMLReportMixin, Report,
         module=module)
-
     Pool.register(
         invoice.Invoice,
         invoice.InvoiceLine,
@@ -57,6 +50,9 @@ def register():
         module=module,
         type_='model',
         depends=['account_invoice', 'account_invoice_discount'])
+    Pool.register(
+        module_report.ModuleReport,
+        module=module, type_='report')
     Pool.register(
         invoice.InvoiceReport,
         module=module, type_='report', depends=[

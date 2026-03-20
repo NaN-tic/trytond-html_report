@@ -282,10 +282,6 @@ msgctxt "model:ir.message,text:unused_signatures"
 msgid "\"%(template)s\" unused signatures: %(unused)s"
 msgstr "Nicht verwendete Signaturen in \"%(template)s\": %(unused)s"
 
-msgctxt "model:ir.ui.menu,name:menu_action_report_form"
-msgid "Reports"
-msgstr "Berichte"
-
 msgctxt "model:ir.ui.menu,name:menu_html"
 msgid "HTML Reports"
 msgstr "HTML Berichte"
@@ -301,10 +297,6 @@ msgstr "Signaturen"
 msgctxt "model:ir.ui.menu,name:menu_template_form"
 msgid "Templates"
 msgstr "Vorlagen"
-
-msgctxt "model:ir.ui.menu,name:menu_template_translation_form"
-msgid "Template Translation"
-msgstr "Vorlagenübersetzung"
 
 msgctxt "selection:html.template,type:"
 msgid "Base"

@@ -3,12 +3,10 @@ import io
 import mimetypes
 import os
 import logging
+import jinja2
 import markdown
-import pytz
 import subprocess
-import zipfile
 import tempfile
-import traceback
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 from functools import partial
@@ -17,16 +15,12 @@ from urllib.parse import urlparse
 from pypdf import PdfReader, PdfWriter
 import re
 import barcode
-import jinja2
-import jinja2.ext
 import qrcode
 import qrcode.image.svg
 from ppf.datamatrix import DataMatrix
 import weasyprint
-from babel import dates, numbers, support
+from babel import dates, numbers
 from barcode.writer import SVGWriter
-from openpyxl import Workbook
-from bs4 import BeautifulSoup
 
 from trytond.config import config
 from trytond.exceptions import UserError
@@ -34,15 +28,14 @@ from trytond.i18n import gettext
 from trytond.model.fields.selection import TranslatedSelection
 from trytond.model.modelstorage import _record_eval_pyson
 from trytond.pool import Pool
-from trytond.tools import file_open, slugify
+from trytond.tools import file_open
 from trytond.transaction import Transaction
 from trytond.tools import grouped_slice
 from trytond.report import Report
 from trytond.modules.widgets import tools
 
 from . import words
-from .generator import PdfGenerator
-from .tools import save_virtual_workbook, _convert_str_to_float, label as tools_label
+from .tools import label as tools_label
 
 MEDIA_TYPE = config.get('html_report', 'type', default='screen')
 RAISE_USER_ERRORS = config.getboolean('html_report', 'raise_user_errors',
@@ -118,116 +111,6 @@ class DualRecordError(Exception):
 
     def __str__(self):
         return self.message
-
-
-class SwitchableTranslations:
-    '''
-    Class that implements ugettext() and ngettext() as expected by
-    jinja2.ext.i18n but also adds the ability to switch the language
-    at any point in a template.
-
-    The class is used by SwitchableLanguageExtension
-    '''
-    def __init__(self, lang='en', dirname=None, domain=None):
-        self.dirname = dirname
-        self.domain = domain
-        self.cache = {}
-        self.env = None
-        self.current = None
-        self.language = lang
-        self.report = None
-        self.set_language(lang)
-
-    # TODO: We should implement a context manager
-
-    def set_language(self, lang='en'):
-        self.language = lang
-        if lang in self.cache:
-            self.current = self.cache[lang]
-            return
-
-        context = Transaction().context
-        if context.get('report_translations'):
-            report_translations = context['report_translations']
-            if os.path.isdir(report_translations):
-                self.current = support.Translations.load(
-                    dirname=report_translations,
-                    locales=[lang],
-                    domain=self.domain,
-                    )
-                self.cache[lang] = self.current
-        else:
-            self.report = context.get('html_report', -1)
-
-    def ugettext(self, message):
-        Report = Pool().get('ir.action.report')
-
-        if self.current:
-            return self.current.ugettext(message)
-        elif self.report:
-            return Report.gettext(self.report, message, self.language)
-        return message
-
-    def ngettext(self, singular, plural, n):
-        Report = Pool().get('ir.action.report')
-
-        if self.current:
-            return self.current.ugettext(singular, plural, n)
-        elif self.report:
-            return Report.gettext(self.report, singular, self.language)
-        return singular
-
-# Based on
-# https://stackoverflow.com/questions/44882075/switch-language-in-jinja-template/45014393#45014393
-
-class SwitchableLanguageExtension(jinja2.ext.Extension):
-    '''
-    This Jinja2 Extension allows the user to use the folowing tag:
-
-    {% language 'en' %}
-    {% endlanguage %}
-
-    All gettext() calls within the block will return the text in the language
-    defined thanks to the use of SwitchableTranslations class.
-    '''
-    tags = {'language'}
-
-    def __init__(self, env):
-        self.env = env
-        env.extend(
-            install_switchable_translations=self._install,
-            )
-        self.translations = None
-
-    def _install(self, translations):
-        self.env.install_gettext_translations(translations)
-        self.translations = translations
-
-    def parse(self, parser):
-        lineno = next(parser.stream).lineno
-        # Parse the language code argument
-        context = jinja2.nodes.ContextReference()
-        args = [parser.parse_expression(), context]
-        # Parse everything between the start and end tag:
-        body = parser.parse_statements(['name:endlanguage'], drop_needle=True)
-        node = self.call_method('_switch_language', args, lineno=lineno)
-        # Call the _switch_language method with the given language code and body
-        return jinja2.ext.nodes.CallBlock(node, [], [], body).set_lineno(lineno)
-
-    def _switch_language(self, language_code, context, caller):
-        if self.translations:
-            self.translations.set_language(language_code)
-        with Transaction().set_context(language=language_code):
-            record = context.get('record')
-            if isinstance(record, DualRecord):
-                record.refresh()
-            records = context.get('records')
-            if isinstance(records, (tuple, list)):
-                for record in records:
-                    if isinstance(record, DualRecord):
-                        record.refresh()
-            output = caller()
-        return output
 
 
 class Formatter:
@@ -452,19 +335,6 @@ class HTMLReportMixin:
         return [DualRecord(x) for x in records]
 
     @classmethod
-    def get_templates_jinja(cls, action):
-        header = action.html_header_content
-        content = (action.report_content
-            and action.report_content.decode("utf-8") or action.html_content)
-        footer = action.html_footer_content
-        last_footer = action.html_last_footer_content
-        if not content:
-            if not action.html_content:
-                raise Exception('Error', 'Missing jinja report file!')
-            content = action.html_content
-        return header, content, footer, last_footer
-
-    @classmethod
     def merge_pdfs(cls, pdfs_data):
         merger = PdfWriter()
         for pdf_data in pdfs_data:
@@ -504,175 +374,6 @@ class HTMLReportMixin:
         return pdf_data
 
     @classmethod
-    def __execute(cls, ids, data, queue=None):
-        action, model = cls.get_action(data)
-        cls.check_access(action, model, ids)
-
-        # in case is not jinja, call super()
-        if action.template_extension != 'jinja':
-            return super().execute(ids, data)
-        action_name = cls.get_name(action)
-        side_margin = cls.get_side_margin(action)
-        extra_vertical_margin = action.html_extra_vertical_margin
-        if extra_vertical_margin is None:
-            extra_vertical_margin = cls.extra_vertical_margin
-
-        if Transaction().context.get('output_format') == 'html':
-            is_zip, is_merge_pdf, Printer = None, None, None
-            output_format = data['output_format'] = 'html'
-        else:
-            is_zip = action.single and len(ids) > 1 and action.html_zipped
-            is_merge_pdf = action.html_copies and action.html_copies > 1
-            Printer = None
-            try:
-                Printer = Pool().get('printer')
-            except KeyError:
-                logger.warning('Model "Printer" not found.')
-            output_format = data.get('output_format', action.extension or 'pdf')
-
-        # use DualRecord when template extension is jinja
-        data['html_dual_record'] = True
-        records = []
-        with Transaction().set_context(
-                html_report=action.id,
-                address_with_party=False,
-                output_format=output_format):
-            if model and ids:
-                records = cls._get_dual_records(ids, model, data)
-
-                if action.html_file_name:
-                    template = jinja2.Template(action.html_file_name)
-                    filename = slugify('-'.join(template.render(record=record)
-                                                for record in records[:5]))
-                else:
-                    suffix = '-'.join(r.render.rec_name for r in records[:5])
-                    if len(records) > 5:
-                        suffix += '__' + str(len(records[5:]))
-                    filename = slugify('%s-%s' % (action_name, suffix))
-            else:
-                records = []
-                filename = slugify(action_name)
-
-            # report single and len > 1, return zip file
-            if is_zip:
-                content = BytesIO()
-                with zipfile.ZipFile(content, 'w') as content_zip:
-                    for record in records:
-                        oext, rcontent = cls._execute_html_report(
-                            [record],
-                            data,
-                            action,
-                            side_margin=side_margin,
-                            extra_vertical_margin=extra_vertical_margin)
-                        rfilename = '%s.%s' % (
-                            slugify(record.render.rec_name),
-                            oext)
-                        if action.html_copies and action.html_copies > 1:
-                            rcontent = cls.merge_pdfs([rcontent] * action.html_copies)
-                        content_zip.writestr(rfilename, rcontent)
-                content = content.getvalue()
-                return ('zip', content, False, filename)
-
-            oext, content = cls._execute_html_report(
-                    records,
-                    data,
-                    action,
-                    side_margin=side_margin,
-                    extra_vertical_margin=extra_vertical_margin)
-            if content is None:
-                content = ''
-            if not isinstance(content, str):
-                content = bytes(content)
-
-            if is_merge_pdf:
-                content = cls.merge_pdfs([content] * action.html_copies)
-            if Printer:
-                return Printer.send_report(oext, content,
-                    action_name, action)
-            return oext, content, cls.get_direct_print(action), filename
-
-    @classmethod
-    def execute(cls, ids, data):
-        action, model = cls.get_action(data)
-        cls.check_access(action, model, ids)
-        if action.template_extension != 'jinja':
-            return super().execute(ids, data)
-        return cls.__execute(ids, data, queue=None)
-
-    @classmethod
-    def _execute_html_report(cls, records, data, action, side_margin=2,
-            extra_vertical_margin=30):
-        header_template, main_template, footer_template, last_footer_template = \
-                cls.get_templates_jinja(action)
-        extension = data.get('output_format', action.extension or 'pdf')
-        if action.single:
-            # If document requires a page counter for each record we need to
-            # render records individually
-            documents = []
-            for record in records:
-                content = cls.render_template_jinja(action, main_template,
-                    record=record, records=[record], data=data)
-                header = header_template and cls.render_template_jinja(action,
-                    header_template, record=record, records=[record],
-                    data=data)
-                footer = footer_template and cls.render_template_jinja(action,
-                    footer_template, record=record, records=[record],
-                    data=data)
-                last_footer = last_footer_template and cls.render_template_jinja(action,
-                    last_footer_template, record=record, records=[record],
-                    data=data)
-                if extension == 'pdf':
-                    documents.append(PdfGenerator(
-                            content,
-                            header_html=header,
-                            footer_html=footer,
-                            last_footer_html=last_footer,
-                            side_margin=side_margin,
-                            extra_vertical_margin=extra_vertical_margin).render_html())
-                else:
-                    documents.append(content)
-            if extension == 'pdf' and documents:
-                document = documents[0].copy([page for doc in documents
-                    for page in doc.pages])
-                document = document.write_pdf()
-            else:
-                document = ''.join(documents)
-        else:
-            content = cls.render_template_jinja(action, main_template,
-                records=records, data=data)
-            header = header_template and cls.render_template_jinja(action,
-                header_template, records=records, data=data)
-            footer = footer_template and cls.render_template_jinja(action,
-                footer_template, records=records, data=data)
-            last_footer = last_footer_template and cls.render_template_jinja(action,
-                last_footer_template, records=records, data=data)
-            if extension == 'pdf':
-                document = PdfGenerator(
-                    content,
-                    header_html=header,
-                    footer_html=footer,
-                    last_footer_html=last_footer,
-                    side_margin=side_margin,
-                    extra_vertical_margin=extra_vertical_margin
-                    ).render_pdf()
-            else:
-                document = content
-
-        if extension == 'xlsx':
-            wb = Workbook()
-            ws = wb.active
-
-            soup = BeautifulSoup(document, 'html.parser')
-            for table in soup.find_all('table'):
-                for row in table.find_all('tr'):
-                    data = []
-                    for cell in row.find_all(['td', 'th']):
-                        data.append(_convert_str_to_float(cell.text))
-                    ws.append(data)
-                document = save_virtual_workbook(wb)
-        return extension, document
-
-    @classmethod
     def get_action(cls, data):
         pool = Pool()
         ActionReport = pool.get('ir.action.report')
@@ -698,34 +399,7 @@ class HTMLReportMixin:
         return action.direct_print
 
     @classmethod
-    def jinja_loader_func(cls, name):
-        """
-        Return the template from the module directories or ID from other template.
-
-        The name is expected to be in the format:
-
-            <module_name>/path/to/template
-
-        for example, if the account_invoice_html_report module had a base
-        template in its reports folder, then you should be able to use:
-
-            {% extends 'html_report/report/base.html' %}
-        """
-        Template = Pool().get('html.template')
-
-        if '/' in name:
-            module, path = name.split('/', 1)
-            try:
-                with file_open(os.path.join(module, path)) as f:
-                    return f.read()
-            except IOError:
-                return None
-        else:
-            template, = Template.search([('id', '=', name)], limit=1)
-            return template.all_content
-
-    @classmethod
-    def get_jinja_filters(cls):
+    def get_template_filters(cls):
         """
         Returns filters that are made available in the template context.
         By default, the following filters are available:
@@ -807,7 +481,6 @@ class HTMLReportMixin:
             'js_plus_js': tools.js_plus_js,
             'js_to_html': partial(tools.js_to_html, url_prefix='base64'),
             'js_to_text': tools.js_to_text,
-            'markdown': markdown.markdown,
             'modulepath': module_path,
             'nullslast': nullslast,
             'numberformat': partial(numbers.format_number, locale=locale),
@@ -822,38 +495,21 @@ class HTMLReportMixin:
             }
 
     @classmethod
-    def get_environment(cls):
-        """
-        Create and return a jinja environment to render templates
-
-        Downstream modules can override this method to easily make changes
-        to environment
-        """
-        extensions = ['jinja2.ext.i18n', 'jinja2.ext.loopcontrols', 'jinja2.ext.do',
-            SwitchableLanguageExtension]
-        env = jinja2.Environment(extensions=extensions,
-            loader=jinja2.FunctionLoader(cls.jinja_loader_func))
-        env.filters.update(cls.get_jinja_filters())
-
-        context = Transaction().context
-        locale = context.get(
-            'report_lang', Transaction().language or 'en').split('_')[0]
-        report_translations = context.get('report_translations')
-        if report_translations and os.path.isdir(report_translations):
-            translations = SwitchableTranslations(
-                locale, report_translations, cls.babel_domain)
-        else:
-            translations = SwitchableTranslations(locale)
-        env.install_switchable_translations(translations)
-        return env
-
-    @classmethod
     def label(cls, model, field=None, lang=None):
         return tools_label(model, field=field, lang=lang)
 
     @classmethod
     def message(cls, message_id, *args, **variables):
         return gettext(message_id, *args, **variables)
+
+    @classmethod
+    def markdown(cls, value):
+        return markdown.markdown(value, extensions=['fenced_code'])
+
+    @classmethod
+    def render_jinja(cls, template_string, **context):
+        # Render a small Jinja2 template string using the provided context.
+        return jinja2.Template(template_string).render(**context)
 
     @classmethod
     def qrcode(cls, value, error_correction=qrcode.ERROR_CORRECT_M):
@@ -896,99 +552,6 @@ class HTMLReportMixin:
     @classmethod
     def raise_user_error(cls, value):
         raise UserError(value)
-
-
-    @classmethod
-    def render_template_jinja(cls, action, template_string, record=None,
-            records=None, data=None):
-        """
-        Render the template using Jinja2
-        """
-        pool = Pool()
-        User = pool.get('res.user')
-        try:
-            Company = pool.get('company.company')
-        except:
-            Company = None
-
-        env = cls.get_environment()
-
-        if records is None:
-            records = []
-
-        now = datetime.now()
-        context = {
-            'barcode': cls.barcode,
-            'data': data,
-            'datamatrix': cls.datamatrix,
-            'Decimal': Decimal,
-            'dualrecord': cls.dualrecord,
-            'qrcode': cls.qrcode,
-            'label': cls.label,
-            'message': cls.message,
-            'pool': Pool(),
-            'raise_user_error': cls.raise_user_error,
-            'record': record,
-            'records': records,
-            'report': DualRecord(action) if action else None,
-            'timedelta': timedelta,
-            'user': DualRecord(User(Transaction().user)),
-            'utc_time': now,
-            }
-        company_id = Transaction().context.get('company')
-        if Company and company_id:
-            company = Company(company_id)
-            context['company'] = DualRecord(company)
-            if company.timezone:
-                timezone = pytz.timezone(company.timezone)
-                tznow = timezone.localize(now)
-                tznow = now + tznow.utcoffset()
-                context['time'] = tznow
-        if not 'time' in context:
-            context['time'] = now
-        context['today'] = context['time'].date()
-
-        context.update(cls.local_context())
-        try:
-            report_template = env.from_string(template_string)
-        except jinja2.exceptions.TemplateSyntaxError as e:
-            if RAISE_USER_ERRORS or action.html_raise_user_error:
-                raise UserError(gettext('html_report.template_error',
-                        report=action.rec_name, error=repr(e)))
-            raise
-        try:
-            res = report_template.render(**context)
-        except Exception as e:
-            o = traceback.TracebackException.from_exception(e)
-            lineno = None
-            for line in reversed(o.stack):
-                if line.filename == '<template>':
-                    lineno = line.lineno
-                    break
-            if lineno:
-                location = []
-                location.append('Line %s' % lineno)
-                lines = template_string.splitlines()
-                for line in reversed(lines[:lineno]):
-                    if re.match(r'^\s*{%\s*endmacro\s+', line):
-                        location.append('(not in a macro)')
-                        break
-                    if re.match(r'^\s*{%\s*macro\s+', line):
-                        location.append('Macro %s' % line.split()[2])
-                        break
-                location.append('Expr: %s' %
-                    template_string.splitlines()[lineno-1])
-                e.args = e.args + tuple(location)
-
-            if RAISE_USER_ERRORS or action and action.html_raise_user_error:
-                raise UserError(gettext('html_report.render_error',
-                        report=action.rec_name, error=repr(e)))
-            raise
-        return res
-
-    @classmethod
-    def local_context(cls):
-        return {}
 
     @classmethod
     def weasyprint_render(cls, content):
