@@ -2,6 +2,7 @@ import weasyprint
 
 from trytond.transaction import Transaction
 from trytond.report import Report
+from trytond.pool import Pool
 
 class HTMLReport(Report):
     render_method = "weasyprint"

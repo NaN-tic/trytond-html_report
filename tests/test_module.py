@@ -5,7 +5,6 @@ from decimal import Decimal
 from trytond.tests.test_tryton import (ModuleTestCase, with_transaction,
     activate_module)
 from trytond.pool import Pool
-from trytond.tools import file_open
 from trytond.transaction import Transaction
 from trytond.modules.company.tests import CompanyTestMixin, create_company, set_company
 from trytond.modules.account.tests import create_chart, get_fiscalyear
