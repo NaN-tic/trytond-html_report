@@ -126,6 +126,12 @@ class HtmlReportTestCase(CompanyTestMixin, ModuleTestCase):
                 HTMLReportMixin.markdown('# Test\nHello World'),
                 '<h1>Test</h1>\n<p>Hello World</p>')
             self.assertEqual(
+                HTMLReportMixin.markdown('| A | B |\n| --- | --- |\n| 1 | 2 |'),
+                '<table>\n<thead>\n<tr>\n<th>A</th>\n<th>B</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>1</td>\n<td>2</td>\n</tr>\n</tbody>\n</table>')
+            self.assertEqual(
+                HTMLReportMixin.markdown('1. One\n2. Two'),
+                '<ol>\n<li>One</li>\n<li>Two</li>\n</ol>')
+            self.assertEqual(
                 HTMLReportMixin.render_jinja(
                     '{{ value }}-{{ number }}', value='test', number=7),
                 'test-7')
