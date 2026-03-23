@@ -106,8 +106,7 @@ class InvoiceLineDiscount(HTMLDiscountReportMixin, metaclass=PoolMeta):
     __name__ = 'account.invoice.line'
 
 
-class InvoiceReport(DominateReport):
-    __name__ = 'account.invoice'
+class InvoiceReportMixin(DominateReport):
     _single = True
 
     @classmethod
@@ -537,3 +536,7 @@ class InvoiceReport(DominateReport):
                 p(raw(record.render.comment))
 
         return container
+
+
+class InvoiceReport(InvoiceReportMixin):
+    __name__ = 'account.invoice'
