@@ -106,7 +106,7 @@ class ProductionReport(DominateReport):
                         td(move.product and move.product.render.code or '-')
                         td(move.product and move.product.render.name or '-')
                         if show_lots:
-                            td(move.lot and move.lot.raw.name or '')
+                            td(move.lot and move.lot.raw.rec_name or '')
                             if move.raw.lot and getattr(
                                     move.lot.raw, 'expiration_date', None):
                                 td(move.lot.render.expiration_date)
@@ -162,7 +162,7 @@ class ProductionReport(DominateReport):
                         td(move.product and move.product.render.code or '-')
                         td(move.product and move.product.render.name or '-')
                         if show_lots:
-                            td(move.lot and move.lot.raw.name or '')
+                            td(move.lot and move.lot.raw.rec_name or '')
                             if move.raw.lot and getattr(
                                     move.lot.raw, 'expiration_date', None):
                                 td(move.lot.render.expiration_date)
