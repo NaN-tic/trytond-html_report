@@ -6,6 +6,7 @@ from trytond.report import Report
 from . import action
 from . import engine
 from . import i18n
+from . import ir
 from . import invoice
 from . import dominate_report
 from . import module as module_report
@@ -18,6 +19,9 @@ from . import account_configuration
 
 def register():
     module = 'html_report'
+    Pool.register(
+        ir.ModelAccess,
+        module=module, type_='model')
     Pool.register(
         dominate_report.DominateCommon,
         action.ActionReport,
