@@ -38,8 +38,6 @@ from . import words
 from .tools import label as tools_label
 
 MEDIA_TYPE = config.get('html_report', 'type', default='screen')
-RAISE_USER_ERRORS = config.getboolean('html_report', 'raise_user_errors',
-    default=False)
 DEFAULT_MIME_TYPE = config.get('html_report', 'mime_type', default='image/png')
 
 # Determines if on merge, resulting PDF should be compacted using ghostscript
@@ -549,10 +547,6 @@ class HTMLReportMixin:
             model, id = record.split(',')
             record = Pool().get(model)(id)
         return DualRecord(record)
-
-    @classmethod
-    def raise_user_error(cls, value):
-        raise UserError(value)
 
     @classmethod
     def weasyprint_render(cls, content):
