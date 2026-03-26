@@ -9,8 +9,6 @@ from trytond.ir.lang import get_parent_language
 
 class ActionReport(metaclass=PoolMeta):
     __name__ = 'ir.action.report'
-    html_raise_user_error = fields.Boolean('Raise User Error',
-        help='Will raise a UserError in case of error in template parsing.')
     html_zipped = fields.Boolean('Zipped', states={
         'invisible': ~Eval('single'),
         },

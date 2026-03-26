@@ -6,8 +6,6 @@
     </xpath>
     <xpath expr="/form/notebook/page[@id='general']" position="after">
         <page string="HTML Report" id="html_report">
-            <label name="html_raise_user_error"/>
-            <field name="html_raise_user_error"/>
             <label name="html_copies"/>
             <field name="html_copies"/>
             <label name="html_side_margin"/>
