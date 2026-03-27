@@ -209,9 +209,10 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
 
     @classmethod
     def title(cls, action, data, records):
-        record = records[0] if records else None
-        if record:
-            return cls.label(record.raw.__name__)
+        if records and len(records) == 1:
+            record, = records
+            return '%s %s' % (
+                cls.label(record.raw.__name__), record.render.rec_name)
         if action and action.model:
             return cls.label(action.model)
         return action.name if action else ''
