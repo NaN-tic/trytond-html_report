@@ -41,6 +41,10 @@ class SaleReport(DominateReport):
     _single = True
 
     @classmethod
+    def _is_proforma(cls, action):
+        return bool(action and action.name == 'Proforma')
+
+    @classmethod
     def language(cls, records):
         record = records[0] if records else None
         if record and record.party and record.party.raw.lang:
@@ -175,7 +179,7 @@ class SaleReport(DominateReport):
     def header(cls, action, data, records):
         record, = records
         company = record.company
-        is_proforma = action and action.name == 'Proforma'
+        is_proforma = cls._is_proforma(action)
 
         header = div()
         with header:
