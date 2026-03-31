@@ -45,6 +45,13 @@ class SaleReport(DominateReport):
         return bool(action and action.name == 'Proforma')
 
     @classmethod
+    def title(cls, action, data, records):
+        if cls._is_proforma(action):
+            record = records[0] if records else None
+            return 'Proforma %s' % (record and record.render.number or '')
+        return super().title(action, data, records)
+
+    @classmethod
     def language(cls, records):
         record = records[0] if records else None
         if record and record.party and record.party.raw.lang:
