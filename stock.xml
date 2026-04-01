@@ -126,11 +126,94 @@
             <field name="single" eval="True"/>
             <field name="html_side_margin" eval="None"/>
         </record>
-
         <record model="ir.action.keyword" id="report_inventory_keyword">
             <field name="keyword">form_print</field>
             <field name="model">stock.inventory,-1</field>
             <field name="action" ref="html_report_inventory"/>
+        </record>
+
+        <record model="ir.action.report" id="html_report_blind_inventory">
+            <field name="name">Blind Count</field>
+            <field name="model">stock.inventory</field>
+            <field name="report_name">stock.inventory.blind</field>
+            <field name="extension">pdf</field>
+            <field name="template_extension">html</field>
+        </record>
+        <record model="ir.action.keyword" id="report_blind_inventory_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">stock.inventory,-1</field>
+            <field name="action" ref="html_report_blind_inventory"/>
+        </record>
+
+        <record model="ir.action.report" id="html_report_inventory_valued">
+            <field name="name">Stock Inventory Valued</field>
+            <field name="model">product.product</field>
+            <field name="report_name">stock.inventory.valued</field>
+            <field name="extension">pdf</field>
+            <field name="template_extension">html</field>
+        </record>
+        <record model="ir.action.keyword" id="report_inventory_valued_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">product.product,-1</field>
+            <field name="action" ref="html_report_inventory_valued"/>
+        </record>
+        <record model="ir.action.keyword" id="report_inventory_valued_by_locations_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">stock.products_by_locations,-1</field>
+            <field name="action" ref="html_report_inventory_valued"/>
+        </record>
+
+        <record model="ir.action.report"
+            id="html_report_location_inventory_valued">
+            <field name="name">Location Inventory Value</field>
+            <field name="model">stock.location</field>
+            <field name="report_name">stock.location.inventory.valued</field>
+            <field name="extension">pdf</field>
+            <field name="template_extension">html</field>
+        </record>
+        <record model="ir.action.keyword"
+            id="report_location_inventory_valued_keyword">
+            <field name="keyword">form_print</field>
+            <field name="model">stock.location,-1</field>
+            <field name="action" ref="html_report_location_inventory_valued"/>
+        </record>
+
+        <!-- stock total inventory -->
+        <record model="ir.action.report" id="html_report_total_inventory">
+            <field name="name">Total Inventory</field>
+            <field name="report_name">html_report.stock.total_inventory</field>
+            <field name="model">stock.inventory</field>
+            <field name="extension">pdf</field>
+            <field name="template_extension">html</field>
+        </record>
+
+        <record model="ir.action.report" id="html_report_total_inventory_xlsx">
+            <field name="name">Total Inventory</field>
+            <field name="report_name">html_report.stock.total_inventory_xlsx</field>
+            <field name="model">stock.inventory</field>
+            <field name="extension">xlsx</field>
+        </record>
+
+        <record model="ir.ui.view" id="print_total_inventory_start_view_form">
+            <field name="model">html_report.stock.print_total_inventory.start</field>
+            <field name="type">form</field>
+            <field name="name">stock_total_inventory_start_form</field>
+        </record>
+
+        <record model="ir.action.wizard" id="wizard_print_total_inventory">
+            <field name="name">Total Inventory</field>
+            <field name="wiz_name">html_report.stock.print_total_inventory</field>
+        </record>
+
+        <menuitem id="menu_print_total_inventory" name="Total Inventory"
+            parent="stock.menu_inventory_form" action="wizard_print_total_inventory"
+            icon="tryton-print"/>
+    </data>
+    <data depends="stock_lot">
+        <record model="ir.ui.view" id="print_total_inventory_start_lot_view_form">
+            <field name="model">html_report.stock.print_total_inventory.start</field>
+            <field name="inherit" ref="print_total_inventory_start_view_form"/>
+            <field name="name">stock_total_inventory_start_lot_form</field>
         </record>
     </data>
 </tryton>

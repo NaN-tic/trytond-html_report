@@ -476,9 +476,21 @@ msgctxt "model:ir.action,name:html_report_internal_picking_note"
 msgid "Internal Picking Note"
 msgstr "Nota recogida interna"
 
+msgctxt "model:ir.action,name:html_report_location_inventory_valued"
+msgid "Location Inventory Value"
+msgstr "Valor inventario ubicación"
+
 msgctxt "model:ir.action,name:html_report_inventory"
 msgid "Inventory"
 msgstr "Inventario"
+
+msgctxt "model:ir.action,name:html_report_blind_inventory"
+msgid "Blind Count"
+msgstr "Inventario ciego"
+
+msgctxt "model:ir.action,name:html_report_inventory_valued"
+msgid "Stock Inventory Valued"
+msgstr "Inventario de stock valorado"
 
 msgctxt "model:ir.action,name:html_report_invoice"
 msgid "Invoice"
@@ -645,3 +657,127 @@ msgstr "Lista de módulos"
 msgctxt "html_report:h:"
 msgid "This report lists the selected modules and their dependencies."
 msgstr "Este informe muestra los módulos seleccionados y sus dependencias."
+
+msgctxt "html_report:h:"
+msgid "Inventory Total"
+msgstr "Total inventario"
+
+msgctxt "model:ir.action,name:html_report_total_inventory"
+msgid "Total Inventory"
+msgstr "Inventario total"
+
+msgctxt "model:ir.action,name:html_report_total_inventory_xlsx"
+msgid "Total Inventory"
+msgstr "Inventario total"
+
+msgctxt "model:ir.action,name:wizard_print_total_inventory"
+msgid "Total Inventory"
+msgstr "Inventario total"
+
+msgctxt "model:ir.ui.menu,name:menu_print_total_inventory"
+msgid "Total Inventory"
+msgstr "Inventario total"
+
+msgctxt "model:html_report.stock.print_total_inventory.start,name:"
+msgid "Stock Total Inventory"
+msgstr "Inventario total de stock"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,date:"
+msgid "Date"
+msgstr "Fecha"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,group_by_lot:"
+msgid "Group by Lot"
+msgstr "Agrupar por lote"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,locations:"
+msgid "Locations"
+msgstr "Ubicaciones"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,order:"
+msgid "Order"
+msgstr "Ordenación"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,output_format:"
+msgid "Format"
+msgstr "Formato"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,products:"
+msgid "Products"
+msgstr "Productos"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,quantities:"
+msgid "Quantities"
+msgstr "Cantidades"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,timeout:"
+msgid "Timeout"
+msgstr "Se acabó el tiempo de espera"
+
+msgctxt "help:html_report.stock.print_total_inventory.start,timeout:"
+msgid "Timeout in seconds"
+msgstr "Tiempo de espera en segundos"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,order:"
+msgid "Location"
+msgstr "Ubicación"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,order:"
+msgid "Product"
+msgstr "Producto"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,output_format:"
+msgid "Excel"
+msgstr "Excel"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,output_format:"
+msgid "HTML"
+msgstr "HTML"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,output_format:"
+msgid "PDF"
+msgstr "PDF"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,quantities:"
+msgid "All"
+msgstr "Todo"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,quantities:"
+msgid "Negative"
+msgstr "Negativo"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,quantities:"
+msgid "Positive"
+msgstr "Positivo"
+
+msgctxt "wizard_button:html_report.stock.print_total_inventory,start,end:"
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgctxt "wizard_button:html_report.stock.print_total_inventory,start,print_:"
+msgid "Print"
+msgstr "Imprimir"
+
+msgctxt "html_report:h:"
+msgid "Location"
+msgstr "Ubicación"
+
+msgctxt "html_report:h:"
+msgid "Product"
+msgstr "Producto"
+
+msgctxt "html_report:h:"
+msgid "Lot"
+msgstr "Lote"
+
+msgctxt "html_report:h:"
+msgid "Quantity"
+msgstr "Cantidad"
+
+msgctxt "html_report:h:"
+msgid "Total Inventory"
+msgstr "Inventario total"
+
+msgctxt "html_report:h:"
+msgid "No records found"
+msgstr "No se han encontrado registros"
