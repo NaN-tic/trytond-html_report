@@ -1,8 +1,7 @@
 # This file is part of Tryton.  The COPYRIGHT file at the top level of
 # this repository contains the full copyright notices and license terms.
 from decimal import Decimal
-from trytond.tests.test_tryton import (ModuleTestCase, with_transaction,
-    activate_module)
+from trytond.tests.test_tryton import ModuleTestCase, with_transaction
 from trytond.pool import Pool
 from trytond.tools import file_open
 from trytond.transaction import Transaction
@@ -14,21 +13,14 @@ from trytond.modules.account_invoice.tests import set_invoice_sequences
 class HtmlReportTestCase(CompanyTestMixin, ModuleTestCase):
     'Test HtmlReport module'
     module = 'html_report'
+    extras = ['account_invoice', 'account_payment_type',
+        'account_invoice_discount', 'account_bank', 'carrier', 'sale',
+        'sale_product_customer', 'purchase', 'stock', 'stock_lot',
+        'stock_valued', 'production']
 
     @classmethod
     def setUpClass(cls):
-        super(HtmlReportTestCase, cls).setUpClass()
-        activate_module('account_invoice')
-        activate_module('account_payment_type')
-        activate_module('account_invoice_discount')
-        activate_module('account_bank')
-        activate_module('carrier')
-        activate_module('sale')
-        activate_module('sale_product_customer')
-        activate_module('purchase')
-        activate_module('stock')
-        activate_module('stock_valued')
-        activate_module('production')
+        super().setUpClass()
 
     @with_transaction()
     def test_html_report(self):
