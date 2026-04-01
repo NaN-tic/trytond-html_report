@@ -1,16 +1,26 @@
+from datetime import datetime
+from tempfile import NamedTemporaryFile
+
 from dominate.util import raw
 from dominate.tags import (br, div, footer as footer_tag, h1, h2, h3, h4,
     header as header_tag, img, p, strong, table, tbody, td, th, thead, tr)
+from openpyxl import Workbook
 
-from trytond.model import fields
+from trytond.model import ModelView, fields
 from trytond.pool import Pool, PoolMeta
 from trytond.transaction import Transaction
 from trytond.pyson import Eval
+from trytond.report import Report
+from trytond.rpc import RPC
+from trytond.tools import grouped_slice
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
-from trytond.modules.html_report.engine import DualRecord
+from trytond.modules.html_report.engine import DualRecord, render
 from trytond.modules.html_report.tools import label
 from trytond.modules.html_report.dominate_report import DominateReport
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
+from trytond.wizard import Wizard, StateView, StateReport, Button
+from babel.dates import format_datetime
+from .common import TimeoutChecker, TimeoutException
 from .i18n import _
 
 
@@ -196,6 +206,14 @@ class ShipmentInternal(HTMLPartyInfoMixin, metaclass=PoolMeta):
 
 class StockInventory(metaclass=PoolMeta):
     __name__ = 'stock.inventory'
+    show_lots = fields.Function(fields.Boolean('Show Lots'),
+        'get_show_lots')
+
+    def get_show_lots(self, name):
+        for line in self.lines:
+            if hasattr(line, 'lot') and getattr(line, 'lot'):
+                return True
+        return False
 
 
 class StockReportMixin(DominateReport):
@@ -671,55 +689,173 @@ class StockReportMixin(DominateReport):
                         td(move.render.quantity)
         return moves_table
 
+class StockInventoryReportMixin:
+    blind = False
+
+    @classmethod
+    def css(cls, action, data, records):
+        css = super().css(action, data, records) or ''
+        now = datetime.now().strftime('%d/%m/%Y %H:%M')
+        return '%s\n%s' % (
+            css,
+            ('@page {'
+             '@bottom-left {'
+             'content: "%s";'
+             "font-family: 'Arial';"
+             'font-size: 9px;'
+             'padding-bottom: 0.5cm;'
+             '}'
+             '}') % now)
+
+    @classmethod
+    def get_report_company(cls):
+        Company = Pool().get('company.company')
+        company_id = Transaction().context.get('company')
+        if not company_id:
+            return None
+        return DualRecord(Company(company_id))
+
+    @classmethod
+    def get_locations_label(cls):
+        Location = Pool().get('stock.location')
+        location_ids = Transaction().context.get('locations') or []
+        if not location_ids:
+            return ''
+        locations = Location.browse(location_ids)
+        labels = []
+        for location in locations:
+            if getattr(location, 'code', None):
+                labels.append('%s [%s]' % (
+                    location.name.strip(), location.code.strip()))
+            else:
+                labels.append(location.name.strip())
+        return ' / '.join(labels)
+
     @classmethod
     def show_inventory_lines(cls, inventory):
+        show_lots = inventory.raw.show_lots
+        blind = cls.blind
         lines_table = table(style='width:100%;')
         with lines_table:
             with thead():
                 th(cls.label('stock.inventory.line', 'product'),
                     nowrap=True)
-                th(cls.label('stock.inventory.line',
-                    'expected_quantity'), cls='text-right')
+                if show_lots:
+                    th(cls.label('stock.inventory.line', 'lot'),
+                        nowrap=True)
+                if not blind:
+                    th(cls.label('stock.inventory.line',
+                        'expected_quantity'), cls='text-right')
                 th(cls.label('stock.inventory.line', 'quantity'),
                     cls='text-right')
             with tbody(cls='border'):
                 for line in inventory.lines:
-                    with tr():
+                    with tr(style='border-bottom: 1px solid #cfcfcf;'):
                         td('%s - %s' % (
                             line.product and line.product.render.code,
                             line.product and line.product.render.name))
-                        td(line.render.expected_quantity or 0,
+                        if show_lots:
+                            td(line.raw.lot and line.lot.render.number or '')
+                        if not blind:
+                            td(line.render.expected_quantity or 0,
+                                cls='text-right')
+                        td('' if blind else (line.render.quantity or 0),
                             cls='text-right')
-                        td(line.render.quantity or 0, cls='text-right')
         return lines_table
 
+    @classmethod
+    def show_inventory_valued_lines(cls, records):
+        company = cls.get_report_company()
+        currency_symbol = (company.currency.render.symbol
+            if company and company.raw.currency else '')
+        total_cost_value = 0
+        lines_table = table(style='width:100%;')
+        with lines_table:
+            with thead():
+                th(cls.label('product.product', 'code'), nowrap=True)
+                th(cls.label('product.template', 'name'), nowrap=True)
+                th(cls.label('product.product', 'quantity'),
+                    cls='text-right')
+                th(cls.label('product.product', 'cost_value'),
+                    cls='text-right')
+            with tbody(cls='border'):
+                for record in sorted(records, key=lambda r: (
+                        r.render.code or '',
+                        r.render.rec_name or '')):
+                    total_cost_value += record.raw.cost_value or 0
+                    with tr(style='border-bottom: 1px solid #cfcfcf;'):
+                        td(record.render.code)
+                        td(record.render.rec_name)
+                        td(record.render.quantity, cls='text-right')
+                        td('%s %s' % (
+                                record.render.cost_value,
+                                currency_symbol) if currency_symbol
+                            else record.render.cost_value,
+                            cls='text-right')
+                with tr():
+                    td('')
+                    td('')
+                    td(strong(_('Inventory Total')), cls='text-right')
+                    td('%s %s' % (
+                            render(total_cost_value),
+                            currency_symbol) if currency_symbol
+                        else render(total_cost_value),
+                        cls='text-right')
+        return lines_table
 
-class StockInventoryReport(StockReportMixin, metaclass=PoolMeta):
+    @classmethod
+    def inventory_valued_header(cls, action, data, records):
+        company = cls.get_report_company()
+        locations = cls.get_locations_label()
+        header = div()
+        with header:
+            with header_tag(id='header'):
+                with table():
+                    with tr():
+                        with td(cls='party_info', valign='top'):
+                            cls.show_company_info(company)
+                        with td(valign='top'):
+                            h1(action.name, cls='document')
+                            if locations:
+                                h2(locations, cls='document')
+        return header
+
+    @classmethod
+    def inventory_valued_body(cls, action, data, records):
+        container = div()
+        with container:
+            container.add(cls.show_inventory_valued_lines(records))
+        return container
+
+
+class StockInventoryReport(StockInventoryReportMixin, StockReportMixin,
+        metaclass=PoolMeta):
     __name__ = 'stock.inventory'
     _single = True
 
     @classmethod
     def header(cls, action, data, records):
         record, = records
+        company = record.company
         header = div()
         with header:
             with header_tag(id='header'):
                 with table():
                     with tr():
-                        with td():
+                        with td(cls='party_info', valign='top'):
+                            cls.show_company_info(company)
+                        with td(valign='top'):
                             strong('%s:' % cls.label(
                                 'stock.inventory', 'number'))
                             raw(' %s' % record.render.number)
-                        with td():
+                            br()
                             strong('%s:' % cls.label(
                                 'stock.inventory', 'date'))
                             raw(' %s' % record.render.date)
-                    with tr():
-                        with td():
+                            br()
                             strong('%s:' % cls.label(
                                 'stock.inventory', 'location'))
                             raw(' %s' % record.location.render.name)
-                        td('')
         return header
 
     @classmethod
@@ -729,6 +865,55 @@ class StockInventoryReport(StockReportMixin, metaclass=PoolMeta):
         with container:
             container.add(cls.show_inventory_lines(record))
         return container
+
+
+class StockBlindInventoryReport(StockInventoryReport):
+    __name__ = 'stock.inventory.blind'
+    blind = True
+
+
+class InventoryValuedReport(StockInventoryReportMixin, StockReportMixin):
+    __name__ = 'stock.inventory.valued'
+    _single = False
+
+    @classmethod
+    def header(cls, action, data, records):
+        return cls.inventory_valued_header(action, data, records)
+
+    @classmethod
+    def body(cls, action, data, records):
+        return cls.inventory_valued_body(action, data, records)
+
+
+class LocationInventoryValuedReport(StockInventoryReportMixin,
+        StockReportMixin):
+    __name__ = 'stock.location.inventory.valued'
+    _single = False
+
+    @classmethod
+    def execute(cls, ids, data):
+        with Transaction().set_context(locations=ids):
+            return super().execute(ids, data)
+
+    @classmethod
+    def _get_records(cls, ids, model, data):
+        pool = Pool()
+        Product = pool.get('product.product')
+        product_ids = []
+        pbl = Product.products_by_location(ids, with_childs=True)
+        for key, value in pbl.items():
+            if value != 0 and key[1] not in product_ids:
+                product_ids.append(key[1])
+        with Transaction().set_context(locations=ids):
+            return Product.browse(product_ids)
+
+    @classmethod
+    def header(cls, action, data, records):
+        return cls.inventory_valued_header(action, data, records)
+
+    @classmethod
+    def body(cls, action, data, records):
+        return cls.inventory_valued_body(action, data, records)
 
 
 class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
@@ -1011,3 +1196,357 @@ class SupplierRestockingListReport(StockReportMixin, metaclass=PoolMeta):
             container.add(cls.show_restocking_list_info(record))
             container.add(cls.show_restocking_list_moves(record))
         return container
+
+
+class StockTotalInventoryStart(ModelView):
+    'Stock Total Inventory'
+    __name__ = 'html_report.stock.print_total_inventory.start'
+
+    date = fields.Date("Date")
+    products = fields.Many2Many(
+        'product.product', None, None, "Products",
+        domain=[('type', 'in', ['goods', 'assets'])])
+    locations = fields.Many2Many(
+        'stock.location', None, None, "Locations",
+        domain=[('type', '=', 'warehouse')], required=True)
+    output_format = fields.Selection([
+        ('pdf', "PDF"),
+        ('xlsx', "Excel"),
+        ('html', "HTML")],
+        "Format", required=True)
+    order = fields.Selection([
+        ('location', 'Location'),
+        ('product', 'Product'),
+        ], "Order", required=True)
+    quantities = fields.Selection([
+        ('all', 'All'),
+        ('positive', 'Positive'),
+        ('negative', 'Negative'),
+        ], "Quantities", required=True)
+    timeout = fields.Integer('Timeout', required=True,
+        help='Timeout in seconds')
+
+    @staticmethod
+    def default_locations():
+        warehouse = Transaction().context.get('warehouse')
+        if warehouse:
+            return [warehouse]
+        return []
+
+    @staticmethod
+    def default_quantities():
+        return 'positive'
+
+    @staticmethod
+    def default_timeout():
+        return 120
+
+
+class StockTotalInventoryLotStart(metaclass=PoolMeta):
+    __name__ = 'html_report.stock.print_total_inventory.start'
+
+    group_by_lot = fields.Boolean('Group by Lot')
+
+
+class StockTotalInventory(Wizard):
+    'Stock Total Inventory'
+    __name__ = 'html_report.stock.print_total_inventory'
+
+    start = StateView('html_report.stock.print_total_inventory.start',
+        'html_report.print_total_inventory_start_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Print', 'print_', 'tryton-print', default=True),
+            ])
+    print_ = StateReport('html_report.stock.total_inventory')
+
+    def default_start(self, fields):
+        return {
+            'output_format': 'pdf',
+            'order': 'location',
+            }
+
+    def do_print_(self, action):
+        data = {
+            'date': self.start.date,
+            'quantities': self.start.quantities,
+            'group_by_lot': getattr(self.start, 'group_by_lot', False),
+            'products': [x.id for x in self.start.products],
+            'locations': [x.id for x in self.start.locations],
+            'output_format': self.start.output_format,
+            'order': self.start.order,
+            'timeout': self.start.timeout,
+            }
+        if self.start.output_format == 'xlsx':
+            ActionReport = Pool().get('ir.action.report')
+            action_report, = ActionReport.search([
+                    ('report_name', '=', 'html_report.stock.total_inventory_xlsx'),
+                    ])
+            action = action_report.action.get_action_value()
+        return action, data
+
+    def transition_print_(self):
+        return 'end'
+
+
+class StockTotalInventoryReport(StockInventoryReportMixin, StockReportMixin):
+    'Total Inventory Report'
+    __name__ = 'html_report.stock.total_inventory'
+    _single = False
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls.__rpc__['execute'] = RPC(False)
+
+    @classmethod
+    def css_body(cls, action, data, records):
+        css = super().css_body(action, data, records)
+        if data.get('output_format') != 'pdf':
+            css += (
+                '\nheader { position: static; padding-top: 0; '
+                'padding-left: 0; }\n'
+            )
+        return css
+
+    @classmethod
+    def prepare(cls, data):
+        pool = Pool()
+        Company = pool.get('company.company')
+        Location = pool.get('stock.location')
+        Date = pool.get('ir.date')
+        Product = pool.get('product.product')
+
+        checker = TimeoutChecker(data.get('timeout', 60), TimeoutException)
+
+        if data.get('group_by_lot'):
+            Lot = pool.get('stock.lot')
+        else:
+            Lot = None
+
+        with Transaction().set_context(_record_cache_size=100000):
+            locations = Location.search([
+                    ('parent', 'child_of', data['locations']),
+                    ('type', '=', 'storage'),
+                    ], order=[('name', 'ASC')])
+        location_ids = [l.id for l in locations]
+        locations_by_id = {l.id: l for l in locations}
+        checker.check()
+
+        domain = [('type', '=', 'goods')]
+        if data['products']:
+            domain.append(('id', 'in', data['products']))
+
+        with Transaction().set_context(active_test=False,
+                _record_cache_size=100000):
+            products = Product.search(domain)
+        products_by_id = {p.id: p for p in products}
+
+        stock_date_end = data['date'] or Date.today()
+        quantities = data.get('quantities', 'positive')
+
+        records = []
+        with Transaction().set_context(stock_date_end=stock_date_end):
+            grouping = ('product',)
+            if data.get('group_by_lot'):
+                grouping += ('lot',)
+            for sub_products in grouped_slice(products, count=10000):
+                checker.check()
+                product_ids = [x.id for x in sub_products]
+                pbl = Product.products_by_location(
+                    location_ids,
+                    grouping=grouping,
+                    grouping_filter=(product_ids,))
+
+                for key, qty in pbl.items():
+                    if not qty:
+                        continue
+                    if quantities == 'positive' and qty < 0:
+                        continue
+                    if quantities == 'negative' and qty > 0:
+                        continue
+                    record = {
+                        'quantity': qty,
+                        'location': locations_by_id[key[0]],
+                        'product': products_by_id[key[1]],
+                        }
+                    if data.get('group_by_lot'):
+                        record['lot'] = Lot(key[2]) if key[2] else None
+                    records.append(record)
+
+        company_id = Transaction().context.get('company')
+        parameters = {}
+        parameters['company'] = (Company(company_id)
+            if company_id is not None and company_id >= 0 else None)
+        parameters['now'] = format_datetime(
+            datetime.now(), format='short',
+            locale=Transaction().language or 'en')
+        parameters['sort_attribute'] = ('product.rec_name'
+            if data['order'] == 'product' else 'location.rec_name')
+        parameters['has_lot'] = data.get('group_by_lot')
+        parameters['timeout'] = data.get('timeout') - checker.elapsed
+        return records, parameters
+
+    @classmethod
+    def _sort_value(cls, item, sort_attribute):
+        value = item
+        for part in sort_attribute.split('.'):
+            if isinstance(value, dict):
+                value = value.get(part)
+            else:
+                value = getattr(value, part, '')
+        return value or ''
+
+    @classmethod
+    def show_lines(cls, records, parameters):
+        has_lot = parameters.get('has_lot')
+        sort_attribute = parameters.get('sort_attribute')
+        lines_table = table()
+        with lines_table:
+            with thead():
+                with tr():
+                    th(_('Location'))
+                    th(_('Product'))
+                    if has_lot:
+                        th(_('Lot'))
+                    th(_('Quantity'), style='text-align: right')
+            with tbody():
+                for record in sorted(
+                        records,
+                        key=lambda item: cls._sort_value(
+                            item, sort_attribute)):
+                    product = record['product']
+                    with tr():
+                        td(record['location'].name)
+                        td(product.rec_name)
+                        if has_lot:
+                            lot = record.get('lot')
+                            td(lot.rec_name if lot else '')
+                        td(render(
+                                record['quantity'],
+                                digits=product.default_uom.digits),
+                            style='text-align: right')
+        return lines_table
+
+    @classmethod
+    def report_title(cls, parameters):
+        company = parameters.get('company')
+        company_name = company.rec_name if company else ''
+        now = parameters.get('now', '')
+        title = _('Total Inventory')
+        return '%s - %s - %s' % (title, company_name or '', now)
+
+    @classmethod
+    def header(cls, action, data, records):
+        parameters = data['parameters']
+        company = cls.get_report_company()
+        title = cls.report_title(parameters)
+        header = div()
+        with header:
+            with header_tag(id='header'):
+                with table():
+                    with tr():
+                        with td(cls='party_info', valign='top'):
+                            cls.show_company_info(company)
+                        with td(valign='top'):
+                            h1(title, cls='document')
+        return header
+
+    @classmethod
+    def body(cls, action, data, records):
+        parameters = data['parameters']
+        container = div()
+        with container:
+            if data.get('output_format') != 'pdf':
+                container.add(cls.header(action, data, records))
+            if data['records']:
+                container.add(cls.show_lines(data['records'], parameters))
+            else:
+                strong(_('No records found'))
+        return container
+
+    @classmethod
+    def execute(cls, ids, data):
+        action, model = cls.get_action(data)
+        cls.check_access(action, model, ids)
+        side_margin = action.html_side_margin
+        if side_margin is None:
+            side_margin = cls.side_margin
+        extra_vertical_margin = action.html_extra_vertical_margin
+        if extra_vertical_margin is None:
+            extra_vertical_margin = cls.extra_vertical_margin
+        with Transaction().set_context(active_test=False):
+            records, parameters = cls.prepare(data)
+        report_data = dict(data)
+        report_data['records'] = records
+        report_data['parameters'] = parameters
+        output_format = data.get('output_format', action.extension or 'pdf')
+        with Transaction().set_context(
+                html_report=action.id,
+                address_with_party=False,
+                output_format=output_format):
+            oext, content = cls._execute_dominate_report(
+                [], report_data, action,
+                side_margin=side_margin,
+                extra_vertical_margin=extra_vertical_margin)
+        if content is None:
+            content = ''
+        if not isinstance(content, str):
+            content = bytes(content)
+        return oext, content, cls.get_direct_print(action), action.name
+
+
+class StockTotalInventoryXlsxReport(Report):
+    __name__ = 'html_report.stock.total_inventory_xlsx'
+
+    @classmethod
+    def execute(cls, ids, data):
+        pool = Pool()
+        ActionReport = pool.get('ir.action.report')
+        action_report, = ActionReport.search([
+                ('report_name', '=', cls.__name__)
+                ])
+        cls.check_access(action_report, action_report.model, ids)
+        with Transaction().set_context(active_test=False):
+            records, parameters = StockTotalInventoryReport.prepare(data)
+        content = cls.get_content(records, parameters)
+        return 'xlsx', content, action_report.direct_print, action_report.name
+
+    @classmethod
+    def get_content(cls, records, parameters):
+        wb = Workbook()
+        ws = wb.active
+        ws.title = _('Total Inventory')[:31]
+
+        title = StockTotalInventoryReport.report_title(parameters)
+        ws.append([title])
+        company = parameters.get('company')
+        if company:
+            ws.append([company.rec_name])
+        if parameters.get('now'):
+            ws.append([parameters['now']])
+        ws.append([])
+
+        has_lot = parameters.get('has_lot')
+        sort_attribute = parameters.get('sort_attribute')
+        headers = [_('Location'), _('Product')]
+        if has_lot:
+            headers.append(_('Lot'))
+        headers.append(_('Quantity'))
+        ws.append(headers)
+
+        for record in sorted(
+                records,
+                key=lambda item: StockTotalInventoryReport._sort_value(
+                    item, sort_attribute)):
+            product = record['product']
+            row = [record['location'].name, product.rec_name]
+            if has_lot:
+                lot = record.get('lot')
+                row.append(lot.rec_name if lot else '')
+            row.append(record['quantity'])
+            ws.append(row)
+
+        with NamedTemporaryFile() as tmp_file:
+            wb.save(tmp_file.name)
+            tmp_file.seek(0)
+            return bytes(tmp_file.read())
