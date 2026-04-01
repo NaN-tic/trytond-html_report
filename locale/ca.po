@@ -492,9 +492,21 @@ msgctxt "model:ir.action,name:html_report_internal_picking_note"
 msgid "Internal Picking Note"
 msgstr "Nota recollida intern"
 
+msgctxt "model:ir.action,name:html_report_location_inventory_valued"
+msgid "Location Inventory Value"
+msgstr "Valor inventari ubicació"
+
 msgctxt "model:ir.action,name:html_report_inventory"
 msgid "Inventory"
 msgstr "Inventari"
+
+msgctxt "model:ir.action,name:html_report_blind_inventory"
+msgid "Blind Count"
+msgstr "Inventari cec"
+
+msgctxt "model:ir.action,name:html_report_inventory_valued"
+msgid "Stock Inventory Valued"
+msgstr "Inventari d'estoc valorat"
 
 msgctxt "model:ir.action,name:html_report_invoice"
 msgid "Invoice"
@@ -655,3 +667,127 @@ msgstr "Esborrany"
 msgctxt "html_report:h:"
 msgid "Restocking List"
 msgstr "Llista de reaprovisionament"
+
+msgctxt "html_report:h:"
+msgid "Inventory Total"
+msgstr "Total inventari"
+
+msgctxt "model:ir.action,name:html_report_total_inventory"
+msgid "Total Inventory"
+msgstr "Total inventari"
+
+msgctxt "model:ir.action,name:html_report_total_inventory_xlsx"
+msgid "Total Inventory"
+msgstr "Total inventari"
+
+msgctxt "model:ir.action,name:wizard_print_total_inventory"
+msgid "Total Inventory"
+msgstr "Total inventari"
+
+msgctxt "model:ir.ui.menu,name:menu_print_total_inventory"
+msgid "Total Inventory"
+msgstr "Total inventari"
+
+msgctxt "model:html_report.stock.print_total_inventory.start,name:"
+msgid "Stock Total Inventory"
+msgstr "Total inventari estoc"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,date:"
+msgid "Date"
+msgstr "Data"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,group_by_lot:"
+msgid "Group by Lot"
+msgstr "Grup per Lot"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,locations:"
+msgid "Locations"
+msgstr "Ubicacions"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,order:"
+msgid "Order"
+msgstr "Ordre"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,output_format:"
+msgid "Format"
+msgstr "Format"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,products:"
+msgid "Products"
+msgstr "Productes"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,quantities:"
+msgid "Quantities"
+msgstr "Quantitats"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,timeout:"
+msgid "Timeout"
+msgstr "Temps d'espera"
+
+msgctxt "help:html_report.stock.print_total_inventory.start,timeout:"
+msgid "Timeout in seconds"
+msgstr "Temps d'espera en segons"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,order:"
+msgid "Location"
+msgstr "Ubicació"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,order:"
+msgid "Product"
+msgstr "Producte"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,output_format:"
+msgid "Excel"
+msgstr "Excel"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,output_format:"
+msgid "HTML"
+msgstr "HTML"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,output_format:"
+msgid "PDF"
+msgstr "PDF"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,quantities:"
+msgid "All"
+msgstr "Tots"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,quantities:"
+msgid "Negative"
+msgstr "Negatiu"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,quantities:"
+msgid "Positive"
+msgstr "Positiu"
+
+msgctxt "wizard_button:html_report.stock.print_total_inventory,start,end:"
+msgid "Cancel"
+msgstr "Cancel·la"
+
+msgctxt "wizard_button:html_report.stock.print_total_inventory,start,print_:"
+msgid "Print"
+msgstr "Imprimeix"
+
+msgctxt "html_report:h:"
+msgid "Location"
+msgstr "Ubicació"
+
+msgctxt "html_report:h:"
+msgid "Product"
+msgstr "Producte"
+
+msgctxt "html_report:h:"
+msgid "Lot"
+msgstr "Lot"
+
+msgctxt "html_report:h:"
+msgid "Quantity"
+msgstr "Quantitat"
+
+msgctxt "html_report:h:"
+msgid "Total Inventory"
+msgstr "Total inventari"
+
+msgctxt "html_report:h:"
+msgid "No records found"
+msgstr "No s'han trobat registres"

@@ -102,14 +102,26 @@ def register():
         stock.ShipmentInReturn,
         stock.Move,
         stock.StockInventory,
+        stock.StockTotalInventoryStart,
         module=module, type_='model', depends=['stock'])
+    Pool.register(
+        stock.StockTotalInventoryLotStart,
+        module=module, type_='model', depends=['stock', 'stock_lot'])
     Pool.register(
         stock.MoveDiscount,
         module=module,
         type_='model',
         depends=['stock_valued'])
     Pool.register(
+        stock.StockTotalInventory,
+        module=module, type_='wizard', depends=['stock'])
+    Pool.register(
         stock.StockInventoryReport,
+        stock.StockBlindInventoryReport,
+        stock.InventoryValuedReport,
+        stock.LocationInventoryValuedReport,
+        stock.StockTotalInventoryReport,
+        stock.StockTotalInventoryXlsxReport,
         stock.DeliveryNoteReport,
         stock.ValuedDeliveryNoteReport,
         stock.PickingNoteReport,

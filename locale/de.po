@@ -266,6 +266,18 @@ msgctxt "model:ir.action,name:act_template_translation_form"
 msgid "Template Translation"
 msgstr "Vorlagenübersetzung"
 
+msgctxt "model:ir.action,name:html_report_inventory_valued"
+msgid "Stock Inventory Valued"
+msgstr "Stock Inventory Valued"
+
+msgctxt "model:ir.action,name:html_report_location_inventory_valued"
+msgid "Location Inventory Value"
+msgstr "Location Inventory Value"
+
+msgctxt "html_report:h:"
+msgid "Inventory Total"
+msgstr "Inventory Total"
+
 msgctxt "model:ir.message,text:missing_signatures"
 msgid "\"%(template)s\" missing signatures: %(missing)s"
 msgstr "\"%(template)s\" fehlende Signaturen: %(missing)s"
@@ -325,3 +337,123 @@ msgstr "Makro"
 msgctxt "view:ir.action.report:"
 msgid "HTML Report"
 msgstr "HTML Bericht"
+
+msgctxt "model:ir.action,name:html_report_total_inventory"
+msgid "Total Inventory"
+msgstr "Total Inventory"
+
+msgctxt "model:ir.action,name:html_report_total_inventory_xlsx"
+msgid "Total Inventory"
+msgstr "Total Inventory"
+
+msgctxt "model:ir.action,name:wizard_print_total_inventory"
+msgid "Total Inventory"
+msgstr "Total Inventory"
+
+msgctxt "model:ir.ui.menu,name:menu_print_total_inventory"
+msgid "Total Inventory"
+msgstr "Total Inventory"
+
+msgctxt "model:html_report.stock.print_total_inventory.start,name:"
+msgid "Stock Total Inventory"
+msgstr "Stock Total Inventory"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,date:"
+msgid "Date"
+msgstr "Date"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,group_by_lot:"
+msgid "Group by Lot"
+msgstr "Group by Lot"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,locations:"
+msgid "Locations"
+msgstr "Locations"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,order:"
+msgid "Order"
+msgstr "Order"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,output_format:"
+msgid "Format"
+msgstr "Format"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,products:"
+msgid "Products"
+msgstr "Products"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,quantities:"
+msgid "Quantities"
+msgstr "Quantities"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,timeout:"
+msgid "Timeout"
+msgstr "Timeout"
+
+msgctxt "help:html_report.stock.print_total_inventory.start,timeout:"
+msgid "Timeout in seconds"
+msgstr "Timeout in seconds"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,order:"
+msgid "Location"
+msgstr "Location"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,order:"
+msgid "Product"
+msgstr "Product"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,output_format:"
+msgid "Excel"
+msgstr "Excel"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,output_format:"
+msgid "HTML"
+msgstr "HTML"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,output_format:"
+msgid "PDF"
+msgstr "PDF"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,quantities:"
+msgid "All"
+msgstr "All"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,quantities:"
+msgid "Negative"
+msgstr "Negative"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,quantities:"
+msgid "Positive"
+msgstr "Positive"
+
+msgctxt "wizard_button:html_report.stock.print_total_inventory,start,end:"
+msgid "Cancel"
+msgstr "Cancel"
+
+msgctxt "wizard_button:html_report.stock.print_total_inventory,start,print_:"
+msgid "Print"
+msgstr "Print"
+
+msgctxt "html_report:h:"
+msgid "Location"
+msgstr "Location"
+
+msgctxt "html_report:h:"
+msgid "Product"
+msgstr "Product"
+
+msgctxt "html_report:h:"
+msgid "Lot"
+msgstr "Lot"
+
+msgctxt "html_report:h:"
+msgid "Quantity"
+msgstr "Quantity"
+
+msgctxt "html_report:h:"
+msgid "Total Inventory"
+msgstr "Total Inventory"
+
+msgctxt "html_report:h:"
+msgid "No records found"
+msgstr "No records found"
