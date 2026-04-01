@@ -2,6 +2,7 @@ from weasyprint import HTML, CSS
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
 from trytond.transaction import Transaction
+import copy
 import os
 import json
 import tempfile
@@ -116,6 +117,29 @@ class PdfGenerator:
 
         return element_body, element_height
 
+    @staticmethod
+    def clone_box_tree(box):
+        """
+        Create a deep copy of a WeasyPrint box tree.
+
+        Overlay boxes can't be reused across pages because WeasyPrint mutates
+        the tree when boxes are attached to a page body. Re-clone the subtree
+        for each page to keep headers and footers on every page.
+        """
+        if not hasattr(box, 'copy_with_children'):
+            return copy.copy(box)
+        return box.copy_with_children([
+                PdfGenerator.clone_box_tree(child)
+                for child in box.all_children()
+                ])
+
+    @staticmethod
+    def clone_box_children(box):
+        return tuple(
+            PdfGenerator.clone_box_tree(child)
+            for child in box.all_children()
+            )
+
     def _apply_overlay_on_main(self, main_doc, header_body=None,
             footer_body=None, last_footer_body=None):
         """
@@ -140,11 +164,14 @@ class PdfGenerator:
                 'body')
 
             if header_body:
-                page_body.children += header_body.all_children()
+                page_body.children += PdfGenerator.clone_box_children(
+                    header_body)
             if last_footer_body and number_page == total_pages:
-                page_body.children += last_footer_body.all_children()
+                page_body.children += PdfGenerator.clone_box_children(
+                    last_footer_body)
             if footer_body:
-                page_body.children += footer_body.all_children()
+                page_body.children += PdfGenerator.clone_box_children(
+                    footer_body)
             number_page += 1
 
     def render_html(self):
