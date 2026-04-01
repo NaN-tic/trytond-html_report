@@ -2,8 +2,7 @@
 # this repository contains the full copyright notices and license terms.
 from datetime import date, datetime, time, timedelta
 from decimal import Decimal
-from trytond.tests.test_tryton import (ModuleTestCase, with_transaction,
-    activate_module)
+from trytond.tests.test_tryton import ModuleTestCase, with_transaction
 from trytond.pool import Pool
 from trytond.transaction import Transaction
 from trytond.modules.company.tests import CompanyTestMixin, create_company, set_company
@@ -15,21 +14,14 @@ from trytond.modules.html_report.engine import HTMLReportMixin, DualRecord
 class HtmlReportTestCase(CompanyTestMixin, ModuleTestCase):
     'Test HtmlReport module'
     module = 'html_report'
+    extras = ['account_invoice', 'account_payment_type',
+        'account_invoice_discount', 'account_bank', 'carrier', 'sale',
+        'sale_product_customer', 'purchase', 'stock', 'stock_lot',
+        'stock_valued', 'production']
 
     @classmethod
     def setUpClass(cls):
-        super(HtmlReportTestCase, cls).setUpClass()
-        activate_module('account_invoice')
-        activate_module('account_payment_type')
-        activate_module('account_invoice_discount')
-        activate_module('account_bank')
-        activate_module('carrier')
-        activate_module('sale')
-        activate_module('sale_product_customer')
-        activate_module('purchase')
-        activate_module('stock')
-        activate_module('stock_valued')
-        activate_module('production')
+        super().setUpClass()
 
     @with_transaction()
     def test_get_template_filters(self):
