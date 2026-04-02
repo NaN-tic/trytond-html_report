@@ -302,6 +302,13 @@ class DualRecord:
         self.raw = self.raw.__class__(self.raw.id)
         self.render = FormattedRecord(self.raw, self._formatter)
 
+    def __lt__(self, other):
+        raw = getattr(other, 'raw', other)
+        if not (hasattr(raw, '__name__') and hasattr(raw, 'id')):
+            return NotImplemented
+        return ((self.raw.__name__, self.raw.id)
+            < (raw.__name__, raw.id))
+
     def __eq__(self, other):
         if isinstance(other, DualRecord):
             return (self.raw.__name__ == other.raw.__name__
