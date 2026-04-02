@@ -100,6 +100,19 @@ table thead th {
   margin-right: 0;
 }
 
+.table-header {
+  font-weight: bold;
+  border-bottom: 1px solid #000;
+}
+
+.table-total td {
+  border-top: 1px solid #000;
+}
+
+.table-row-border td {
+  border-bottom: 1px solid #d9d9d9;
+}
+
 table tbody.border  {
   border-top: 2px solid #dee2e6;
   margin-left: 0;
