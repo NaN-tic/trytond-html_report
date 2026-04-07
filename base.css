@@ -39,7 +39,18 @@ header {
 .logo {
     width: auto;
     height: 50px;
+}
 
+code {
+    display: inline-block;
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+    background: #f1f3f5;
+    border: 1px solid #d9dee3;
+    color: #1f2933;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.92em;
+    white-space: pre-wrap;
 }
 
 body {
