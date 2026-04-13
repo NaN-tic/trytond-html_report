@@ -35,10 +35,13 @@ class ProductionReport(DominateReport):
 
     @classmethod
     def show_company_info(cls, company, show_party=True,
-            show_contact_mechanism=True):
+            show_contact_mechanism=True, show_phone=True,
+            show_email=True, show_website=True):
         return cls.common().show_company_info(
             company, show_party=show_party,
-            show_contact_mechanism=show_contact_mechanism)
+            show_contact_mechanism=show_contact_mechanism,
+            show_phone=show_phone, show_email=show_email,
+            show_website=show_website)
 
     @classmethod
     def show_footer(cls, company=None):
