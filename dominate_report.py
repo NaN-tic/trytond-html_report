@@ -30,7 +30,8 @@ class DominateCommonCompany(metaclass=PoolMeta):
 
     @classmethod
     def show_company_info(cls, company, show_party=True,
-            show_contact_mechanism=True):
+            show_contact_mechanism=True, show_phone=True,
+            show_email=True, show_website=True):
         if not company or not getattr(company, 'raw', None):
             return raw('')
         party = company.party
@@ -53,15 +54,15 @@ class DominateCommonCompany(metaclass=PoolMeta):
         if show_contact_mechanism:
             with container:
                 with div(cls='company-info-contact-mechanims'):
-                    if party.raw.phone:
+                    if show_phone and party.raw.phone:
                         raw('%s: %s' % (
                             label('party.party', 'phone'),
                             party.render.phone))
                         br()
-                    if party.raw.email:
+                    if show_email and party.raw.email:
                         raw(party.render.email)
                         br()
-                    if party.raw.website:
+                    if show_website and party.raw.website:
                         raw(party.render.website)
         return container
 
@@ -146,7 +147,8 @@ class DominateCommonParty(metaclass=PoolMeta):
 
     @classmethod
     def show_party_info(cls, party, tax_identifier, address,
-            second_address_label, second_address):
+            second_address_label, second_address, show_phone=True,
+            show_email=True, show_website=True):
         if not party or not getattr(party, 'raw', None):
             return raw('')
         record = DualRecord(party.raw)
@@ -160,12 +162,12 @@ class DominateCommonParty(metaclass=PoolMeta):
             if address:
                 raw(address.render.full_address.replace('\n', '<br/>'))
             br()
-            if record.raw.phone:
+            if show_phone and record.raw.phone:
                 raw('%s: %s' % (
                     HTMLReportMixin.label('party.party', 'phone'),
                     record.render.phone))
                 br()
-            if record.raw.email:
+            if show_email and record.raw.email:
                 raw(record.render.email)
                 br()
             if second_address and address and second_address.raw.id != address.raw.id:
