@@ -119,13 +119,15 @@ def register():
         stock.StockTotalInventoryReport,
         stock.StockTotalInventoryXlsxReport,
         stock.DeliveryNoteReport,
-        stock.ValuedDeliveryNoteReport,
         stock.PickingNoteReport,
         stock.InternalPickingNoteReport,
         stock.CustomerRefundNoteReport,
         stock.RefundNoteReport,
         stock.SupplierRestockingListReport,
         module=module, type_='report', depends=['stock'])
+    Pool.register(
+        stock.ValuedDeliveryNoteReport,
+        module=module, type_='report', depends=['stock_valued'])
     Pool.register(
         product.Product,
         module=module, type_='model', depends=['product'])
