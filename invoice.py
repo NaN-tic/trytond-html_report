@@ -340,7 +340,7 @@ class InvoiceReportMixin(DominateReport):
     def show_due_dates(cls, invoice, company):
         if not invoice.move or not invoice.move.lines:
             return raw('')
-        due_table = table(id='due-dates', width='200px')
+        due_table = table(id='due-dates', style='width:4cm;')
         with due_table:
             with thead():
                 with tr():
@@ -356,7 +356,8 @@ class InvoiceReportMixin(DominateReport):
                         formatted = html_render(
                             amount, digits=invoice.currency.raw.digits)
                         td('%s %s' % (formatted,
-                            invoice.currency.render.symbol), cls='text-right')
+                            invoice.currency.render.symbol),
+                            cls='text-right no-wrap')
         return due_table
 
     @classmethod
