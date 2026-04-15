@@ -211,8 +211,8 @@ class SaleReport(DominateReport):
                             party = record.html_party
                             tax_identifier = record.html_tax_identifier
                             address = record.html_address
-                            second_address_label = record.html_address
-                            second_address = record.html_address
+                            second_address_label = record.render.html_second_address_label
+                            second_address = record.html_second_address
                             cls.show_party_info(party, tax_identifier, address,
                                 second_address_label, second_address)
         return header
