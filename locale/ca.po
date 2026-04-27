@@ -546,7 +546,7 @@ msgstr "Llista de proveïment"
 
 msgctxt "model:ir.action,name:html_report_valued_delivery_note"
 msgid "Valued Delivery Note"
-msgstr "Nota de lliurament valorada"
+msgstr "Nota d'enviament valorada"
 
 msgctxt "model:ir.message,text:missing_signatures"
 msgid "\"%(template)s\" missing signatures: %(missing)s"
