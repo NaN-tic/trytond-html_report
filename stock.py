@@ -1210,7 +1210,10 @@ class StockTotalInventoryStart(ModelView):
     date = fields.Date("Date")
     products = fields.Many2Many(
         'product.product', None, None, "Products",
-        domain=[('type', 'in', ['goods', 'assets'])])
+        domain=[
+            ('type', '=', 'goods'),
+            ('consumable', '!=', True),
+            ])
     locations = fields.Many2Many(
         'stock.location', None, None, "Locations",
         domain=[('type', '=', 'warehouse')], required=True)
@@ -1337,7 +1340,10 @@ class StockTotalInventoryReport(StockInventoryReportMixin, StockReportMixin):
         locations_by_id = {l.id: l for l in locations}
         checker.check()
 
-        domain = [('type', '=', 'goods')]
+        domain = [
+            ('type', '=', 'goods'),
+            ('consumable', '!=', True),
+            ]
         if data['products']:
             domain.append(('id', 'in', data['products']))
 
