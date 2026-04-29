@@ -186,6 +186,10 @@ class InvoiceReportMixin(DominateReport):
             groups.append((key, list(group)))
         return groups
 
+    @staticmethod
+    def _normalize_group_key(value):
+        return value or None
+
     @classmethod
     def show_invoice_lines(cls, document):
         lines_table = table(style='width:100%;')
@@ -206,7 +210,8 @@ class InvoiceReportMixin(DominateReport):
             with tbody(cls='border'):
                 lines = list(document.raw.lines or [])
                 for key, grouped in cls._group_sorted(lines,
-                        lambda line: line.shipment_key):
+                        lambda line: cls._normalize_group_key(
+                            line.shipment_key)):
                     if key:
                         key_record = cls.dualrecord(key)
                     else:
@@ -225,7 +230,8 @@ class InvoiceReportMixin(DominateReport):
                                         'stock.msg_shipment_effective_date'),
                                     key_record.render.effective_date)))
                     for key2, origin_lines in cls._group_sorted(grouped,
-                            lambda line: line.origin_line_key):
+                            lambda line: cls._normalize_group_key(
+                                line.origin_line_key)):
                         if key2:
                             key2_record = cls.dualrecord(key2)
                         else:
