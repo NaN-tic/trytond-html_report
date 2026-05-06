@@ -474,6 +474,12 @@ class InvoiceReportMixin(DominateReport):
         return cls.common().show_totals(record)
 
     @classmethod
+    def show_logo(cls, record):
+        company = record.company
+        if company.render.logo:
+            return img(cls='logo', src=company.render.logo)
+
+    @classmethod
     def header(cls, action, data, records):
         record, = records
         company = record.company
@@ -484,9 +490,10 @@ class InvoiceReportMixin(DominateReport):
             with header_tag(id='header'):
                 with table():
                     with tr():
-                        with td(cls='company_logo'):
-                            if company.render.logo:
-                                img(cls='logo', src=company.render.logo)
+                        with td(cls='company_logo') as cell:
+                            logo = cls.show_logo(record)
+                            if logo:
+                                cell.add(logo)
                         if getattr(record.raw, 'aeat_qr_url', None):
                             with td(style='width: 1%'):
                                 cls._tax_code(record)
