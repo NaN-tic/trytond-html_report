@@ -661,6 +661,10 @@ msgid "Proforma"
 msgstr "Proforma"
 
 msgctxt "html_report:h:"
+msgid "Credit Note"
+msgstr "Abonament"
+
+msgctxt "html_report:h:"
 msgid "Draft"
 msgstr "Esborrany"
 

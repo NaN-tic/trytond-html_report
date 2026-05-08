@@ -411,6 +411,8 @@ class InvoiceReportMixin(DominateReport):
         # FIX en lang label
         if 'Account' in title:
             title = title.replace('Account ', '')
+        if record.raw.untaxed_amount < 0 and record.raw.type == 'out':
+            title = _('Credit Note')
         if record.raw.state == 'validated':
             title = _('Proforma')
         document_date = (record.raw.invoice_date
