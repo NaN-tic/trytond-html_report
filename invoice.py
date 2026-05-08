@@ -108,6 +108,8 @@ class InvoiceLineDiscount(HTMLDiscountReportMixin, metaclass=PoolMeta):
 
 class InvoiceReportMixin(DominateReport):
     _single = True
+    show_header_level1 = True
+    show_header_level2 = True
 
     @classmethod
     def language(cls, records):
@@ -216,19 +218,20 @@ class InvoiceReportMixin(DominateReport):
                         key_record = cls.dualrecord(key)
                     else:
                         key_record = None
-                    with tr():
-                        header_cell = th(cls='sub_header_level1', colspan='6')
-                        if key_record:
-                            header_cell.add(raw('%s: %s' % (
-                                cls.label(key_record.raw.__name__),
-                                key_record.render.number)))
-                            if key_record.raw.reference:
-                                header_cell.add(raw(' / %s' % key_record.render.reference))
-                            if key_record.raw.effective_date:
-                                header_cell.add(raw(' %s: %s' % (
-                                    cls.message(
-                                        'stock.msg_shipment_effective_date'),
-                                    key_record.render.effective_date)))
+                    if cls.show_header_level1:
+                        with tr():
+                            header_cell = th(cls='sub_header_level1', colspan='6')
+                            if key_record:
+                                header_cell.add(raw('%s: %s' % (
+                                    cls.label(key_record.raw.__name__),
+                                    key_record.render.number)))
+                                if key_record.raw.reference:
+                                    header_cell.add(raw(' / %s' % key_record.render.reference))
+                                if key_record.raw.effective_date:
+                                    header_cell.add(raw(' %s: %s' % (
+                                        cls.message(
+                                            'stock.msg_shipment_effective_date'),
+                                        key_record.render.effective_date)))
                     for key2, origin_lines in cls._group_sorted(grouped,
                             lambda line: cls._normalize_group_key(
                                 line.origin_line_key)):
@@ -236,24 +239,25 @@ class InvoiceReportMixin(DominateReport):
                             key2_record = cls.dualrecord(key2)
                         else:
                             key2_record = None
-                        with tr():
-                            header_cell = th(cls=('sub_header_level2'
-                                if key2_record else 'sub_header_level1'),
-                                colspan='6')
-                            if key2_record:
-                                header_cell.add(raw('%s: %s' % (
-                                    cls.label(key2_record.raw.__name__),
-                                    key2_record.render.number)))
-                                if key2_record.render.reference:
-                                    header_cell.add(raw(' / %s' % key2_record.render.reference))
-                                if hasattr(key2_record.render, 'sale_date'):
-                                    sale_date = key2_record.render.sale_date
-                                    if sale_date:
-                                        header_cell.add(raw(' %s: %s' % (
-                                            cls.label(
-                                                key2_record.raw.__name__,
-                                                'sale_date'),
-                                            sale_date)))
+                        if cls.show_header_level2:
+                            with tr():
+                                header_cell = th(cls=('sub_header_level2'
+                                    if key2_record else 'sub_header_level1'),
+                                    colspan='6')
+                                if key2_record:
+                                    header_cell.add(raw('%s: %s' % (
+                                        cls.label(key2_record.raw.__name__),
+                                        key2_record.render.number)))
+                                    if key2_record.render.reference:
+                                        header_cell.add(raw(' / %s' % key2_record.render.reference))
+                                    if hasattr(key2_record.render, 'sale_date'):
+                                        sale_date = key2_record.render.sale_date
+                                        if sale_date:
+                                            header_cell.add(raw(' %s: %s' % (
+                                                cls.label(
+                                                    key2_record.raw.__name__,
+                                                    'sale_date'),
+                                                sale_date)))
                         for line in origin_lines:
                             line = DualRecord(line)
                             if line.raw.type == 'line':
