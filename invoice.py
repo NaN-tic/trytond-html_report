@@ -51,9 +51,10 @@ class Invoice(HTMLPartyInfoMixin, metaclass=PoolMeta):
 
         taxes = defaultdict(default_amount)
         for tax in self.taxes:
-            taxes[tax.tax]['base'] += tax.base
-            taxes[tax.tax]['amount'] += tax.amount
-            taxes[tax.tax]['legal_notice'] = tax.legal_notice
+            key = tax.tax or tax
+            taxes[key]['base'] += tax.base
+            taxes[key]['amount'] += tax.amount
+            taxes[key]['legal_notice'] = tax.legal_notice
         return {DualRecord(k): v for k, v in taxes.items()}
 
 
