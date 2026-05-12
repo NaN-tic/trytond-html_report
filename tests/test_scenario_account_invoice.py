@@ -172,3 +172,48 @@ class Test(unittest.TestCase):
         self.assertEqual(invoice2.state, 'posted')
         self.assertEqual(invoice2.invoice_report_cache, None)
         self.assertNotEqual(invoice2.invoice_report_format, 'pdf')
+
+    def test_invoice_report_manual_tax_without_account_tax(self):
+        activate_modules(['html_report', 'account_invoice',
+                'account_payment_type', 'account_bank',
+                'account_invoice_stock'])
+
+        _ = create_company()
+        company = get_company()
+
+        fiscalyear = set_fiscalyear_invoice_sequences(
+            create_fiscalyear(company))
+        fiscalyear.click('create_period')
+
+        _ = create_chart(company)
+        accounts = get_accounts(company)
+        revenue = accounts['revenue']
+
+        Party = Model.get('party.party')
+        party = Party(name='Party')
+        party.save()
+
+        Invoice = Model.get('account.invoice')
+        InvoiceLine = Model.get('account.invoice.line')
+        invoice = Invoice()
+        invoice.party = party
+        line = InvoiceLine()
+        invoice.lines.append(line)
+        line.account = revenue
+        line.description = 'Test'
+        line.quantity = 1
+        line.unit_price = Decimal('100')
+
+        tax_line = invoice.taxes.new()
+        tax_line.description = 'Manual Tax'
+        tax_line.account = accounts['tax']
+        tax_line.base = Decimal('100')
+        tax_line.amount = Decimal('10')
+
+        invoice.save()
+        self.assertIsNone(tax_line.tax)
+        self.assertEqual(invoice.tax_amount, Decimal('10.00'))
+
+        InvoiceReport = Report('account.invoice')
+        oext, _, _, _ = InvoiceReport.execute([invoice])
+        self.assertEqual(oext, 'pdf')
