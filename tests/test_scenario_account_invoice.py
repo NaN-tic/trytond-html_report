@@ -195,7 +195,7 @@ class Test(unittest.TestCase):
 
         Invoice = Model.get('account.invoice')
         InvoiceLine = Model.get('account.invoice.line')
-        invoice = Invoice()
+        invoice = Invoice(type='out')
         invoice.party = party
         line = InvoiceLine()
         invoice.lines.append(line)
