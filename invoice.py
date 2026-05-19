@@ -408,10 +408,7 @@ class InvoiceReportMixin(DominateReport):
 
     @classmethod
     def show_document_info(cls, record):
-        title = cls.label(record.raw.__name__)
-        # FIX en lang label
-        if 'Account' in title:
-            title = title.replace('Account ', '')
+        title = _('Invoice')
         if record.raw.untaxed_amount < 0 and record.raw.type == 'out':
             title = _('Credit Note')
         if record.raw.state == 'validated':
