@@ -38,6 +38,10 @@ msgctxt "field:html.report.template,write_uid:"
 msgid "Write User"
 msgstr "Letzte Änderung durch"
 
+msgctxt "html_report:h:"
+msgid "Invoice"
+msgstr "Rechnung"
+
 msgctxt "field:html.template,all_content:"
 msgid "All Content"
 msgstr "Gesamter Inhalt"
