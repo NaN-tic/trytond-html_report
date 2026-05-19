@@ -647,6 +647,10 @@ msgid "Credit Note"
 msgstr "Abono"
 
 msgctxt "html_report:h:"
+msgid "Invoice"
+msgstr "Factura"
+
+msgctxt "html_report:h:"
 msgid "Draft"
 msgstr "Borrador"
 
