@@ -450,6 +450,10 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
     def execute(cls, ids, data):
         action, model = cls.get_action(data)
         cls.check_access(action, model, ids)
+
+        if action.template_extension != 'html':
+            return super().execute(ids, data)
+
         action_name = cls.get_name(action)
         side_margin = action.html_side_margin
         if side_margin is None:
