@@ -194,6 +194,11 @@ class InvoiceReportMixin(DominateReport):
         return value or None
 
     @classmethod
+    def hook_invoice_origin_lines(cls, shipment_record, origin_record,
+            origin_lines):
+        return origin_lines
+
+    @classmethod
     def show_invoice_lines(cls, document):
         lines_table = table(style='width:100%;')
         with lines_table:
@@ -219,6 +224,20 @@ class InvoiceReportMixin(DominateReport):
                         key_record = cls.dualrecord(key)
                     else:
                         key_record = None
+                    origin_groups = []
+                    for key2, origin_lines in cls._group_sorted(grouped,
+                            lambda line: cls._normalize_group_key(
+                                line.origin_line_key)):
+                        if key2:
+                            key2_record = cls.dualrecord(key2)
+                        else:
+                            key2_record = None
+                        hook_lines = cls.hook_invoice_origin_lines(
+                            key_record, key2_record, origin_lines)
+                        if hook_lines:
+                            origin_groups.append((key2_record, hook_lines))
+                    if not origin_groups:
+                        continue
                     if cls.show_header_level1:
                         with tr():
                             header_cell = th(cls='sub_header_level1', colspan='6')
@@ -233,13 +252,7 @@ class InvoiceReportMixin(DominateReport):
                                         cls.message(
                                             'stock.msg_shipment_effective_date'),
                                         key_record.render.effective_date)))
-                    for key2, origin_lines in cls._group_sorted(grouped,
-                            lambda line: cls._normalize_group_key(
-                                line.origin_line_key)):
-                        if key2:
-                            key2_record = cls.dualrecord(key2)
-                        else:
-                            key2_record = None
+                    for key2_record, origin_lines in origin_groups:
                         if cls.show_header_level2:
                             with tr():
                                 header_cell = th(cls=('sub_header_level2'
