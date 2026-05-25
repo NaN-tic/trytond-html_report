@@ -785,3 +785,11 @@ msgstr "Total inventari"
 msgctxt "html_report:h:"
 msgid "No records found"
 msgstr "No s'han trobat registres"
+
+msgctxt "html_report:h:"
+msgid "Customer Shipment"
+msgstr "Albarà de client"
+
+msgctxt "html_report:h:"
+msgid "Supplier Shipment"
+msgstr "Albarà de proveïdor"
