@@ -219,6 +219,14 @@ class StockInventory(metaclass=PoolMeta):
 class StockReportMixin(DominateReport):
 
     @classmethod
+    def document_title(cls, model):
+        titles = {
+            'stock.shipment.out': _('Customer Shipment'),
+            'stock.shipment.in': _('Supplier Shipment'),
+            }
+        return titles.get(model, cls.label(model))
+
+    @classmethod
     def show_carrier(cls, carrier):
         container = div()
         with container:
@@ -633,7 +641,7 @@ class StockReportMixin(DominateReport):
 
     @classmethod
     def show_restocking_list_info(cls, record):
-        title = cls.label(record.raw.__name__)
+        title = cls.document_title(record.raw.__name__)
         container = div()
         with container:
             p(record.company.render.rec_name)
@@ -927,7 +935,7 @@ class DeliveryNoteReport(StockReportMixin, metaclass=PoolMeta):
 
     @classmethod
     def show_document_info(cls, record):
-        title = cls.label(record.raw.__name__)
+        title = cls.document_title(record.raw.__name__)
         document_date = (record.render.effective_date
             if getattr(record.raw, 'effective_date', None) else '')
         container = div()
@@ -1014,7 +1022,7 @@ class PickingNoteReport(StockReportMixin, metaclass=PoolMeta):
 
     @classmethod
     def show_document_info(cls, record):
-        title = cls.label(record.raw.__name__)
+        title = cls.document_title(record.raw.__name__)
         document_date = (record.render.effective_date
             if getattr(record.raw, 'effective_date', None) else '')
         label_package = None
@@ -1068,7 +1076,7 @@ class InternalPickingNoteReport(StockReportMixin, metaclass=PoolMeta):
 
     @classmethod
     def show_document_info(cls, record):
-        title = cls.label(record.raw.__name__)
+        title = cls.document_title(record.raw.__name__)
         document_date = (record.render.effective_date
             if getattr(record.raw, 'effective_date', None) else '')
         label_package = None
@@ -1126,7 +1134,7 @@ class CustomerRefundNoteReport(StockReportMixin, metaclass=PoolMeta):
 
     @classmethod
     def show_document_info(cls, record):
-        title = cls.label(record.raw.__name__)
+        title = cls.document_title(record.raw.__name__)
         document_date = (record.render.effective_date
             if getattr(record.raw, 'effective_date', None) else '')
         container = div()
