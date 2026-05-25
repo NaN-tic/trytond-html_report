@@ -804,3 +804,11 @@ msgstr "Inventario total"
 msgctxt "html_report:h:"
 msgid "No records found"
 msgstr "No se han encontrado registros"
+
+msgctxt "html_report:h:"
+msgid "Customer Shipment"
+msgstr "Albarán de cliente"
+
+msgctxt "html_report:h:"
+msgid "Supplier Shipment"
+msgstr "Albarán de proveedor"
