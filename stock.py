@@ -665,9 +665,12 @@ class StockReportMixin(DominateReport):
 
     @classmethod
     def show_restocking_list_moves(cls, shipment):
-        moves = (shipment.incoming_moves if
-            shipment.warehouse_input == shipment.warehouse_storage
-            else shipment.inventory_moves)
+        if shipment.raw.state in ('cancelled', 'draft'):
+            moves = shipment.incoming_moves
+        else:
+            moves = (shipment.incoming_moves if
+                shipment.warehouse_input == shipment.warehouse_storage
+                else shipment.inventory_moves)
         moves_table = table(style='width:100%;')
         with moves_table:
             with thead():
