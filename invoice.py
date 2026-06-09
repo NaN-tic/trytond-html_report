@@ -93,7 +93,7 @@ class InvoiceLine(metaclass=PoolMeta):
     def get_origin_line_key(self, name):
         models = self._get_origin_line_keys()
         if self.origin:
-            model = self.origin.__name__
+            model = getattr(self.origin, '__name__', None)
             if models.get(model):
                 field = models.get(model)
                 return str(getattr(self.origin, field))
