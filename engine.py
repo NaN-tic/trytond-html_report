@@ -527,12 +527,14 @@ class HTMLReportMixin:
         return cls.to_base64(stream.getvalue())
 
     @classmethod
-    def barcode(cls, _type, value, text=None, **options):
+    def barcode(cls, name, code, size=(), **kwargs):
         # For the list of available options see:
         # https://python-barcode.readthedocs.io/en/latest/writers.html
-        ean_class = barcode.get_barcode_class(_type)
-        ean_code = ean_class(value, writer=SVGWriter()).render(options, text)
-        return cls.to_base64(ean_code)
+        # Override Report.barcode() to return a data URI string because
+        # html_report uses the result directly as the src of img tags.
+        ean_class = barcode.get_barcode_class(name)
+        image = ean_class(code, writer=SVGWriter()).render(kwargs)
+        return cls.to_base64(image)
 
     @classmethod
     def datamatrix(cls, value):
