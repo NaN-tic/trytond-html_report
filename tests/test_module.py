@@ -8,6 +8,16 @@ from trytond.transaction import Transaction
 from trytond.modules.company.tests import CompanyTestMixin, create_company, set_company
 from trytond.modules.account.tests import create_chart, get_fiscalyear
 from trytond.modules.account_invoice.tests import set_invoice_sequences
+from trytond.modules.html_report.engine import DualRecord
+
+
+class _FalseyRecord:
+    _fields = {}
+    __name__ = 'test.falsey'
+    id = None
+
+    def __bool__(self):
+        return False
 
 
 class HtmlReportTestCase(CompanyTestMixin, ModuleTestCase):
@@ -21,6 +31,10 @@ class HtmlReportTestCase(CompanyTestMixin, ModuleTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+    def test_dual_record_bool(self):
+        self.assertFalse(DualRecord(None))
+        self.assertFalse(DualRecord(_FalseyRecord()))
 
     @with_transaction()
     def test_html_report(self):

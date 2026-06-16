@@ -382,6 +382,9 @@ class DualRecord:
             self._formatter = Formatter()
         self.render = FormattedRecord(record, self._formatter)
 
+    def __bool__(self):
+        return bool(self.raw)
+
     def __getattr__(self, name):
         field = self.raw._fields.get(name)
         if not field:
