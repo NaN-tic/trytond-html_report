@@ -11,6 +11,15 @@ from trytond.modules.account_invoice.tests import set_invoice_sequences
 from trytond.modules.html_report.engine import HTMLReportMixin, DualRecord
 
 
+class _FalseyRecord:
+    _fields = {}
+    __name__ = 'test.falsey'
+    id = None
+
+    def __bool__(self):
+        return False
+
+
 class HtmlReportTestCase(CompanyTestMixin, ModuleTestCase):
     'Test HtmlReport module'
     module = 'html_report'
@@ -22,6 +31,10 @@ class HtmlReportTestCase(CompanyTestMixin, ModuleTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+    def test_dual_record_bool(self):
+        self.assertFalse(DualRecord(None))
+        self.assertFalse(DualRecord(_FalseyRecord()))
 
     @with_transaction()
     def test_get_template_filters(self):
