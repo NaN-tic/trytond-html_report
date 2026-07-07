@@ -1,7 +1,7 @@
 from dominate.tags import h1, p, table, tbody, td, th, thead, tr
 
 from .dominate_report import DominateReport
-from .i18n import _
+from trytond.modules.xgettext import _
 
 
 class ModuleReport(DominateReport):

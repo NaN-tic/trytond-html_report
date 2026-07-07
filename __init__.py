@@ -5,7 +5,6 @@ from trytond.pool import Pool
 from trytond.report import Report
 from . import action
 from . import engine
-from . import i18n
 from . import invoice
 from . import dominate_report
 from . import module as module_report
@@ -16,13 +15,13 @@ from . import product
 from . import stock
 from . import account_configuration
 
+
 def register():
     module = 'html_report'
     Pool.register(
         dominate_report.DominateCommon,
         action.ActionReport,
         action.HTMLTemplateTranslation,
-        i18n.Translation,
         module=module, type_='model')
     Pool.register(
         dominate_report.DominateCommonCompany,
@@ -34,11 +33,6 @@ def register():
         account_configuration.Configuration,
         account_configuration.ConfigurationHTMLReport,
         module=module, type_='model', depends=['account'])
-    Pool.register(
-        i18n.TranslationSet,
-        i18n.TranslationClean,
-        i18n.TranslationUpdate,
-        module=module, type_='wizard')
     Pool.register_mixin(engine.HTMLReportMixin, Report,
         module=module)
     Pool.register(

@@ -11,6 +11,7 @@ MODULE = 'html_report'
 PREFIX = 'nantic'
 MODULE2PREFIX = {
     'widgets': 'nantic',
+    'xgettext': 'nantic',
 }
 
 

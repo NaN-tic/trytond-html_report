@@ -38,7 +38,7 @@ msgctxt "field:html.report.template,write_uid:"
 msgid "Write User"
 msgstr "Letzte Änderung durch"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Invoice"
 msgstr "Rechnung"
 
@@ -266,7 +266,7 @@ msgctxt "model:ir.action,name:html_report_location_inventory_valued"
 msgid "Location Inventory Value"
 msgstr "Location Inventory Value"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Inventory Total"
 msgstr "Inventory Total"
 
@@ -418,26 +418,26 @@ msgctxt "wizard_button:html_report.stock.print_total_inventory,start,print_:"
 msgid "Print"
 msgstr "Print"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Location"
 msgstr "Location"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Product"
 msgstr "Product"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Lot"
 msgstr "Lot"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Quantity"
 msgstr "Quantity"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Total Inventory"
 msgstr "Total Inventory"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "No records found"
 msgstr "No records found"
