@@ -4,9 +4,11 @@ from trytond.pyson import Eval
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 from trytond.modules.html_report.dominate_report import DominateReport
+from .i18n import _
 from dominate.util import raw
-from dominate.tags import (div, footer as footer_tag, h1, h2, h4,
-    header as header_tag, img, p, strong, table, tbody, td, th, thead, tr)
+from dominate.tags import (br, div, footer as footer_tag, h1, h2, h4,
+    header as header_tag, img, p, span, strong, table, tbody, td, th, thead,
+    tr)
 
 
 class Purchase(HTMLPartyInfoMixin, metaclass=PoolMeta):
@@ -46,6 +48,60 @@ class PurchaseReportMixin(DominateReport):
             show_contact_mechanism=show_contact_mechanism,
             show_phone=show_phone, show_email=show_email,
             show_website=show_website)
+
+    @classmethod
+    def show_receiving_info(cls, company, warehouse, show_party=True,
+            show_contact_mechanism=True, show_phone=True,
+            show_email=True, show_website=True):
+        warehouse_address = warehouse and warehouse.address or None
+        if not warehouse_address:
+            return cls.show_company_info(
+                company, show_party=show_party,
+                show_contact_mechanism=show_contact_mechanism,
+                show_phone=show_phone, show_email=show_email,
+                show_website=show_website)
+        if not company or not getattr(company, 'raw', None):
+            return raw('')
+
+        party = company.party
+        address = party.addresses and party.addresses[0] or None
+        tax_identifier = party.tax_identifier
+
+        container = div(id='company-info', cls='header-details')
+        if show_party:
+            with container:
+                span(company.party.render.name, cls='company-info-name')
+                br()
+        if tax_identifier:
+            with container:
+                raw(tax_identifier.render.code)
+                br()
+        if address:
+            with container:
+                with div(cls='company-info-address'):
+                    strong(_('Fiscal Address'))
+                    br()
+                    raw(address.render.full_address.replace('\n', '<br/>'))
+        with container:
+            with div(cls='company-info-address'):
+                strong(cls.label('purchase.purchase', 'warehouse'))
+                br()
+                raw(warehouse_address.render.full_address.replace(
+                        '\n', '<br/>'))
+        if show_contact_mechanism:
+            with container:
+                with div(cls='company-info-contact-mechanims'):
+                    if show_phone and party.raw.phone:
+                        raw('%s: %s' % (
+                            cls.label('party.party', 'phone'),
+                            party.render.phone))
+                        br()
+                    if show_email and party.raw.email:
+                        raw(party.render.email)
+                        br()
+                    if show_website and party.raw.website:
+                        raw(party.render.website)
+        return container
 
     @classmethod
     def show_party_info(cls, party, tax_identifier, address,
@@ -183,7 +239,7 @@ class PurchaseReportMixin(DominateReport):
                             cls.show_document_info(record)
                     with tr():
                         with td(cls='party_info'):
-                            cls.show_company_info(company)
+                            cls.show_receiving_info(company, record.warehouse)
                         with td(cls='party_info'):
                             party = record.html_party
                             tax_identifier = record.html_tax_identifier
