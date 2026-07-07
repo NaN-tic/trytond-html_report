@@ -634,35 +634,35 @@ msgctxt "view:ir.action.report:"
 msgid "Jinja Template"
 msgstr "Plantilla Jinja"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Proforma"
 msgstr "Proforma"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Credit Note"
 msgstr "Abonament"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Invoice"
 msgstr "Factura"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Draft"
 msgstr "Esborrany"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Restocking List"
 msgstr "Llista de reaprovisionament"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Module List"
 msgstr "Llista de mòduls"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "This report lists the selected modules and their dependencies."
 msgstr "Aquest informe mostra els mòduls seleccionats i les seves dependències."
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Inventory Total"
 msgstr "Total inventari"
 
@@ -762,34 +762,34 @@ msgctxt "wizard_button:html_report.stock.print_total_inventory,start,print_:"
 msgid "Print"
 msgstr "Imprimeix"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Location"
 msgstr "Ubicació"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Product"
 msgstr "Producte"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Lot"
 msgstr "Lot"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Quantity"
 msgstr "Quantitat"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Total Inventory"
 msgstr "Total inventari"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "No records found"
 msgstr "No s'han trobat registres"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Customer Shipment"
 msgstr "Albarà de client"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Supplier Shipment"
 msgstr "Albarà de proveïdor"
