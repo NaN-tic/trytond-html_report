@@ -21,7 +21,7 @@ from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 from trytond.wizard import Wizard, StateView, StateReport, Button
 from babel.dates import format_datetime
 from .common import TimeoutChecker, TimeoutException
-from .i18n import _
+from trytond.modules.xgettext import _
 
 
 class ShipmentOutReturn(HTMLPartyInfoMixin, metaclass=PoolMeta):

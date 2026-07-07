@@ -9,7 +9,7 @@ from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import DualRecord, render as html_render
 from trytond.modules.html_report.dominate_report import DominateReport
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
-from trytond.modules.html_report.i18n import _
+from trytond.modules.xgettext import _
 from dominate.util import raw
 from dominate.tags import (div, footer as footer_tag, h1, h2, h4,
     header as header_tag, img, p, strong, style, table, tbody, td, th, thead,

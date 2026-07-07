@@ -5,7 +5,7 @@ from trytond.modules.html_report.dominate_report import DominateReport
 from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 from trytond.modules.html_report.tools import label
 from trytond.transaction import Transaction
-from .i18n import _
+from trytond.modules.xgettext import _
 from dominate.util import raw
 from dominate.tags import (div, footer as footer_tag, h1, h2, h3, h4,
     header as header_tag, img, p, strong, table, tbody, td, th, thead, tr)

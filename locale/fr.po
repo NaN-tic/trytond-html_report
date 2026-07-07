@@ -2,6 +2,6 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
-msgctxt "html_report:h:"
+msgctxt "xgettext:x:"
 msgid "Invoice"
 msgstr "Facture"
