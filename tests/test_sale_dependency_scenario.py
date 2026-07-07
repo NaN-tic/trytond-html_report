@@ -57,5 +57,11 @@ class Test(unittest.TestCase):
         sale.save()
 
         SaleReport = Report('sale.sale')
-        oext, _, _, _ = SaleReport.execute([sale])
+        oext, data, _, _ = SaleReport.execute([sale])
         self.assertEqual(oext, 'pdf')
+        self.assertTrue(data.startswith(b'%PDF'))
+
+        oext, merged_data, _, _ = SaleReport.execute([sale, sale])
+        self.assertEqual(oext, 'pdf')
+        self.assertTrue(merged_data.startswith(b'%PDF'))
+        self.assertGreater(len(merged_data), len(data))

@@ -390,13 +390,14 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
                         last_footer_html=last_footer,
                         side_margin=side_margin,
                         extra_vertical_margin=extra_vertical_margin,
-                    ).render_html())
+                    ).render_pdf())
                 else:
                     documents.append(content)
             if extension == 'pdf' and documents:
-                document = documents[0].copy([page for doc in documents
-                    for page in doc.pages])
-                document = document.write_pdf()
+                if len(documents) == 1:
+                    document = documents[0]
+                else:
+                    document = cls.merge_pdfs(documents)
             else:
                 document = ''.join(documents)
         else:
