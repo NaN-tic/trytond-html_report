@@ -643,6 +643,10 @@ msgid "Proforma"
 msgstr "Proforma"
 
 msgctxt "html_report:h:"
+msgid "Fiscal Address"
+msgstr "Dirección fiscal"
+
+msgctxt "html_report:h:"
 msgid "Credit Note"
 msgstr "Abono"
 
