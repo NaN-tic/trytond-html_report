@@ -60,8 +60,6 @@ class PurchaseReportMixin(DominateReport):
                 show_contact_mechanism=show_contact_mechanism,
                 show_phone=show_phone, show_email=show_email,
                 show_website=show_website)
-        if not company or not getattr(company, 'raw', None):
-            return raw('')
 
         party = company.party
         address = party.addresses and party.addresses[0] or None
