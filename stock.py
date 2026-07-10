@@ -1327,6 +1327,13 @@ class StockTotalInventoryReport(StockInventoryReportMixin, StockReportMixin):
             )
         return css
 
+    @staticmethod
+    def get_location_domain(data):
+        return [
+            ('parent', 'child_of', data['locations']),
+            ('type', '=', 'storage'),
+            ]
+
     @classmethod
     def prepare(cls, data):
         pool = Pool()
@@ -1343,10 +1350,8 @@ class StockTotalInventoryReport(StockInventoryReportMixin, StockReportMixin):
             Lot = None
 
         with Transaction().set_context(_record_cache_size=100000):
-            locations = Location.search([
-                    ('parent', 'child_of', data['locations']),
-                    ('type', '=', 'storage'),
-                    ], order=[('name', 'ASC')])
+            locations = Location.search(cls.get_location_domain(data),
+                                        order=[('name', 'ASC')])
         location_ids = [l.id for l in locations]
         locations_by_id = {l.id: l for l in locations}
         checker.check()
@@ -1528,8 +1533,9 @@ class StockTotalInventoryXlsxReport(Report):
                 ('report_name', '=', cls.__name__)
                 ])
         cls.check_access(action_report, action_report.model, ids)
+        report = pool.get('html_report.stock.total_inventory', type='report')
         with Transaction().set_context(active_test=False):
-            records, parameters = StockTotalInventoryReport.prepare(data)
+            records, parameters = report.prepare(data)
         content = cls.get_content(records, parameters)
         return 'xlsx', content, action_report.direct_print, action_report.name
 
