@@ -692,7 +692,7 @@ msgstr "Data"
 
 msgctxt "field:html_report.stock.print_total_inventory.start,group_by_lot:"
 msgid "Group by Lot"
-msgstr "Grup per Lot"
+msgstr "Agrupar per lot"
 
 msgctxt "field:html_report.stock.print_total_inventory.start,locations:"
 msgid "Locations"
