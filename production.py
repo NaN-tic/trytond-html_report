@@ -118,7 +118,7 @@ class ProductionReport(DominateReport):
                         else:
                             td('')
                         td(move.render.quantity, cls='text-right')
-                        td(move.unit.render.name)
+                        td(move.raw.unit and move.unit.render.name or '')
         return moves_table
 
     @classmethod
@@ -174,7 +174,7 @@ class ProductionReport(DominateReport):
                         else:
                             td('')
                         td(move.render.quantity, cls='text-right')
-                        td(move.unit.render.name)
+                        td(move.raw.unit and move.unit.render.name or '')
         return moves_table
 
     @classmethod
@@ -249,7 +249,7 @@ class ProductionReport(DominateReport):
                     h2('%s : %s %s' % (
                         cls.label('production', 'quantity'),
                         record.render.quantity,
-                        record.unit.render.name))
+                        record.raw.unit and record.unit.render.name or ''))
                     if getattr(record.raw, 'route', None):
                         h2('%s : %s' % (
                             cls.label('production', 'route'),
