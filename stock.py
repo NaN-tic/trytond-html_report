@@ -1335,6 +1335,21 @@ class StockTotalInventoryReport(StockInventoryReportMixin, StockReportMixin):
             ]
 
     @classmethod
+    def get_stock_context(cls, data):
+        return {}
+
+    @classmethod
+    def get_stock_grouping(cls, data):
+        grouping = ('product',)
+        if data.get('group_by_lot'):
+            grouping += ('lot',)
+        return grouping
+
+    @classmethod
+    def get_stock_grouping_key(cls, key, data):
+        return key
+
+    @classmethod
     def prepare(cls, data):
         pool = Pool()
         Company = pool.get('company.company')
@@ -1371,11 +1386,10 @@ class StockTotalInventoryReport(StockInventoryReportMixin, StockReportMixin):
         stock_date_end = data['date'] or Date.today()
         quantities = data.get('quantities', 'positive')
 
-        records = []
-        with Transaction().set_context(stock_date_end=stock_date_end):
-            grouping = ('product',)
-            if data.get('group_by_lot'):
-                grouping += ('lot',)
+        quantities_by_key = {}
+        with Transaction().set_context(
+                stock_date_end=stock_date_end, **cls.get_stock_context(data)):
+            grouping = cls.get_stock_grouping(data)
             for sub_products in grouped_slice(products, count=10000):
                 checker.check()
                 product_ids = [x.id for x in sub_products]
@@ -1385,20 +1399,25 @@ class StockTotalInventoryReport(StockInventoryReportMixin, StockReportMixin):
                     grouping_filter=(product_ids,))
 
                 for key, qty in pbl.items():
-                    if not qty:
-                        continue
-                    if quantities == 'positive' and qty < 0:
-                        continue
-                    if quantities == 'negative' and qty > 0:
-                        continue
-                    record = {
-                        'quantity': qty,
-                        'location': locations_by_id[key[0]],
-                        'product': products_by_id[key[1]],
-                        }
-                    if data.get('group_by_lot'):
-                        record['lot'] = Lot(key[2]) if key[2] else None
-                    records.append(record)
+                    key = cls.get_stock_grouping_key(key, data)
+                    quantities_by_key[key] = quantities_by_key.get(key, 0) + qty
+
+        records = []
+        for key, qty in quantities_by_key.items():
+            if not qty:
+                continue
+            if quantities == 'positive' and qty < 0:
+                continue
+            if quantities == 'negative' and qty > 0:
+                continue
+            record = {
+                'quantity': qty,
+                'location': locations_by_id[key[0]],
+                'product': products_by_id[key[1]],
+                }
+            if data.get('group_by_lot'):
+                record['lot'] = Lot(key[2]) if key[2] else None
+            records.append(record)
 
         company_id = Transaction().context.get('company')
         parameters = {}
