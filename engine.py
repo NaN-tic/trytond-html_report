@@ -22,7 +22,7 @@ import weasyprint
 from babel import dates, numbers
 from barcode.writer import SVGWriter
 
-from trytond.config import config
+import trytond.config as config
 from trytond.exceptions import UserError
 from trytond.i18n import gettext
 from trytond.model.fields.selection import TranslatedSelection
