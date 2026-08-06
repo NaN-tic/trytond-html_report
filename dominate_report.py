@@ -534,5 +534,5 @@ class DominateReport(HTMLReportMixin, metaclass=PoolMeta):
                 content = cls.merge_pdfs([content] * action.html_copies)
             if Printer:
                 return Printer.send_report(oext, content,
-                    action_name, action)
+                    filename, action)
             return oext, content, cls.get_direct_print(action), filename
