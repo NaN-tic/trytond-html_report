@@ -120,8 +120,9 @@ class InvoiceReportMixin(DominateReport):
         return Transaction().language or 'en'
 
     @classmethod
-    def _execute_dominate_report(cls, records, data, action, side_margin,
-            extra_vertical_margin):
+    def _execute_dominate_report(
+            cls, records, data, action, side_margin=2,
+            extra_vertical_margin=30):
         pool = Pool()
         Invoice = pool.get('account.invoice')
         Configuration = Pool().get('account.configuration')
