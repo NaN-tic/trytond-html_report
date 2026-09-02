@@ -26,7 +26,7 @@ class HTMLReport(Report):
         return report.report_content.decode('utf-8')
 
     @classmethod
-    def convert(cls, report, data):
+    def convert(cls, report, data, timeout=5 * 60, retry=5):
         # Convert the report to PDF if the output format is PDF
         # Do not convert when report is generated in tests, as it takes
         # time to convert to PDF due to which tests run longer.
