@@ -178,8 +178,9 @@ class Formatter:
     def _formatted_char(self, record, field, value):
         if value is None:
             return ''
-        Model = Pool().get(record.__name__)
-        value = getattr(Model(record.id), field.name)
+        if record.id is not None and record.id >= 0:
+            Model = Pool().get(record.__name__)
+            value = getattr(Model(record.id), field.name)
         return value.replace('\n', '<br/>')
 
     def _formatted_text(self, record, field, value):
@@ -231,8 +232,9 @@ class Formatter:
         if value is None:
             return ''
 
-        Model = Pool().get(record.__name__)
-        record = Model(record.id)
+        if record.id is not None and record.id >= 0:
+            Model = Pool().get(record.__name__)
+            record = Model(record.id)
         t  = TranslatedSelection(field.name)
         return t.__get__(record, record).replace('\n', '<br/>')
 
@@ -302,7 +304,8 @@ class DualRecord:
         'Re-instantiates the object using the current context. '
         'This can be useful if the DualRecord instance was outside '
         'the {% language %} tag.'
-        self.raw = self.raw.__class__(self.raw.id)
+        if self.raw.id is not None and self.raw.id >= 0:
+            self.raw = self.raw.__class__(self.raw.id)
         self.render = FormattedRecord(self.raw, self._formatter)
 
     def __lt__(self, other):
