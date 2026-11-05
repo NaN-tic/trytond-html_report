@@ -4,7 +4,7 @@ from itertools import groupby
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
 from trytond.pyson import Eval
-from trytond.transaction import Transaction
+from trytond.transaction import Transaction, without_check_access
 from trytond.modules.html_report.template import HTMLPartyInfoMixin
 from trytond.modules.html_report.engine import DualRecord, render as html_render
 from trytond.modules.html_report.dominate_report import DominateReport
@@ -159,7 +159,10 @@ class InvoiceReportMixin(DominateReport):
                     'invoice_report_format': values['invoice_report_format'],
                     'invoice_report_cache': values['invoice_report_cache'],
                     }))
-            Invoice.write(*to_write)
+            # Printing is already authorized by the report's access check.
+            # Cache fields are server-owned and readonly to clients in 8.2.
+            with without_check_access():
+                Invoice.write(*to_write)
 
         documents = []
         for record in records:
