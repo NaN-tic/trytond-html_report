@@ -1,0 +1,831 @@
+#
+msgid ""
+msgstr ""
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "field:account.configuration,use_invoice_report_cache:"
+msgid "Use Invoice Report Cache"
+msgstr "Számlajelentés gyorsítótárának használata"
+
+msgctxt "field:account.configuration.html_report,company:"
+msgid "Company"
+msgstr "Cég"
+
+msgctxt "field:account.configuration.html_report,use_invoice_report_cache:"
+msgid "Use Invoice Report Cache"
+msgstr "Számlajelentés gyorsítótárának használata"
+
+msgctxt "field:account.invoice,html_address:"
+msgid "HTML Party Address"
+msgstr "Partner címe HTML-formátumban"
+
+msgctxt "field:account.invoice,html_lines_to_pay:"
+msgid "HTML Lines to Pay"
+msgstr "Fizetendő tételek HTML-formátumban"
+
+msgctxt "field:account.invoice,html_party:"
+msgid "HTML Party"
+msgstr "Partner HTML-formátumban"
+
+msgctxt "field:account.invoice,html_second_address:"
+msgid "HTML Second Address"
+msgstr "Második cím HTML-formátumban"
+
+msgctxt "field:account.invoice,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr "Második cím felirata HTML-formátumban"
+
+msgctxt "field:account.invoice,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr "Partner adóazonosítója HTML-formátumban"
+
+msgctxt "field:account.invoice.line,html_discount:"
+msgid "HTML Discount"
+msgstr "Engedmény HTML-formátumban"
+
+msgctxt "field:account.invoice.line,html_product_code:"
+msgid "HTML Code"
+msgstr "Kód HTML-formátumban"
+
+msgctxt "field:account.invoice.line,origin_line_key:"
+msgid "Origin Line Key"
+msgstr "Forrástétel kulcsa"
+
+msgctxt "field:account.invoice.line,shipment_key:"
+msgid "Shipment Key"
+msgstr "Szállítás kulcsa"
+
+msgctxt "field:html.report.template,report:"
+msgid "Report"
+msgstr "Nyomtatvány"
+
+msgctxt "field:html.report.template,signature:"
+msgid "Signature"
+msgstr "Aláírás"
+
+msgctxt "field:html.report.template,template:"
+msgid "Template"
+msgstr "Sablon"
+
+msgctxt "field:html.report.template,template_used:"
+msgid "Template Used"
+msgstr "Használt sablon"
+
+msgctxt "field:html.template,all_content:"
+msgid "All Content"
+msgstr "Teljes tartalom"
+
+msgctxt "field:html.template,content:"
+msgid "Content"
+msgstr "Tartalom"
+
+msgctxt "field:html.template,data:"
+msgid "Content"
+msgstr "Tartalom"
+
+msgctxt "field:html.template,filename:"
+msgid "Template path"
+msgstr "Sablon elérési útja"
+
+msgctxt "field:html.template,implements:"
+msgid "Signature"
+msgstr "Aláírás"
+
+msgctxt "field:html.template,name:"
+msgid "Name"
+msgstr "Név"
+
+msgctxt "field:html.template,parent:"
+msgid "Parent"
+msgstr "Fölérendelt"
+
+msgctxt "field:html.template,preview:"
+msgid "Preview"
+msgstr "Előnézet"
+
+msgctxt "field:html.template,preview_filename:"
+msgid "Preview Filename"
+msgstr "Előnézet fájlneve"
+
+msgctxt "field:html.template,preview_placeholder_macros:"
+msgid "Use Placeholder for Macros"
+msgstr "Helyőrző használata makrókhoz"
+
+msgctxt "field:html.template,preview_record:"
+msgid "Preview Record"
+msgstr "Előnézeti rekord"
+
+msgctxt "field:html.template,type:"
+msgid "Type"
+msgstr "Típus"
+
+msgctxt "field:html.template,uses:"
+msgid "Uses"
+msgstr "Felhasználások"
+
+msgctxt "field:html.template.signature,name:"
+msgid "Name"
+msgstr "Név"
+
+msgctxt "field:html.template.signature,templates:"
+msgid "Templates"
+msgstr "Sablonok"
+
+msgctxt "field:html.template.translation,lang:"
+msgid "Language"
+msgstr "Nyelv"
+
+msgctxt "field:html.template.translation,report:"
+msgid "Report"
+msgstr "Nyomtatvány"
+
+msgctxt "field:html.template.translation,src:"
+msgid "Source"
+msgstr "Forrás"
+
+msgctxt "field:html.template.translation,value:"
+msgid "Translation Value"
+msgstr "Fordítás"
+
+msgctxt "field:html.template.usage,signature:"
+msgid "Signature"
+msgstr "Aláírás"
+
+msgctxt "field:html.template.usage,template:"
+msgid "Template"
+msgstr "Sablon"
+
+msgctxt "field:ir.action.report,html_content:"
+msgid "Content"
+msgstr "Tartalom"
+
+msgctxt "field:ir.action.report,html_copies:"
+msgid "Number of copies"
+msgstr "Példányszám"
+
+msgctxt "field:ir.action.report,html_extra_vertical_margin:"
+msgid "Extra Vertical Margin (cm)"
+msgstr "További függőleges margó (cm)"
+
+msgctxt "field:ir.action.report,html_file_name:"
+msgid "Report File Name Pattern"
+msgstr "Jelentés fájlnévmintája"
+
+msgctxt "field:ir.action.report,html_footer_content:"
+msgid "Footer Content"
+msgstr "Lábléc tartalma"
+
+msgctxt "field:ir.action.report,html_footer_template:"
+msgid "Footer"
+msgstr "Lábléc"
+
+msgctxt "field:ir.action.report,html_header_content:"
+msgid "Header Content"
+msgstr "Fejléc tartalma"
+
+msgctxt "field:ir.action.report,html_header_template:"
+msgid "Header"
+msgstr "Fejléc"
+
+msgctxt "field:ir.action.report,html_last_footer_content:"
+msgid "Last Page Footer Content"
+msgstr "Utolsó oldal láblécének tartalma"
+
+msgctxt "field:ir.action.report,html_last_footer_template:"
+msgid "Last Page Footer"
+msgstr "Utolsó oldal lábléce"
+
+msgctxt "field:ir.action.report,html_side_margin:"
+msgid "Side Margin (cm)"
+msgstr "Oldalsó margó (cm)"
+
+msgctxt "field:ir.action.report,html_template:"
+msgid "Body"
+msgstr "Tartalom"
+
+msgctxt "field:ir.action.report,html_templates:"
+msgid "Templates"
+msgstr "Sablonok"
+
+msgctxt "field:ir.action.report,html_translations:"
+msgid "Translations"
+msgstr "Fordítások"
+
+msgctxt "field:ir.action.report,html_zipped:"
+msgid "Zipped"
+msgstr "ZIP-be tömörítve"
+
+msgctxt "field:ir.action.report,jinja_template:"
+msgid "Jinja Template"
+msgstr "Jinja-sablon"
+
+msgctxt "field:product.product,html_code:"
+msgid "HTML Code"
+msgstr "Kód HTML-formátumban"
+
+msgctxt "field:production,html_address:"
+msgid "HTML Party Address"
+msgstr "Partner címe HTML-formátumban"
+
+msgctxt "field:production,html_party:"
+msgid "HTML Party"
+msgstr "Partner HTML-formátumban"
+
+msgctxt "field:production,html_second_address:"
+msgid "HTML Second Address"
+msgstr "Második cím HTML-formátumban"
+
+msgctxt "field:production,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr "Második cím felirata HTML-formátumban"
+
+msgctxt "field:production,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr "Partner adóazonosítója HTML-formátumban"
+
+msgctxt "field:production,show_lots:"
+msgid "Production"
+msgstr "gyártás"
+
+msgctxt "field:purchase.purchase,html_address:"
+msgid "HTML Party Address"
+msgstr "Partner címe HTML-formátumban"
+
+msgctxt "field:purchase.purchase,html_party:"
+msgid "HTML Party"
+msgstr "Partner HTML-formátumban"
+
+msgctxt "field:purchase.purchase,html_second_address:"
+msgid "HTML Second Address"
+msgstr "Második cím HTML-formátumban"
+
+msgctxt "field:purchase.purchase,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr "Második cím felirata HTML-formátumban"
+
+msgctxt "field:purchase.purchase,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr "Partner adóazonosítója HTML-formátumban"
+
+msgctxt "field:sale.product_customer,notes:"
+msgid "Notes"
+msgstr "Jegyzetek"
+
+msgctxt "field:sale.sale,html_address:"
+msgid "HTML Party Address"
+msgstr "Partner címe HTML-formátumban"
+
+msgctxt "field:sale.sale,html_party:"
+msgid "HTML Party"
+msgstr "Partner HTML-formátumban"
+
+msgctxt "field:sale.sale,html_second_address:"
+msgid "HTML Second Address"
+msgstr "Második cím HTML-formátumban"
+
+msgctxt "field:sale.sale,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr "Második cím felirata HTML-formátumban"
+
+msgctxt "field:sale.sale,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr "Partner adóazonosítója HTML-formátumban"
+
+msgctxt "field:stock.move,html_discount:"
+msgid "HTML Discount"
+msgstr "Engedmény HTML-formátumban"
+
+msgctxt "field:stock.move,origin_key:"
+msgid "Origin Key"
+msgstr "Forrás kulcsa"
+
+msgctxt "field:stock.move,sort_key:"
+msgid "key"
+msgstr "kulcs"
+
+msgctxt "field:stock.shipment.in,show_lots:"
+msgid "Show Lots"
+msgstr "Tételek megjelenítése"
+
+msgctxt "field:stock.shipment.in.return,html_address:"
+msgid "HTML Party Address"
+msgstr "Partner címe HTML-formátumban"
+
+msgctxt "field:stock.shipment.in.return,html_party:"
+msgid "HTML Party"
+msgstr "Partner HTML-formátumban"
+
+msgctxt "field:stock.shipment.in.return,html_second_address:"
+msgid "HTML Second Address"
+msgstr "Második cím HTML-formátumban"
+
+msgctxt "field:stock.shipment.in.return,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr "Második cím felirata HTML-formátumban"
+
+msgctxt "field:stock.shipment.in.return,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr "Partner adóazonosítója HTML-formátumban"
+
+msgctxt "field:stock.shipment.in.return,show_lots:"
+msgid "Show Lots"
+msgstr "Tételek megjelenítése"
+
+msgctxt "field:stock.shipment.internal,html_address:"
+msgid "HTML Party Address"
+msgstr "Partner címe HTML-formátumban"
+
+msgctxt "field:stock.shipment.internal,html_party:"
+msgid "HTML Party"
+msgstr "Partner HTML-formátumban"
+
+msgctxt "field:stock.shipment.internal,html_second_address:"
+msgid "HTML Second Address"
+msgstr "Második cím HTML-formátumban"
+
+msgctxt "field:stock.shipment.internal,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr "Második cím felirata HTML-formátumban"
+
+msgctxt "field:stock.shipment.internal,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr "Partner adóazonosítója HTML-formátumban"
+
+msgctxt "field:stock.shipment.internal,show_lots:"
+msgid "Show Lots"
+msgstr "Tételek megjelenítése"
+
+msgctxt "field:stock.shipment.out,html_address:"
+msgid "HTML Party Address"
+msgstr "Partner címe HTML-formátumban"
+
+msgctxt "field:stock.shipment.out,html_party:"
+msgid "HTML Party"
+msgstr "Partner HTML-formátumban"
+
+msgctxt "field:stock.shipment.out,html_second_address:"
+msgid "HTML Second Address"
+msgstr "Második cím HTML-formátumban"
+
+msgctxt "field:stock.shipment.out,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr "Második cím felirata HTML-formátumban"
+
+msgctxt "field:stock.shipment.out,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr "Partner adóazonosítója HTML-formátumban"
+
+msgctxt "field:stock.shipment.out,show_lots:"
+msgid "Show Lots"
+msgstr "Tételek megjelenítése"
+
+msgctxt "field:stock.shipment.out,sorted_keys:"
+msgid "key"
+msgstr "kulcs"
+
+msgctxt "field:stock.shipment.out,sorted_lines:"
+msgid "Sorted Lines"
+msgstr "Rendezett sorok"
+
+msgctxt "field:stock.shipment.out.return,html_address:"
+msgid "HTML Party Address"
+msgstr "Partner címe HTML-formátumban"
+
+msgctxt "field:stock.shipment.out.return,html_party:"
+msgid "HTML Party"
+msgstr "Partner HTML-formátumban"
+
+msgctxt "field:stock.shipment.out.return,html_second_address:"
+msgid "HTML Second Address"
+msgstr "Második cím HTML-formátumban"
+
+msgctxt "field:stock.shipment.out.return,html_second_address_label:"
+msgid "HTML Second Address Label"
+msgstr "Második cím felirata HTML-formátumban"
+
+msgctxt "field:stock.shipment.out.return,html_tax_identifier:"
+msgid "HTML Party Tax Identifier"
+msgstr "Partner adóazonosítója HTML-formátumban"
+
+msgctxt "field:stock.shipment.out.return,show_lots:"
+msgid "Show Lots"
+msgstr "Tételek megjelenítése"
+
+msgctxt "help:ir.action.report,html_file_name:"
+msgid ""
+"By default, the file name is generated from the report name and the record’s"
+" full name. To customize the file name, define a Jinja2 pattern. The record "
+"is evaluated as a DualRecord, so fields must be accessed through raw or "
+"render. Example: demo-{{ record.render.rec_name }}"
+msgstr ""
+"Alapértelmezés szerint a fájlnév a jelentés nevéből és a rekord teljes "
+"nevéből készül. Egyéni fájlnévhez adjon meg Jinja2-mintát. A rekord "
+"DualRecord-ként kerül kiértékelésre, ezért a mezőket a raw vagy render "
+"tulajdonságon keresztül kell elérni. Példa: demo-{{ record.render.rec_name "
+"}}"
+
+msgctxt "help:ir.action.report,html_zipped:"
+msgid "If set, a zip file with a document per record will be created."
+msgstr ""
+"Ha be van állítva, rekordonként egy dokumentumot tartalmazó ZIP-fájl jön "
+"létre."
+
+msgctxt "model:account.configuration.html_report,name:"
+msgid "Account Configuration HTML Report"
+msgstr "Könyvelési HTML-jelentés beállítása"
+
+msgctxt "model:html.report.template,name:"
+msgid "HTML Report - Template"
+msgstr "HTML-jelentés - Sablon"
+
+msgctxt "model:html.template,name:"
+msgid "HTML Template"
+msgstr "HTML-sablon"
+
+msgctxt "model:html.template.signature,name:"
+msgid "HTML Template Signature"
+msgstr "HTML-sablon szignatúrája"
+
+msgctxt "model:html.template.translation,name:"
+msgid "HTML Template Translation"
+msgstr "HTML-sablon fordítása"
+
+msgctxt "model:html.template.usage,name:"
+msgid "HTML Template Usage"
+msgstr "HTML-sablon használata"
+
+msgctxt "model:ir.action,name:act_action_report_form"
+msgid "Reports"
+msgstr "Nyomtatványok"
+
+msgctxt "model:ir.action,name:act_report_html_translation_form2"
+msgid "HTML Translations"
+msgstr "HTML-fordítások"
+
+msgctxt "model:ir.action,name:act_template_translation_form"
+msgid "Template Translation"
+msgstr "Sablonfordítás"
+
+msgctxt "model:ir.action,name:html_report_customer_refund_note"
+msgid "Customer Refund Note"
+msgstr "Vevői visszatérítési bizonylat"
+
+msgctxt "model:ir.action,name:html_report_delivery_note"
+msgid "Delivery Note"
+msgstr "Szállítólevél"
+
+msgctxt "model:ir.action,name:html_report_internal_picking_note"
+msgid "Internal Picking Note"
+msgstr "Belső komissiózási jegyzék"
+
+msgctxt "model:ir.action,name:html_report_location_inventory_valued"
+msgid "Location Inventory Value"
+msgstr "Raktárhely készletértéke"
+
+msgctxt "model:ir.action,name:html_report_inventory"
+msgid "Inventory"
+msgstr "Leltár"
+
+msgctxt "model:ir.action,name:html_report_blind_inventory"
+msgid "Blind Count"
+msgstr "Vakleltár"
+
+msgctxt "model:ir.action,name:html_report_inventory_valued"
+msgid "Stock Inventory Valued"
+msgstr "Értékadatokat tartalmazó készletleltár"
+
+msgctxt "model:ir.action,name:html_report_invoice"
+msgid "Invoice"
+msgstr "Számla"
+
+msgctxt "model:ir.action,name:html_report_picking_note"
+msgid "Picking Note"
+msgstr "Komissiózási jegyzék"
+
+msgctxt "model:ir.action,name:html_report_production"
+msgid "Production"
+msgstr "gyártás"
+
+msgctxt "model:ir.action,name:html_report_purchase"
+msgid "Purchase"
+msgstr "Beszerzési rendelés"
+
+msgctxt "model:ir.action,name:html_report_purchase_simplified"
+msgid "Purchase Simplified"
+msgstr "Egyszerűsített beszerzés"
+
+msgctxt "model:ir.action,name:html_report_refund_note"
+msgid "Refund Note"
+msgstr "Visszatérítési bizonylat"
+
+msgctxt "model:ir.action,name:html_report_sale"
+msgid "Sale"
+msgstr "Vevői rendelés"
+
+msgctxt "model:ir.action,name:html_report_sale_proforma"
+msgid "Proforma"
+msgstr "Díjbekérő"
+
+msgctxt "model:ir.action,name:html_report_shipment_in_restocking_list"
+msgid "Restocking List"
+msgstr "Árubetöltési lista"
+
+msgctxt "model:ir.action,name:html_report_valued_delivery_note"
+msgid "Valued Delivery Note"
+msgstr "Értékadatokat tartalmazó szállítólevél"
+
+msgctxt "model:ir.action,name:html_report_module"
+msgid "Module List"
+msgstr "Modullista"
+
+#, python-format
+msgctxt "model:ir.message,text:missing_signatures"
+msgid "\"%(template)s\" missing signatures: %(missing)s"
+msgstr "A(z) „%(template)s” hiányzó szignatúrái: %(missing)s"
+
+#, python-format
+msgctxt "model:ir.message,text:msg_error_timeout"
+msgid "The process was interrupted by %(seconds)s seconds timeout."
+msgstr "A folyamat %(seconds)s másodperces időtúllépés miatt megszakadt."
+
+#, python-format
+msgctxt "model:ir.message,text:msg_exception_timeout"
+msgid ""
+"There was an exception rendering the report:\n"
+"%(result)s"
+msgstr ""
+"Kivétel történt a jelentés előállítása során:\n"
+"%(result)s"
+
+msgctxt "model:ir.message,text:msg_no"
+msgid "No"
+msgstr "Nem"
+
+msgctxt "model:ir.message,text:msg_queue_empty"
+msgid "The queue (timeout) was empty and can not render the report."
+msgstr ""
+"A várólista üres volt (időtúllépés), ezért a jelentés nem állítható elő."
+
+msgctxt "model:ir.message,text:msg_yes"
+msgid "Yes"
+msgstr "Igen"
+
+msgctxt "model:ir.message,text:nullslat_incorrect_format"
+msgid "The nullslast filter only accept a list of tuples."
+msgstr "A nullslast szűrő csak tuple elemeket tartalmazó listát fogad el."
+
+#, python-format
+msgctxt "model:ir.message,text:render_error"
+msgid "The following error was found rendering report \"%(report)s\": %(error)s"
+msgstr "Hiba a(z) „%(report)s” jelentés előállításakor: %(error)s"
+
+#, python-format
+msgctxt "model:ir.message,text:template_error"
+msgid ""
+"The following template error was found parsing report \"%(report)s\": "
+"%(error)s"
+msgstr "Sablonhiba a(z) „%(report)s” jelentés feldolgozásakor: %(error)s"
+
+#, python-format
+msgctxt "model:ir.message,text:unused_signatures"
+msgid "\"%(template)s\" unused signatures: %(unused)s"
+msgstr "A(z) „%(template)s” nem használt szignatúrái: %(unused)s"
+
+msgctxt "model:ir.ui.menu,name:menu_html"
+msgid "HTML Reports"
+msgstr "HTML-jelentések"
+
+msgctxt "model:ir.ui.menu,name:menu_report_template_form"
+msgid "Report - Templates"
+msgstr "Jelentés - Sablonok"
+
+msgctxt "model:ir.ui.menu,name:menu_signature_form"
+msgid "Signatures"
+msgstr "Szignatúrák"
+
+msgctxt "model:ir.ui.menu,name:menu_template_form"
+msgid "Templates"
+msgstr "Sablonok"
+
+msgctxt "selection:html.template,type:"
+msgid "Base"
+msgstr "Alap"
+
+msgctxt "selection:html.template,type:"
+msgid "Block"
+msgstr "Zárolás"
+
+msgctxt "selection:html.template,type:"
+msgid "Extension"
+msgstr "Dokumentum típusa"
+
+msgctxt "selection:html.template,type:"
+msgid "Footer"
+msgstr "Lábléc"
+
+msgctxt "selection:html.template,type:"
+msgid "Header"
+msgstr "Fejléc"
+
+msgctxt "selection:html.template,type:"
+msgid "Macro"
+msgstr "Makró"
+
+msgctxt "view:account.configuration:"
+msgid "HTML Report"
+msgstr "HTML-jelentés"
+
+msgctxt "view:ir.action.report:"
+msgid "HTML Report"
+msgstr "HTML-jelentés"
+
+msgctxt "view:ir.action.report:"
+msgid "Jinja Template"
+msgstr "Jinja-sablon"
+
+msgctxt "xgettext:x:"
+msgid "Proforma"
+msgstr "Díjbekérő"
+
+msgctxt "xgettext:x:"
+msgid "Credit Note"
+msgstr "Jóváíró számla"
+
+msgctxt "xgettext:x:"
+msgid "Invoice"
+msgstr "Számla"
+
+msgctxt "xgettext:x:"
+msgid "Draft"
+msgstr "vázlat"
+
+msgctxt "xgettext:x:"
+msgid "Restocking List"
+msgstr "Árubetöltési lista"
+
+msgctxt "xgettext:x:"
+msgid "Module List"
+msgstr "Modullista"
+
+msgctxt "xgettext:x:"
+msgid "This report lists the selected modules and their dependencies."
+msgstr "Ez a jelentés a kiválasztott modulokat és függőségeiket sorolja fel."
+
+msgctxt "xgettext:x:"
+msgid "Inventory Total"
+msgstr "Készlet összesen"
+
+msgctxt "model:ir.action,name:html_report_total_inventory"
+msgid "Total Inventory"
+msgstr "Teljes készlet"
+
+msgctxt "model:ir.action,name:html_report_total_inventory_xlsx"
+msgid "Total Inventory"
+msgstr "Teljes készlet"
+
+msgctxt "model:ir.action,name:wizard_print_total_inventory"
+msgid "Total Inventory"
+msgstr "Teljes készlet"
+
+msgctxt "model:ir.ui.menu,name:menu_print_total_inventory"
+msgid "Total Inventory"
+msgstr "Teljes készlet"
+
+msgctxt "model:html_report.stock.print_total_inventory.start,name:"
+msgid "Stock Total Inventory"
+msgstr "Teljes készletleltár"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,date:"
+msgid "Date"
+msgstr "Dátum"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,group_by_lot:"
+msgid "Group by Lot"
+msgstr "Csoportosítás tétel szerint"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,locations:"
+msgid "Locations"
+msgstr "Tárhelyek"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,order:"
+msgid "Order"
+msgstr "Sorrend"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,output_format:"
+msgid "Format"
+msgstr "Formátum"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,products:"
+msgid "Products"
+msgstr "Termékek"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,quantities:"
+msgid "Quantities"
+msgstr "Mennyiségek"
+
+msgctxt "field:html_report.stock.print_total_inventory.start,timeout:"
+msgid "Timeout"
+msgstr "Időkorlát"
+
+msgctxt "help:html_report.stock.print_total_inventory.start,timeout:"
+msgid "Timeout in seconds"
+msgstr "Időtúllépés másodpercben"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,order:"
+msgid "Location"
+msgstr "Tárhely"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,order:"
+msgid "Product"
+msgstr "Termék"
+
+msgctxt ""
+"selection:html_report.stock.print_total_inventory.start,output_format:"
+msgid "Excel"
+msgstr "Excel"
+
+msgctxt ""
+"selection:html_report.stock.print_total_inventory.start,output_format:"
+msgid "HTML"
+msgstr "HTML"
+
+msgctxt ""
+"selection:html_report.stock.print_total_inventory.start,output_format:"
+msgid "PDF"
+msgstr "PDF"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,quantities:"
+msgid "All"
+msgstr "összes"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,quantities:"
+msgid "Negative"
+msgstr "Negatív"
+
+msgctxt "selection:html_report.stock.print_total_inventory.start,quantities:"
+msgid "Positive"
+msgstr "Pozitív"
+
+msgctxt "wizard_button:html_report.stock.print_total_inventory,start,end:"
+msgid "Cancel"
+msgstr "Mégse"
+
+msgctxt "wizard_button:html_report.stock.print_total_inventory,start,print_:"
+msgid "Print"
+msgstr "Nyomtatás"
+
+msgctxt "xgettext:x:"
+msgid "Location"
+msgstr "Tárhely"
+
+msgctxt "xgettext:x:"
+msgid "Product"
+msgstr "Termék"
+
+msgctxt "xgettext:x:"
+msgid "Lot"
+msgstr "Gyártási tétel"
+
+msgctxt "xgettext:x:"
+msgid "Quantity"
+msgstr "Mennyiség"
+
+msgctxt "xgettext:x:"
+msgid "Total Inventory"
+msgstr "Teljes készlet"
+
+msgctxt "xgettext:x:"
+msgid "No records found"
+msgstr "Nem található rekord"
+
+msgctxt "xgettext:x:"
+msgid "Customer Shipment"
+msgstr "Vevői szállítmány"
+
+msgctxt "xgettext:x:"
+msgid "Supplier Shipment"
+msgstr "Beszállító szállítmánya"
+
+msgctxt "field:purchase.line,html_discount:"
+msgid "HTML Discount"
+msgstr "Engedmény HTML-formátumban"
+
+msgctxt "field:sale.line,html_discount:"
+msgid "HTML Discount"
+msgstr "Engedmény HTML-formátumban"
+
+msgctxt "field:stock.inventory,show_lots:"
+msgid "Show Lots"
+msgstr "Tételek megjelenítése"
+
+msgctxt "model:ir.action,name:report_valued_delivery_note_keyword"
+msgid "Proforma"
+msgstr "Díjbekérő"
+
+msgctxt "selection:ir.translation,type:"
+msgid "HTML Report"
+msgstr "HTML-jelentés"
