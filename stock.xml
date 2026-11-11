@@ -216,4 +216,10 @@
             <field name="name">stock_total_inventory_start_lot_form</field>
         </record>
     </data>
+    <data depends="stock">
+        <record model="ir.action-res.group" id="print_total_inventory_group_stock">
+            <field name="action" ref="wizard_print_total_inventory"/>
+            <field name="group" ref="stock.group_stock"/>
+        </record>
+    </data>
 </tryton>
