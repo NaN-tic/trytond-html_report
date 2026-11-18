@@ -12,7 +12,7 @@ from trytond.modules.html_report.discount import HTMLDiscountReportMixin
 from trytond.modules.xgettext import _
 from dominate.util import raw
 from dominate.tags import (div, footer as footer_tag, h1, h2, h4,
-    header as header_tag, img, p, strong, style, table, tbody, td, th, thead,
+    header as header_tag, img, p, strong, table, tbody, td, th, thead,
     tr)
 
 
@@ -503,25 +503,22 @@ class InvoiceReportMixin(DominateReport):
         company = record.company
         header = div()
         with header:
-            if getattr(record.raw, 'aeat_qr_url', None):
-                style(raw('.company_logo {\n    width: 15%;\n  }'))
-            with header_tag(id='header'):
-                with table():
+            with header_tag(id='header', cls='invoice-header'):
+                with table(cls='invoice-heading'):
                     with tr():
                         with td(cls='company_logo') as cell:
                             logo = cls.show_logo(record)
                             if logo:
                                 cell.add(logo)
                         if getattr(record.raw, 'aeat_qr_url', None):
-                            with td(style='width: 1%'):
+                            with td(cls='invoice-tax-code'):
                                 cls._tax_code(record)
-                        with td():
+                        with td(cls='invoice-document-info'):
                             cls.show_document_info(record)
+                with table(cls='invoice-parties'):
                     with tr():
                         with td(cls='party_info'):
                             cls.show_company_info(company)
-                        if getattr(record.raw, 'aeat_qr_url', None):
-                            td('', style='width: 1%')
                         with td(cls='party_info'):
                             party = record.html_party
                             tax_identifier = record.html_tax_identifier
