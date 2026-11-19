@@ -102,6 +102,20 @@ class Test(unittest.TestCase):
                 oext, _, _, _ = ProductionReport.execute([production])
                 self.assertEqual(oext, 'pdf')
 
+                for codes, expected_names in (
+                        ((None, None), [component1.name, component2.name]),
+                        (('B', 'A'), [component2.name, component1.name])):
+                    template1.code, template2.code = codes
+                    template1.save()
+                    template2.save()
+                    _, content, _, _ = ProductionReport.execute([production],
+                        {'output_format': 'html'})
+                    document = html_parser.fromstring(content)
+                    inputs = document.xpath('//tbody[@class="border"]')[-1]
+                    names = [cell.text_content()
+                        for cell in inputs.xpath('./tr/td[4]')]
+                    self.assertEqual(names, expected_names)
+
                 self.assertFalse(production.show_lots)
                 self.assertEqual(hasattr(production.outputs[0], 'lot'), with_lots)
                 if with_lots:

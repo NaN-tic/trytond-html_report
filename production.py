@@ -98,7 +98,9 @@ class ProductionReport(DominateReport):
                     th(cls.label('stock.move', 'unit'),
                         nowrap=True)
             with tbody(cls='border'):
-                for move in production.outputs:
+                for move in sorted(production.outputs, key=lambda move: (
+                        move.raw.product.code or '',
+                        move.raw.product.name or '')):
                     if move.raw.state == 'cancelled':
                         continue
                     with tr():
@@ -156,7 +158,9 @@ class ProductionReport(DominateReport):
                     th(cls.label('stock.move', 'unit'),
                         nowrap=True)
             with tbody(cls='border'):
-                for move in production.inputs:
+                for move in sorted(production.inputs, key=lambda move: (
+                        move.raw.product.code or '',
+                        move.raw.product.name or '')):
                     if move.raw.state == 'cancelled':
                         continue
                     with tr():
