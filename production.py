@@ -20,8 +20,8 @@ class Production(HTMLPartyInfoMixin, metaclass=PoolMeta):
         cls.html_party.depends = ['company']
 
     def get_show_lots(self, name):
-        for move in self.inputs:
-            if hasattr(move, 'lot') and getattr(move, 'lot'):
+        for move in self.inputs + self.outputs:
+            if move.state != 'cancelled' and getattr(move, 'lot', None):
                 return True
         return False
 
@@ -99,6 +99,8 @@ class ProductionReport(DominateReport):
                         nowrap=True)
             with tbody(cls='border'):
                 for move in production.outputs:
+                    if move.raw.state == 'cancelled':
+                        continue
                     with tr():
                         td('%s %s' % (
                             move.from_location.render.code,
@@ -155,6 +157,8 @@ class ProductionReport(DominateReport):
                         nowrap=True)
             with tbody(cls='border'):
                 for move in production.inputs:
+                    if move.raw.state == 'cancelled':
+                        continue
                     with tr():
                         td('%s %s' % (
                             move.from_location.render.code,
